@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, ChevronDown, Rocket } from 'lucide-react';
+import { Calendar, ChevronDown, Zap } from 'lucide-react';
 import type { Sprint } from '../../types';
 
 interface SprintSelectorProps {
@@ -13,39 +13,39 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({ activeSprint }) => {
   const progress = (activeSprint.completedTasks / activeSprint.taskCount) * 100;
 
   return (
-    <div className="flex items-center gap-4 bg-white/[0.03] border border-white/[0.05] rounded-2xl px-4 py-2 hover:bg-white/[0.05] transition-all cursor-pointer group">
-      <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary shadow-[0_0_15px_rgba(56,189,248,0.2)]">
-        <Rocket size={20} />
+    <div className="flex items-center gap-4 bg-surface border border-border rounded-md px-3 py-2 hover:bg-surface-hover transition-colors cursor-pointer group">
+      <div className="w-8 h-8 rounded bg-merged/10 flex items-center justify-center text-merged">
+        <Zap size={16} />
       </div>
       
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-0.5">
-          <h4 className="text-sm font-bold text-white group-hover:text-primary transition-colors">
+      <div className="flex-1 min-w-[140px]">
+        <div className="flex items-center gap-2 mb-1">
+          <h4 className="text-xs font-bold text-text-main leading-none">
             {activeSprint.name}
           </h4>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider">
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-success/10 text-success border border-success/20 font-bold uppercase tracking-wider">
             {activeSprint.status}
           </span>
         </div>
         
-        <div className="flex items-center gap-4 text-[10px] text-slate-500">
+        <div className="flex items-center gap-3 text-[10px] text-text-muted font-medium">
           <div className="flex items-center gap-1">
             <Calendar size={10} />
-            <span>Ends in 4 days</span>
+            <span>Oct 14</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-20 h-1.5 bg-white/[0.05] rounded-full overflow-hidden">
+          <div className="flex items-center gap-2 flex-1">
+            <div className="h-1 bg-background border border-border rounded-full flex-1 overflow-hidden">
               <div 
-                className="h-full bg-primary" 
+                className="h-full bg-success" 
                 style={{ width: `${progress}%` }} 
               />
             </div>
-            <span>{activeSprint.completedTasks}/{activeSprint.taskCount} Tasks</span>
+            <span className="font-mono text-[9px]">{activeSprint.completedTasks}/{activeSprint.taskCount}</span>
           </div>
         </div>
       </div>
 
-      <ChevronDown size={16} className="text-slate-600" />
+      <ChevronDown size={14} className="text-text-muted" />
     </div>
   );
 };

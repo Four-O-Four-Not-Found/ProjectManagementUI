@@ -1,29 +1,21 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export type BadgeVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'purple' | 'cyan';
-
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: BadgeVariant;
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'purple';
   size?: 'xs' | 'sm' | 'md';
   className?: string;
 }
 
-const Badge: React.FC<BadgeProps> = ({ 
-  children, 
-  variant = 'secondary', 
-  size = 'sm',
-  className 
-}) => {
+const Badge: React.FC<BadgeProps> = ({ children, variant = 'secondary', size = 'sm', className }) => {
   const variants = {
     primary: "bg-primary/10 text-primary border-primary/20",
-    secondary: "bg-white/[0.03] text-slate-400 border-white/[0.05]",
-    success: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    warning: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    danger: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-    purple: "bg-accent-purple/10 text-accent-purple border-accent-purple/20",
-    cyan: "bg-accent-cyan/10 text-accent-cyan border-accent-cyan/20",
+    secondary: "bg-surface border-border text-text-muted",
+    success: "bg-success/10 text-success border-success/20",
+    warning: "bg-warning/10 text-warning border-warning/20",
+    danger: "bg-danger/10 text-danger border-danger/20",
+    purple: "bg-merged/10 text-merged border-merged/20",
   };
 
   const sizes = {
@@ -34,7 +26,7 @@ const Badge: React.FC<BadgeProps> = ({
 
   return (
     <span className={twMerge(
-      "inline-flex items-center font-bold uppercase tracking-widest rounded-full border",
+      "inline-flex items-center justify-center font-bold border rounded-full uppercase tracking-wider",
       variants[variant],
       sizes[size],
       className

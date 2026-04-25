@@ -48,6 +48,8 @@ export interface Task {
     name: string;
     avatar: string;
   };
+  startDate?: string;
+  endDate?: string;
   attachments?: Attachment[];
   comments?: Comment[];
 }
