@@ -1,0 +1,94 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --color-primary: #2f81f7; /* GitHub Blue */
+  --color-primary-soft: rgba(56, 139, 253, 0.1);
+  --color-accent-purple: #bc8cff;
+  --color-accent-pink: #ff7b72;
+  
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  :root {
+    /* GitHub Dark Theme */
+    --background: #0d1117;
+    --surface: #161b22;
+    --surface-hover: #21262d;
+    --border: #30363d;
+    --border-hover: #8b949e;
+    --text-main: #c9d1d9;
+    --text-muted: #8b949e;
+    color-scheme: dark;
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background-color: var(--surface);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  
+  .glass-card {
+    background-color: var(--surface);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+  }
+  
+  .glass-card:hover {
+    background-color: var(--surface-hover);
+    border-color: var(--border-hover);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  }
+
+  .water-gradient-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, var(--color-primary), var(--color-accent-purple));
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+  }
+}
+
+.bg-mesh {
+  background-color: var(--background);
+  background-image: 
+    radial-gradient(at 0% 0%, var(--color-primary-soft) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--color-primary-soft) 0px, transparent 50%);
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
