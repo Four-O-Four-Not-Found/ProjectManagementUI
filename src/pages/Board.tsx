@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { 
   Plus, 
@@ -7,7 +7,9 @@ import {
   List as ListIcon, 
   Calendar as CalendarIcon, 
   Users as UsersIcon,
-  Settings
+  Settings,
+  ChevronDown,
+  Target
 } from "lucide-react";
 import TaskCard from "../components/molecules/TaskCard";
 import TaskDetailModal from "../components/organisms/TaskDetailModal";
@@ -35,6 +37,7 @@ type ViewTab = 'Board' | 'Backlog' | 'Timeline' | 'Team' | 'Settings';
 
 const Board: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
 	const { tasks, loading, fetchTasks, moveTask } = useProject();
 	const { success } = useToast();
   
@@ -43,6 +46,7 @@ const Board: React.FC = () => {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isSprintModalOpen, setIsSprintModalOpen] = useState(false);
+  const [isProjectSelectorOpen, setIsProjectSelectorOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const currentProject = MOCK_PROJECTS.find(p => p.id === projectId) || MOCK_PROJECTS[0];
@@ -61,9 +65,13 @@ const Board: React.FC = () => {
 		setIsTaskModalOpen(true);
 	};
 
-  const handleSaveTask = () => {
+  const handleSaveTask = (data: Partial<Task>) => {
     success('Action Successful', editingTask ? 'Task updated.' : 'New task created.');
     setIsTaskModalOpen(false);
+    // If the task was created for a different project, we might want to navigate there
+    if (!editingTask && data.projectId && data.projectId !== projectId) {
+       navigate(`/project/${data.projectId}`);
+    }
   };
 
   const handleCreateProject = (data: Partial<Project>) => {
@@ -109,7 +117,63 @@ const Board: React.FC = () => {
       />
 
 			<PageHeader
-				title={currentProject.name}
+				title={
+          <div className="relative">
+            <button 
+              onClick={() => setIsProjectSelectorOpen(!isProjectSelectorOpen)}
+              className="flex items-center gap-2 hover:bg-surface-hover px-2 py-1 -ml-2 rounded-md transition-all group"
+            >
+              <span>{currentProject.name}</span>
+              <ChevronDown size={18} className={`text-text-muted group-hover:text-text-main transition-transform ${isProjectSelectorOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {/* Project Switcher Dropdown */}
+            <AnimatePresence>
+              {isProjectSelectorOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setIsProjectSelectorOpen(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-full left-0 mt-2 w-72 bg-surface border border-border rounded-md shadow-2xl z-50 overflow-hidden"
+                  >
+                    <div className="p-2 border-b border-border bg-surface-hover">
+                       <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Switch Workspace</span>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto p-1 bg-background">
+                       {MOCK_PROJECTS.map(p => (
+                         <button
+                           key={p.id}
+                           onClick={() => {
+                             navigate(`/project/${p.id}`);
+                             setIsProjectSelectorOpen(false);
+                           }}
+                           className={`w-full flex items-center gap-3 p-3 rounded-md transition-all ${p.id === projectId ? 'bg-primary/10 border border-primary/20' : 'hover:bg-surface border border-transparent'}`}
+                         >
+                           <div className={`w-8 h-8 rounded flex items-center justify-center ${p.id === projectId ? 'bg-primary text-white' : 'bg-surface border border-border text-text-muted'}`}>
+                             <Target size={16} />
+                           </div>
+                           <div className="text-left">
+                             <p className={`text-xs font-bold ${p.id === projectId ? 'text-primary' : 'text-text-main'}`}>{p.name}</p>
+                             <p className="text-[10px] text-text-muted uppercase">{p.key}</p>
+                           </div>
+                         </button>
+                       ))}
+                    </div>
+                    <button 
+                      onClick={() => { setIsProjectModalOpen(true); setIsProjectSelectorOpen(false); }}
+                      className="w-full p-3 border-t border-border text-xs font-bold text-primary hover:bg-surface-hover transition-all flex items-center justify-center gap-2"
+                    >
+                      <Plus size={14} />
+                      Initialize New Workspace
+                    </button>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+        }
 				description={
           <div className="flex items-center gap-3">
             <span className="text-text-muted">{currentProject.description}</span>

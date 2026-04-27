@@ -54,7 +54,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, onMove, className })
       exit={{ opacity: 0, scale: 0.95 }}
       onClick={onClick}
       className={twMerge(
-        "glass-card p-4 rounded-2xl cursor-grab active:cursor-grabbing group hover:bg-white/[0.04] mb-3 relative overflow-hidden",
+        "glass-card p-4 rounded-2xl cursor-grab active:cursor-grabbing group hover:bg-surface-hover/50 mb-3 relative overflow-hidden",
         className
       )}
     >
@@ -66,7 +66,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, onMove, className })
       </button>
 
       {hasImage && thumbnail && (
-        <div className="mb-3 rounded-xl overflow-hidden h-32 border border-white/[0.05]">
+        <div className="mb-3 rounded-xl overflow-hidden h-32 border border-border">
           <img src={thumbnail} alt="Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         </div>
       )}
@@ -74,28 +74,28 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onClick, onMove, className })
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
           <TypeIcon type={task.type} />
-          <span className="text-[10px] font-mono text-muted bg-white/[0.03] px-1.5 py-0.5 rounded border border-white/[0.05]">
+          <span className="text-[10px] font-mono text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border">
             {task.taskId}
           </span>
         </div>
         <PriorityBadge priority={task.priority} />
       </div>
       
-      <h4 className="text-sm font-semibold text-main mb-4 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+      <h4 className="text-sm font-semibold text-text-main mb-4 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
         {task.title}
       </h4>
       
       <div className="flex justify-between items-center">
         <div className="flex items-center -space-x-2">
-          <Avatar name={task.assignee?.name || 'Unassigned'} size="xs" className="border-2 border-slate-900" />
+          <Avatar name={task.assignee?.name || 'Unassigned'} size="xs" className="border-2 border-background" />
           {task.hasGithub && (
-            <div className="w-6 h-6 rounded-lg border-2 border-slate-900 bg-primary/20 flex items-center justify-center text-primary shadow-[0_0_10px_rgba(56,189,248,0.3)] z-10">
+            <div className="w-6 h-6 rounded-lg border-2 border-background bg-primary/20 flex items-center justify-center text-primary shadow-[0_0_10px_rgba(56,189,248,0.3)] z-10">
               <GitBranch size={12} />
             </div>
           )}
         </div>
         
-        <div className="flex items-center gap-3 text-muted">
+        <div className="flex items-center gap-3 text-text-muted">
           <div className="flex items-center gap-1">
             <MessageSquare size={12} />
             <span className="text-[10px]">{task.comments?.length || 0}</span>

@@ -11,7 +11,8 @@ import { useAuth } from '../hooks/useAuth';
 
 const MainLayout: React.FC = () => {
   const { user } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
@@ -26,16 +27,33 @@ const MainLayout: React.FC = () => {
         isOpen={isAccountModalOpen}
         onClose={() => setIsAccountModalOpen(false)}
       />
-      {/* Sidebar */}
-      <Sidebar isCollapsed={!isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+      {/* Mobile Backdrop */}
+      {isMobileSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[90] lg:hidden"
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Desktop: Collapsible, Mobile: Drawer */}
+      <div className={`
+        fixed inset-y-0 left-0 z-[100] lg:relative lg:block transform transition-transform duration-300 ease-in-out
+        ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <Sidebar 
+          isCollapsed={isSidebarCollapsed} 
+          onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} 
+        />
+      </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 h-full relative">
         {/* Header */}
         <header className="h-16 flex items-center justify-between px-4 md:px-6 border-b border-border bg-surface z-20">
           <div className="flex items-center gap-4">
              <button 
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                onClick={() => setIsMobileSidebarOpen(true)}
                 className="p-2 rounded-md lg:hidden text-text-muted hover:bg-background transition-colors"
              >
                 <Menu size={20} />
@@ -81,7 +99,7 @@ const MainLayout: React.FC = () => {
         </header>
 
         {/* Content Outlet */}
-        <div className="flex-1 overflow-auto scrollbar-custom p-6 bg-background">
+        <div className="flex-1 overflow-auto scrollbar-custom p-4 md:p-6 bg-background">
           <div className="max-w-[1400px] mx-auto">
             <Outlet />
           </div>

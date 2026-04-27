@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
 
 @theme {
   /* GitHub Functional Colors */
@@ -8,6 +8,7 @@
   --color-danger: var(--github-red);
   --color-warning: var(--github-yellow);
   --color-merged: var(--github-purple);
+  --color-accent-purple: var(--accent-purple);
 
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -35,6 +36,7 @@
     --github-red: #da3633;
     --github-purple: #8957e5;
     --github-yellow: #d29922;
+    --accent-purple: #a371f7;
 
     color-scheme: dark;
   }
@@ -54,6 +56,7 @@
     --github-red: #cf222e;
     --github-purple: #8250df;
     --github-yellow: #bf8700;
+    --accent-purple: #6e40c9;
 
     color-scheme: light;
   }
@@ -65,6 +68,17 @@
     transition: background-color 0.2s ease, color 0.2s ease;
     margin: 0;
     -webkit-font-smoothing: antialiased;
+  }
+
+  select option {
+    background-color: var(--surface);
+    color: var(--text-main);
+  }
+
+  /* Focus rings for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--github-blue);
+    outline-offset: 2px;
   }
 }
 
