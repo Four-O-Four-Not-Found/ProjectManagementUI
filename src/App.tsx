@@ -11,34 +11,39 @@ import ListView from "./pages/ListView";
 import Team from "./pages/Team";
 import GitHubAdmin from "./pages/GitHubAdmin";
 import Login from "./pages/Login";
+import JoinTeam from "./pages/JoinTeam";
 
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { ToastProvider } from "./context/ToastProvider";
 import { SignalRProvider } from "./context/SignalRProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
+import { ConfirmProvider } from "./context/ConfirmProvider";
 
 function App() {
 	return (
 		<Provider store={store}>
 			<ThemeProvider>
 				<ToastProvider>
-					<SignalRProvider>
-						<Router>
-							<Routes>
-								<Route path="/login" element={<Login />} />
-								<Route path="/" element={<MainLayout />}>
-									<Route index element={<Dashboard />} />
-									<Route path="project/:projectId" element={<Board />} />
-									<Route path="board" element={<Board />} />
-									<Route path="list" element={<ListView />} />
-									<Route path="github" element={<GitHubAdmin />} />
-									<Route path="team" element={<Team />} />
-									<Route path="*" element={<Navigate to="/" replace />} />
-								</Route>
-							</Routes>
-						</Router>
-					</SignalRProvider>
+					<ConfirmProvider>
+						<SignalRProvider>
+							<Router>
+								<Routes>
+									<Route path="/login" element={<Login />} />
+									<Route path="/" element={<MainLayout />}>
+										<Route index element={<Dashboard />} />
+										<Route path="project/:projectId" element={<Board />} />
+										<Route path="board" element={<Board />} />
+										<Route path="list" element={<ListView />} />
+										<Route path="github" element={<GitHubAdmin />} />
+										<Route path="team" element={<Team />} />
+										<Route path="join/:inviteCode" element={<JoinTeam />} />
+										<Route path="*" element={<Navigate to="/" replace />} />
+									</Route>
+								</Routes>
+							</Router>
+						</SignalRProvider>
+					</ConfirmProvider>
 				</ToastProvider>
 			</ThemeProvider>
 		</Provider>

@@ -5,6 +5,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   isLoading?: boolean;
+  loading?: boolean;
+  fullWidth?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
@@ -14,11 +16,14 @@ const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   isLoading,
+  loading,
+  fullWidth,
   leftIcon,
   rightIcon,
   children,
   ...props
 }) => {
+  const isButtonLoading = isLoading || loading;
   const baseStyles = "inline-flex items-center justify-center rounded-md font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed";
   
   const variants = {
@@ -38,11 +43,17 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={twMerge(baseStyles, variants[variant], sizes[size], className)}
-      disabled={isLoading || props.disabled}
+      className={twMerge(
+        baseStyles, 
+        variants[variant], 
+        sizes[size], 
+        fullWidth ? "w-full" : "",
+        className
+      )}
+      disabled={isButtonLoading || props.disabled}
       {...props}
     >
-      {isLoading ? (
+      {isButtonLoading ? (
         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
       ) : (
         <>

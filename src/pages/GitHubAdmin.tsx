@@ -10,6 +10,9 @@ import Button from '../components/atoms/Button';
 import GlassCard from '../components/molecules/GlassCard';
 import PageHeader from '../components/molecules/PageHeader';
 
+import { useConfirm } from '../hooks/useConfirm';
+import { useToast } from '../hooks/useToast';
+
 const repositories = [
   { id: '1', name: 'ProjectManager.API', status: 'Healthy', branch: 'main', lastSync: '2m ago' },
   { id: '2', name: 'ProjectManager.UI', status: 'Healthy', branch: 'develop', lastSync: '15m ago' },
@@ -17,6 +20,35 @@ const repositories = [
 ];
 
 const GitHubAdmin: React.FC = () => {
+  const { confirm } = useConfirm();
+  const { success, error } = useToast();
+
+  const handleDeleteRepository = async (repoName: string) => {
+    const ok = await confirm({
+      title: 'Disconnect Repository',
+      message: `Are you sure you want to disconnect ${repoName}? This will stop all automated pipeline triggers.`,
+      confirmText: 'Disconnect',
+      type: 'danger'
+    });
+
+    if (ok) {
+      success('Repository Disconnected', `${repoName} has been removed from the pipeline.`);
+    }
+  };
+
+  const handleDeleteBranch = async (branchName: string) => {
+    const ok = await confirm({
+      title: 'Prune Stale Branch',
+      message: `You are about to delete ${branchName} from the remote. This action is irreversible.`,
+      confirmText: 'Delete Forever',
+      type: 'danger'
+    });
+
+    if (ok) {
+      success('Branch Pruned', `${branchName} has been deleted.`);
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in pb-10">
       <PageHeader 
@@ -59,7 +91,12 @@ const GitHubAdmin: React.FC = () => {
                        </div>
                        <p className="text-[10px] text-slate-500 uppercase">Last sync: {repo.lastSync}</p>
                     </div>
-                    <Button variant="ghost" size="sm" className="text-slate-500 hover:text-rose-500">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-slate-500 hover:text-rose-500"
+                      onClick={() => handleDeleteRepository(repo.name)}
+                    >
                       <Trash2 size={18} />
                     </Button>
                   </div>
@@ -86,7 +123,12 @@ const GitHubAdmin: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-4">
                        <span className="text-xs text-rose-400 font-bold">{branch.days} days stale</span>
-                       <button className="text-[10px] font-bold text-primary hover:underline uppercase tracking-widest">Delete</button>
+                       <button 
+                        onClick={() => handleDeleteBranch(branch.name)}
+                        className="text-[10px] font-bold text-primary hover:underline uppercase tracking-widest"
+                      >
+                        Delete
+                      </button>
                     </div>
                  </div>
                ))}

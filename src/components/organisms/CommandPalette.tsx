@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Search, Command, ArrowRight, Zap, Target, Users } from "lucide-react";
+import { ArrowRight, Zap, Target, Users, Search, Command } from "lucide-react";
+import BaseModal from "../molecules/BaseModal";
 
 const CommandPalette: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -27,87 +27,75 @@ const CommandPalette: React.FC = () => {
 	].filter((item) => item.title.toLowerCase().includes(search.toLowerCase()));
 
 	return (
-		<AnimatePresence>
-			{isOpen && (
-				<>
-					<motion.div
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						onClick={() => setIsOpen(false)}
-						className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200]"
+		<BaseModal
+			isOpen={isOpen}
+			onClose={() => setIsOpen(false)}
+			size="lg"
+			title={
+				<div className="flex items-center gap-3 w-full">
+					<Search size={18} className="text-text-muted" />
+					<input
+						autoFocus
+						type="text"
+						placeholder="Search tasks, projects, or team members..."
+						className="bg-transparent flex-1 outline-none text-text-main text-sm"
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
 					/>
-					<motion.div
-						initial={{ opacity: 0, scale: 0.95, y: -20 }}
-						animate={{ opacity: 1, scale: 1, y: 0 }}
-						exit={{ opacity: 0, scale: 0.95, y: -20 }}
-						className="fixed top-[10%] md:top-[20%] left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl glass-panel rounded-2xl overflow-hidden z-[201] border-white/[0.1] shadow-2xl"
-					>
-						<div className="p-4 border-b border-white/[0.05] flex items-center gap-3">
-							<Search size={20} className="text-slate-500" />
-							<input
-								autoFocus
-								type="text"
-								placeholder="Search tasks, projects, or team members..."
-								className="bg-transparent flex-1 outline-none text-slate-200 text-lg"
-								value={search}
-								onChange={(e) => setSearch(e.target.value)}
-							/>
-							<div className="flex items-center gap-1 px-2 py-1 bg-white/[0.05] rounded text-[10px] text-slate-500 font-bold uppercase">
-								ESC
-							</div>
-						</div>
-
-						<div className="max-h-[400px] overflow-y-auto p-2 scrollbar-custom">
-							{results.length > 0 ? (
-								results.map((item) => (
-									<div
-										key={item.id}
-										className="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.05] cursor-pointer group transition-all"
-									>
-										<div className="flex items-center gap-4">
-											<div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-												<item.icon size={18} />
-											</div>
-											<div>
-												<p className="text-sm font-semibold text-white">
-													{item.title}
-												</p>
-												<p className="text-[10px] text-slate-500 uppercase tracking-widest">
-													{item.type}
-												</p>
-											</div>
-										</div>
-										<ArrowRight
-											size={16}
-											className="text-slate-600 group-hover:text-primary transition-all group-hover:translate-x-1 opacity-0 group-hover:opacity-100"
-										/>
-									</div>
-								))
-							) : (
-								<div className="p-12 text-center">
-									<p className="text-slate-500">
-										No results found for "{search}"
+					<div className="hidden md:flex items-center gap-1 px-1.5 py-0.5 bg-surface border border-border rounded text-[9px] text-text-muted font-bold uppercase">
+						ESC
+					</div>
+				</div>
+			}
+			footer={
+				<div className="w-full flex items-center justify-between text-[9px] text-text-muted font-bold uppercase tracking-widest px-1">
+					<div className="flex gap-4">
+						<span className="flex items-center gap-1">
+							<ArrowRight size={10} /> Navigate
+						</span>
+						<span className="flex items-center gap-1">
+							<Command size={10} /> Select
+						</span>
+					</div>
+					<span className="opacity-50">FlowState Search</span>
+				</div>
+			}
+		>
+			<div className="max-h-[350px] overflow-y-auto scrollbar-custom -mx-2">
+				{results.length > 0 ? (
+					results.map((item) => (
+						<div
+							key={item.id}
+							className="flex items-center justify-between p-3 rounded-xl hover:bg-surface-hover cursor-pointer group transition-all border border-transparent hover:border-border"
+						>
+							<div className="flex items-center gap-4">
+								<div className="w-10 h-10 rounded-lg bg-surface border border-border flex items-center justify-center text-text-muted group-hover:text-primary transition-colors">
+									<item.icon size={18} />
+								</div>
+								<div>
+									<p className="text-sm font-semibold text-text-main">
+										{item.title}
+									</p>
+									<p className="text-[10px] text-text-muted uppercase tracking-widest">
+										{item.type}
 									</p>
 								</div>
-							)}
-						</div>
-
-						<div className="p-3 border-t border-white/[0.05] bg-white/[0.01] flex items-center justify-between text-[10px] text-slate-500 font-bold uppercase tracking-widest">
-							<div className="flex gap-4">
-								<span className="flex items-center gap-1">
-									<ArrowRight size={10} /> Navigate
-								</span>
-								<span className="flex items-center gap-1">
-									<Command size={10} /> Select
-								</span>
 							</div>
-							<span>FlowState Search</span>
+							<ArrowRight
+								size={16}
+								className="text-text-muted group-hover:text-primary transition-all group-hover:translate-x-1 opacity-0 group-hover:opacity-100"
+							/>
 						</div>
-					</motion.div>
-				</>
-			)}
-		</AnimatePresence>
+					))
+				) : (
+					<div className="py-12 text-center">
+						<p className="text-text-muted text-sm italic">
+							No results found for "{search}"
+						</p>
+					</div>
+				)}
+			</div>
+		</BaseModal>
 	);
 };
 

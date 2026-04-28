@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
 interface BaseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  title: React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -57,10 +57,16 @@ const BaseModal: React.FC<BaseModalProps> = ({
           >
             {/* Header */}
             <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-surface-hover">
-              <h3 className="text-sm font-semibold text-text-main">{title}</h3>
+              <div className="flex-1">
+                {typeof title === 'string' ? (
+                  <h3 className="text-sm font-semibold text-text-main">{title}</h3>
+                ) : (
+                  title
+                )}
+              </div>
               <button 
                 onClick={onClose}
-                className="p-1.5 rounded-md hover:bg-background text-text-muted hover:text-text-main transition-colors"
+                className="p-1.5 rounded-md hover:bg-background text-text-muted hover:text-text-main transition-colors ml-4"
               >
                 <X size={18} />
               </button>
