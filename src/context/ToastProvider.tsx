@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { AnimatePresence } from "framer-motion";
 import Toast from "../components/atoms/Toast";
 import type { ToastMessage, ToastType } from "../components/atoms/Toast";
@@ -21,17 +21,19 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 		setToasts((prev) => prev.filter((t) => t.id !== id));
 	}, []);
 
-	const success = (title: string, message?: string) =>
-		showToast(title, "success", message);
-	const error = (title: string, message?: string) =>
-		showToast(title, "error", message);
-	const warning = (title: string, message?: string) =>
-		showToast(title, "warning", message);
-	const info = (title: string, message?: string) =>
-		showToast(title, "info", message);
+	const success = useCallback((title: string, message?: string) =>
+		showToast(title, "success", message), [showToast]);
+	const error = useCallback((title: string, message?: string) =>
+		showToast(title, "error", message), [showToast]);
+	const warning = useCallback((title: string, message?: string) =>
+		showToast(title, "warning", message), [showToast]);
+	const info = useCallback((title: string, message?: string) =>
+		showToast(title, "info", message), [showToast]);
+
+	const contextValue = useMemo(() => ({ showToast, success, error, warning, info }), [showToast, success, error, warning, info]);
 
 	return (
-		<ToastContext.Provider value={{ showToast, success, error, warning, info }}>
+		<ToastContext.Provider value={contextValue}>
 			{children}
 			<div className="fixed bottom-0 right-0 p-6 flex flex-col gap-4 z-[1000] pointer-events-none">
 				<AnimatePresence mode="popLayout">

@@ -1,24 +1,35 @@
-import type { User } from '../types';
-import { MOCK_USER } from '../mocks/data';
+import axios from "axios";
+import type { User } from "../types";
+
+const API_URL = "https://localhost:7296/api/auth";
 
 const authService = {
-  login: async (credentials: Record<string, unknown>): Promise<{ user: User; token: string }> => {
-    console.log('Logging in with:', credentials);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          user: MOCK_USER,
-          token: 'mock-jwt-token'
-        });
-      }, 1000);
-    });
-  },
+	// Existing login remains mock for now as it's handled via GitHub redirect
+	login: async (
+		credentials: Record<string, unknown>,
+	): Promise<{ user: User; token: string }> => {
+		console.log("Logging in with:", credentials);
+		return Promise.reject("Standard login disabled. Use GitHub.");
+	},
 
-  logout: async (): Promise<void> => {
-    return new Promise((resolve) => {
-      setTimeout(resolve, 500);
-    });
-  }
+	logout: async (): Promise<void> => {
+		try {
+			const storage = localStorage.getItem("auth-storage");
+			const token = storage ? JSON.parse(storage).state?.token : null;
+
+			await axios.post(
+				`${API_URL}/logout`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			);
+		} catch (err) {
+			console.error("Backend logout failed:", err);
+		}
+	},
 };
 
 export default authService;

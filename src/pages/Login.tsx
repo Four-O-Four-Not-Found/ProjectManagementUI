@@ -1,32 +1,55 @@
-import React, { useState } from "react";
-import { GitBranch, Mail, Lock, ArrowRight, Target } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect } from "react";
+import { GitBranch, Target } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../components/atoms/Button";
-import Input from "../components/atoms/Input";
-import { useAuth } from "../hooks/useAuth";
+import { useAuthStore } from "../store/useAuthStore";
 import { useToast } from "../hooks/useToast";
+import LoadingScreen from "../components/organisms/LoadingScreen";
 
 const Login: React.FC = () => {
-	const { login, loading } = useAuth();
 	const navigate = useNavigate();
-	const { success, error } = useToast();
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [searchParams] = useSearchParams();
+	const { setToken, isAuthenticated } = useAuthStore();
+	const { success, warning: toastWarning } = useToast();
 
-	const handleLogin = async (e: React.FormEvent) => {
-		e.preventDefault();
-		try {
-			await login({ email, password });
-			success("Welcome back!", "Successfully logged into your workspace.");
-			navigate("/");
-		} catch (err) {
-			const message =
-				err instanceof Error
-					? err.message
-					: "Invalid credentials. Please try again.";
-			error("Login Failed", message);
+	const isProcessing = !!searchParams.get("token");
+
+	useEffect(() => {
+		const token = searchParams.get("token");
+		const error = searchParams.get("error");
+
+		if (error === "access_denied") {
+			toastWarning(
+				"Authorization Cancelled",
+				"GitHub access was denied. You need to authorize the app to access your workspace.",
+			);
+			// Clean up URL
+			navigate("/login", { replace: true });
+			return;
 		}
+
+		if (token) {
+			// Small delay to show the beautiful loader and ensure state is synced
+			const timer = setTimeout(() => {
+				setToken(token);
+				success(
+					"Authentication Successful",
+					"Welcome to your FlowState workspace.",
+				);
+				navigate("/board");
+			}, 1500);
+			return () => clearTimeout(timer);
+		} else if (isAuthenticated) {
+			navigate("/board");
+		}
+	}, [searchParams, setToken, navigate, success, toastWarning, isAuthenticated]);
+
+	if (isProcessing) {
+		return <LoadingScreen />;
+	}
+
+	const handleGitHubLogin = () => {
+		window.location.href = "https://localhost:7296/api/auth/login-github";
 	};
 
 	return (
@@ -36,85 +59,48 @@ const Login: React.FC = () => {
 			<div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-purple/10 rounded-full blur-[120px] animate-pulse delay-700"></div>
 
 			<div className="w-full max-w-md animate-fade-in relative z-10">
-				<div className="glass-panel p-8 md:p-10 rounded-[32px] border-white/[0.1] shadow-2xl">
-					<div className="flex flex-col items-center mb-10 text-center">
-						<div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(56,189,248,0.4)]">
-							<Target size={32} className="text-slate-900" />
+				<div className="glass-panel p-10 md:p-12 rounded-[40px] border-white/[0.1] shadow-2xl flex flex-col items-center">
+					<div className="flex flex-col items-center mb-12 text-center">
+						<div className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center mb-8 shadow-[0_0_40px_rgba(56,189,248,0.5)]">
+							<Target size={40} className="text-slate-900" />
 						</div>
-						<h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
+						<h1 className="text-5xl font-bold text-white mb-3 tracking-tighter">
 							FlowState
 						</h1>
-						<p className="text-slate-400">Precision Project Orchestration</p>
+						<p className="text-slate-400 text-lg">
+							Precision Project Orchestration
+						</p>
 					</div>
 
-					<form onSubmit={handleLogin} className="space-y-6">
-						<Input
-							label="Work Email"
-							type="email"
-							placeholder="name@company.com"
-							icon={<Mail size={18} />}
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							required
-						/>
-						<Input
-							label="Password"
-							type="password"
-							placeholder="••••••••"
-							icon={<Lock size={18} />}
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
-						/>
-
-						<div className="flex items-center justify-between text-xs">
-							<label className="flex items-center gap-2 text-slate-400 cursor-pointer">
-								<input
-									type="checkbox"
-									className="w-4 h-4 rounded border-white/[0.1] bg-white/[0.02]"
-								/>
-								Remember me
-							</label>
-							<button type="button" className="text-primary hover:underline">
-								Forgot password?
-							</button>
+					<div className="w-full space-y-6">
+						<div className="text-center space-y-2 mb-8">
+							<h2 className="text-white font-medium">Access Restricted</h2>
+							<p className="text-slate-500 text-sm">
+								Please authenticate with your GitHub workspace account to
+								proceed.
+							</p>
 						</div>
 
 						<Button
-							type="submit"
-							className="w-full py-4 text-lg"
-							isLoading={loading}
-							rightIcon={<ArrowRight size={20} />}
+							variant="primary"
+							className="w-full py-5 text-lg font-black tracking-tight"
+							leftIcon={<GitBranch size={24} />}
+							onClick={handleGitHubLogin}
 						>
-							Sign In
+							Continue with GitHub
 						</Button>
-					</form>
 
-					<div className="mt-8">
-						<div className="relative flex items-center justify-center mb-8">
-							<div className="flex-grow border-t border-white/[0.05]"></div>
-							<span className="mx-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
-								or connect with
-							</span>
-							<div className="flex-grow border-t border-white/[0.05]"></div>
-						</div>
-
-						<Button
-							variant="secondary"
-							className="w-full py-4"
-							leftIcon={<GitBranch size={20} />}
-						>
-							GitHub OAuth
-						</Button>
+						<p className="text-[10px] text-center text-slate-600 uppercase tracking-widest font-bold mt-8">
+							Authorized Workspace Access Only
+						</p>
 					</div>
 				</div>
 
-				<p className="text-center mt-8 text-slate-500 text-sm">
-					Don't have an account?{" "}
-					<button className="text-primary font-bold hover:underline">
-						Request Access
-					</button>
-				</p>
+				<div className="mt-12 flex justify-center gap-6 opacity-40">
+					<div className="w-2 h-2 rounded-full bg-slate-500"></div>
+					<div className="w-2 h-2 rounded-full bg-slate-500"></div>
+					<div className="w-2 h-2 rounded-full bg-slate-500"></div>
+				</div>
 			</div>
 		</div>
 	);

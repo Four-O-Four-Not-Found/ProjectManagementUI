@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { MoreVertical, UserPlus, Users, Share2, Plus, Loader2 } from "lucide-react";
 import Badge from "../components/atoms/Badge";
 import Avatar from "../components/atoms/Avatar";
@@ -21,24 +21,33 @@ const Team: React.FC = () => {
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 	const { success, error } = useToast();
 	const { user } = useAuthStore();
+	const hasInitialized = useRef(false);
 
-	const fetchTeams = useCallback(async () => {
+	const fetchTeams = useCallback(async (isInitial = false) => {
 		try {
 			const data = await teamService.getWorkspaceTeams(DEFAULT_WORKSPACE_ID);
 			setTeams(data);
-			if (data.length > 0 && !selectedTeam) {
-				const fullTeam = await teamService.getTeam(data[0].id);
-				setSelectedTeam(fullTeam);
+			
+			if (isInitial && data.length > 0) {
+				try {
+					const fullTeam = await teamService.getTeam(data[0].id);
+					setSelectedTeam(fullTeam);
+				} catch {
+					setSelectedTeam(data[0]);
+				}
 			}
 		} catch {
 			error("Sync Failed", "Could not synchronize team registry.");
 		} finally {
 			setLoading(false);
 		}
-	}, [selectedTeam, error]);
+	}, [error]);
 
 	useEffect(() => {
-		fetchTeams();
+		if (!hasInitialized.current) {
+			hasInitialized.current = true;
+			fetchTeams(true);
+		}
 	}, [fetchTeams]);
 
 	const handleTeamSelect = async (teamId: string) => {

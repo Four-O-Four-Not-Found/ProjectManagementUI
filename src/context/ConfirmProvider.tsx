@@ -1,19 +1,6 @@
-import React, { createContext, useState, useCallback, ReactNode } from 'react';
-import ConfirmDialog, { ConfirmType } from '../components/molecules/ConfirmDialog';
-
-interface ConfirmOptions {
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  type?: ConfirmType;
-}
-
-interface ConfirmContextType {
-  confirm: (options: ConfirmOptions) => Promise<boolean>;
-}
-
-export const ConfirmContext = createContext<ConfirmContextType | undefined>(undefined);
+import React, { useState, useCallback, type ReactNode } from 'react';
+import ConfirmDialog from '../components/molecules/ConfirmDialog';
+import { ConfirmContext, type ConfirmOptions } from './ConfirmContext';
 
 export const ConfirmProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);

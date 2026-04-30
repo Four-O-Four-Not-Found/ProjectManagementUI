@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Bell, MessageSquare, AlertCircle } from 'lucide-react';
+import { X, Bell } from 'lucide-react';
 
 interface NotificationCenterProps {
   isOpen: boolean;
@@ -8,13 +8,17 @@ interface NotificationCenterProps {
 }
 
 import NotificationItem from '../molecules/NotificationItem';
+import { useNotificationStore } from '../../store/useNotificationStore';
+import { Loader2, Inbox } from 'lucide-react';
 
 const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose }) => {
-  const notifications = [
-    { id: '1', title: 'Mentioned you in WEB-42', description: "I've updated the SignalR handlers, please check.", type: 'mention', time: '2m ago', icon: MessageSquare },
-    { id: '2', title: 'Webhook Delivery Failed', description: 'GitHub reported a 401 Unauthorized for WEB-43.', type: 'error', time: '15m ago', icon: AlertCircle },
-    { id: '3', title: 'Task Assigned', description: 'You have been assigned to WEB-46.', type: 'info', time: '1h ago', icon: Bell },
-  ];
+  const { notifications, loading, fetchNotifications, markAllAsRead, markAsRead } = useNotificationStore();
+
+  React.useEffect(() => {
+    if (isOpen) {
+      fetchNotifications();
+    }
+  }, [isOpen, fetchNotifications]);
 
   return (
     <AnimatePresence>
@@ -48,13 +52,32 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-custom">
-              {notifications.map((notif) => (
-                <NotificationItem key={notif.id} notification={notif} />
-              ))}
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                  <Loader2 className="animate-spin text-primary" size={32} />
+                  <p className="text-sm text-slate-500 font-mono">Syncing inbox...</p>
+                </div>
+              ) : notifications.length > 0 ? (
+                notifications.map((notif) => (
+                  <NotificationItem 
+                    key={notif.id} 
+                    notification={notif} 
+                    onClick={() => markAsRead(notif.id)}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-20 space-y-4 opacity-50">
+                  <Inbox size={48} className="text-slate-600" />
+                  <p className="text-sm text-slate-500">Your inbox is clear.</p>
+                </div>
+              )}
             </div>
 
             <div className="p-4 border-t border-white/[0.05] bg-white/[0.01]">
-               <button className="w-full py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05] text-sm font-bold text-slate-300 hover:text-white hover:bg-white/[0.05] transition-all">
+               <button 
+                onClick={markAllAsRead}
+                className="w-full py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05] text-sm font-bold text-slate-300 hover:text-white hover:bg-white/[0.05] transition-all"
+               >
                  Mark all as read
                </button>
             </div>

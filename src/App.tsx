@@ -20,7 +20,11 @@ import { SignalRProvider } from "./context/SignalRProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ConfirmProvider } from "./context/ConfirmProvider";
 
+import { useAuthStore } from "./store/useAuthStore";
+
 function App() {
+	const { isAuthenticated } = useAuthStore();
+
 	return (
 		<Provider store={store}>
 			<ThemeProvider>
@@ -30,16 +34,23 @@ function App() {
 							<Router>
 								<Routes>
 									<Route path="/login" element={<Login />} />
-									<Route path="/" element={<MainLayout />}>
-										<Route index element={<Dashboard />} />
-										<Route path="project/:projectId" element={<Board />} />
-										<Route path="board" element={<Board />} />
-										<Route path="list" element={<ListView />} />
-										<Route path="github" element={<GitHubAdmin />} />
-										<Route path="team" element={<Team />} />
-										<Route path="join/:inviteCode" element={<JoinTeam />} />
-										<Route path="*" element={<Navigate to="/" replace />} />
-									</Route>
+									{isAuthenticated ? (
+										<Route path="/" element={<MainLayout />}>
+											<Route index element={<Dashboard />} />
+											<Route path="project/:projectId" element={<Board />} />
+											<Route path="board" element={<Board />} />
+											<Route path="list" element={<ListView />} />
+											<Route path="github" element={<GitHubAdmin />} />
+											<Route path="team" element={<Team />} />
+											<Route path="join/:inviteCode" element={<JoinTeam />} />
+											<Route path="*" element={<Navigate to="/" replace />} />
+										</Route>
+									) : (
+										<Route
+											path="*"
+											element={<Navigate to="/login" replace />}
+										/>
+									)}
 								</Routes>
 							</Router>
 						</SignalRProvider>
