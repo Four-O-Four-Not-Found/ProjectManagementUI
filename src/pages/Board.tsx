@@ -10,6 +10,7 @@ import {
 	Settings,
 	ChevronDown,
 	Target,
+	Save,
 } from "lucide-react";
 import TaskCard from "../components/molecules/TaskCard";
 import TaskDetailModal from "../components/organisms/TaskDetailModal";
@@ -25,7 +26,10 @@ import type { Task, Sprint, Project } from "../types";
 import { useProject } from "../hooks/useProject";
 import { useToast } from "../hooks/useToast";
 import LoadingScreen from "../components/organisms/LoadingScreen";
-import { MOCK_SPRINTS, MOCK_PROJECTS } from "../mocks/data";
+import { MOCK_SPRINTS } from "../mocks/data";
+import { projectService } from "../services/projectService";
+import teamService, { type Team } from "../services/teamService";
+import { githubService, type GitHubRepo } from "../services/githubService";
 
 const columns = [
 	{ id: "Todo", title: "To Do", color: "border-slate-500" },
@@ -40,7 +44,7 @@ const Board: React.FC = () => {
 	const { projectId } = useParams<{ projectId: string }>();
 	const navigate = useNavigate();
 	const { tasks, loading, fetchTasks, moveTask } = useProject();
-	const { success } = useToast();
+	const { success, error } = useToast();
 
 	const [activeTab, setActiveTab] = useState<ViewTab>("Board");
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -50,12 +54,95 @@ const Board: React.FC = () => {
 	const [isProjectSelectorOpen, setIsProjectSelectorOpen] = useState(false);
 	const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-	const currentProject =
-		MOCK_PROJECTS.find((p) => p.id === projectId) || MOCK_PROJECTS[0];
+	const [currentProject, setCurrentProject] = useState<Project | null>(null);
+	const [allProjects, setAllProjects] = useState<Project[]>([]);
+	const [workspaceTeams, setWorkspaceTeams] = useState<Team[]>([]);
+	const [projectTeam, setProjectTeam] = useState<Team | null>(null);
+	const [repos, setRepos] = useState<GitHubRepo[]>([]);
+	const [isInitializing, setIsInitializing] = useState(true);
 
 	useEffect(() => {
-		fetchTasks(projectId || "1");
-	}, [fetchTasks, projectId]);
+		if (activeTab === "Team" && currentProject?.teamId) {
+			teamService
+				.getTeam(currentProject.teamId)
+				.then(setProjectTeam)
+				.catch(console.error);
+		}
+	}, [activeTab, currentProject?.teamId]);
+
+	const handleRoleChange = async (profileId: string, newRole: string) => {
+		if (!currentProject?.teamId) return;
+		try {
+			await teamService.updateMemberRole(
+				currentProject.teamId,
+				profileId,
+				newRole,
+			);
+			success("Role Updated", "Member role has been changed for this project.");
+			setProjectTeam((prev) => {
+				if (!prev) return prev;
+				return {
+					...prev,
+					members: prev.members?.map((m) =>
+						m.profileId === profileId ? { ...m, role: newRole } : m,
+					),
+				};
+			});
+		} catch {
+			error("Update Failed", "Could not change member role.");
+		}
+	};
+
+	useEffect(() => {
+		if (activeTab === "Settings" && currentProject?.workspaceId) {
+			Promise.all([
+				teamService
+					.getWorkspaceTeams(currentProject.workspaceId)
+					.catch(() => []),
+				githubService.getRepositories().catch(() => []),
+			]).then(([teamsData, reposData]) => {
+				setWorkspaceTeams(teamsData);
+				setRepos(reposData);
+			});
+		}
+	}, [activeTab, currentProject?.workspaceId]);
+
+	useEffect(() => {
+		let isMounted = true;
+
+		if (projectId) {
+			Promise.all([
+				projectService
+					.getProjectBoard(projectId)
+					.then((p) => isMounted && setCurrentProject(p)),
+				projectService
+					.getProjects()
+					.then((p) => isMounted && setAllProjects(p)),
+			])
+				.catch(console.error)
+				.finally(() => {
+					if (isMounted) setIsInitializing(false);
+				});
+			fetchTasks(projectId);
+		} else {
+			// If no project ID is provided, try to load the first available project
+			projectService.getProjects().then((projects) => {
+				if (!isMounted) return;
+				if (projects.length > 0) {
+					navigate(`/project/${projects[0].id}`, { replace: true });
+				} else {
+					// No projects exist, bounce back to dashboard
+					navigate(`/`, { replace: true });
+				}
+			});
+		}
+
+		return () => {
+			isMounted = false;
+			setCurrentProject(null);
+			setIsInitializing(true);
+		};
+	}, [fetchTasks, projectId, navigate]);
 
 	const handleMoveTask = async (taskId: string, newStatus: Task["status"]) => {
 		await moveTask(taskId, newStatus);
@@ -92,7 +179,7 @@ const Board: React.FC = () => {
 		setIsSprintModalOpen(false);
 	};
 
-	if (loading && tasks.length === 0) {
+	if ((loading && tasks.length === 0) || isInitializing || !currentProject) {
 		return <LoadingScreen />;
 	}
 
@@ -158,7 +245,7 @@ const Board: React.FC = () => {
 											</span>
 										</div>
 										<div className="max-h-64 overflow-y-auto p-1 bg-background">
-											{MOCK_PROJECTS.map((p) => (
+											{allProjects.map((p) => (
 												<button
 													key={p.id}
 													onClick={() => {
@@ -302,18 +389,29 @@ const Board: React.FC = () => {
 									/>
 
 									<div className="flex-1 bg-surface/30 rounded-md p-2 min-h-0 overflow-y-auto scrollbar-custom space-y-1 border border-border">
-										{tasks
-											.filter((task) => task.status === col.id)
-											.map((task) => (
-												<TaskCard
-													key={task.id}
-													task={task}
-													onClick={() => setSelectedTask(task)}
-													onMove={(newStatus) =>
-														handleMoveTask(task.id, newStatus)
-													}
-												/>
-											))}
+										{tasks.filter((task) => task.status === col.id).length ===
+										0 ? (
+											<button
+												onClick={handleAddTask}
+												className="w-full p-4 border border-dashed border-border rounded-lg text-sm text-text-muted hover:border-primary hover:text-primary transition-colors flex flex-col items-center gap-2"
+											>
+												<Plus size={20} />
+												<span>Add task to start</span>
+											</button>
+										) : (
+											tasks
+												.filter((task) => task.status === col.id)
+												.map((task) => (
+													<TaskCard
+														key={task.id}
+														task={task}
+														onClick={() => setSelectedTask(task)}
+														onMove={(newStatus) =>
+															handleMoveTask(task.id, newStatus)
+														}
+													/>
+												))
+										)}
 									</div>
 								</div>
 							))}
@@ -372,19 +470,392 @@ const Board: React.FC = () => {
 							initial={{ opacity: 0, x: 20 }}
 							animate={{ opacity: 1, x: 0 }}
 							exit={{ opacity: 0, x: -20 }}
-							className="h-full bg-surface/30 border border-border rounded-md p-12 flex flex-col items-center justify-center text-center space-y-4"
+							className="h-full bg-surface/30 border border-border rounded-md overflow-hidden flex flex-col"
 						>
-							<div className="w-16 h-16 rounded-full bg-surface border border-border flex items-center justify-center text-text-muted">
-								<CalendarIcon size={32} />
+							<div className="p-4 border-b border-border bg-surface-hover flex justify-between items-center">
+								<h3 className="font-bold text-text-main flex items-center gap-2">
+									<CalendarIcon size={16} className="text-primary" />
+									Gantt Chart
+								</h3>
+								<div className="flex gap-2">
+									<Button variant="secondary" size="sm">
+										Today
+									</Button>
+									<Button variant="secondary" size="sm">
+										Months
+									</Button>
+								</div>
 							</div>
-							<div>
-								<h3 className="font-bold text-text-main">Project Roadmap</h3>
-								<p className="text-sm text-text-muted mt-2 max-w-sm">
-									The interactive timeline view is currently synchronizing with
-									the {currentProject.key} milestones.
-								</p>
+							<div className="flex-1 p-8 flex flex-col items-center justify-center text-center space-y-4">
+								<div className="w-16 h-16 rounded-full bg-surface border border-border flex items-center justify-center text-text-muted">
+									<CalendarIcon size={32} />
+								</div>
+								<div>
+									<h3 className="font-bold text-text-main">
+										No tasks scheduled
+									</h3>
+									<p className="text-sm text-text-muted mt-2 max-w-sm">
+										Add tasks with start and end dates to visualize them on the
+										Gantt chart timeline.
+									</p>
+								</div>
+								<Button
+									variant="primary"
+									onClick={handleAddTask}
+									leftIcon={<Plus size={16} />}
+								>
+									Add task to start
+								</Button>
 							</div>
-							<Button variant="secondary">View Full Calendar</Button>
+						</motion.div>
+					)}
+
+					{activeTab === "Team" && (
+						<motion.div
+							key="team"
+							initial={{ opacity: 0, x: 20 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -20 }}
+							className="h-full bg-surface/30 border border-border rounded-md p-8 overflow-y-auto"
+						>
+							<div className="max-w-4xl mx-auto space-y-6">
+								<div>
+									<h2 className="text-xl font-bold text-text-main flex items-center gap-2">
+										<UsersIcon className="text-primary" size={24} />
+										Project Team
+									</h2>
+									<p className="text-sm text-text-muted mt-1">
+										Members of the team assigned to this project.
+									</p>
+								</div>
+
+								{!currentProject?.teamId ? (
+									<div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center text-center bg-surface/10">
+										<div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center text-text-muted mb-4">
+											<UsersIcon size={24} />
+										</div>
+										<h3 className="text-text-main font-bold">
+											No Team Assigned
+										</h3>
+										<p className="text-sm text-text-muted max-w-sm mt-2">
+											There is no team assigned to this project yet. Go to
+											Settings to assign a workspace team.
+										</p>
+										<Button
+											variant="primary"
+											className="mt-4"
+											onClick={() => setActiveTab("Settings")}
+										>
+											Go to Settings
+										</Button>
+									</div>
+								) : projectTeam ? (
+									<div className="space-y-4">
+										<div className="p-4 border border-border rounded-lg bg-surface/50 flex justify-between items-center">
+											<div>
+												<h3 className="font-bold text-text-main">
+													{projectTeam.name}
+												</h3>
+												<p className="text-xs text-text-muted mt-1">
+													{projectTeam.description ||
+														"No description provided."}
+												</p>
+											</div>
+											<Button
+												variant="secondary"
+												onClick={() => (window.location.href = "/team")}
+											>
+												Manage Team
+											</Button>
+										</div>
+
+										<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+											{projectTeam.members?.map((member) => (
+												<div
+													key={member.profileId}
+													className="p-4 border border-border rounded-lg bg-surface flex items-center gap-4 hover:border-text-muted transition-colors"
+												>
+													<Avatar name={member.name} size="md" />
+													<div>
+														<p className="text-sm font-bold text-text-main">
+															{member.name}
+														</p>
+														<select
+															value={member.role}
+															onChange={(e) =>
+																handleRoleChange(
+																	member.profileId,
+																	e.target.value,
+																)
+															}
+															className={`bg-surface-hover border border-border rounded px-2 py-1 text-xs font-medium focus:outline-none focus:border-primary transition-colors cursor-pointer mt-1 ${
+																["Project Manager", "Product Owner"].includes(
+																	member.role,
+																)
+																	? "text-purple-400"
+																	: [
+																				"Tech Lead",
+																				"Senior Developer",
+																				"DevOps Engineer",
+																		  ].includes(member.role)
+																		? "text-emerald-400"
+																		: [
+																					"UI/UX Designer",
+																					"QA Engineer",
+																			  ].includes(member.role)
+																			? "text-amber-400"
+																			: member.role === "Stakeholder"
+																				? "text-slate-400"
+																				: "text-primary"
+															}`}
+														>
+															<optgroup
+																label="Management"
+																className="bg-slate-900 text-slate-500"
+															>
+																<option
+																	value="Project Manager"
+																	className="text-purple-400"
+																>
+																	Project Manager
+																</option>
+																<option
+																	value="Product Owner"
+																	className="text-purple-400"
+																>
+																	Product Owner
+																</option>
+															</optgroup>
+															<optgroup
+																label="Engineering"
+																className="bg-slate-900 text-slate-500"
+															>
+																<option
+																	value="Tech Lead"
+																	className="text-emerald-400"
+																>
+																	Tech Lead
+																</option>
+																<option
+																	value="Senior Developer"
+																	className="text-emerald-400"
+																>
+																	Senior Developer
+																</option>
+																<option
+																	value="Developer"
+																	className="text-primary"
+																>
+																	Developer
+																</option>
+																<option
+																	value="Junior Developer"
+																	className="text-primary"
+																>
+																	Junior Developer
+																</option>
+																<option
+																	value="DevOps Engineer"
+																	className="text-emerald-400"
+																>
+																	DevOps Engineer
+																</option>
+															</optgroup>
+															<optgroup
+																label="Design & Quality"
+																className="bg-slate-900 text-slate-500"
+															>
+																<option
+																	value="UI/UX Designer"
+																	className="text-amber-400"
+																>
+																	UI/UX Designer
+																</option>
+																<option
+																	value="QA Engineer"
+																	className="text-amber-400"
+																>
+																	QA Engineer
+																</option>
+															</optgroup>
+															<optgroup
+																label="Other"
+																className="bg-slate-900 text-slate-500"
+															>
+																<option
+																	value="Stakeholder"
+																	className="text-slate-400"
+																>
+																	Stakeholder
+																</option>
+																<option value="Member" className="text-primary">
+																	Member
+																</option>
+															</optgroup>
+														</select>
+													</div>
+												</div>
+											))}
+											{(!projectTeam.members ||
+												projectTeam.members.length === 0) && (
+												<div className="col-span-full p-8 border border-dashed border-border rounded-lg text-center text-text-muted">
+													No members found in this team.
+												</div>
+											)}
+										</div>
+									</div>
+								) : (
+									<div className="flex items-center justify-center p-12">
+										<div className="animate-spin text-primary">
+											<Target size={24} />
+										</div>
+									</div>
+								)}
+							</div>
+						</motion.div>
+					)}
+
+					{activeTab === "Settings" && (
+						<motion.div
+							key="settings"
+							initial={{ opacity: 0, x: 20 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -20 }}
+							className="h-full bg-surface/30 border border-border rounded-md p-8 overflow-y-auto"
+						>
+							<div className="max-w-2xl mx-auto space-y-8">
+								<div>
+									<h2 className="text-xl font-bold text-text-main">
+										Project Settings
+									</h2>
+									<p className="text-sm text-text-muted mt-1">
+										Manage your workspace details and integrations.
+									</p>
+								</div>
+
+								<form
+									onSubmit={async (e) => {
+										e.preventDefault();
+										const form = e.target as HTMLFormElement;
+										const data = {
+											name: (
+												form.elements.namedItem("name") as HTMLInputElement
+											).value,
+											key: (form.elements.namedItem("key") as HTMLInputElement)
+												.value,
+											description: (
+												form.elements.namedItem(
+													"description",
+												) as HTMLTextAreaElement
+											).value,
+											gitHubRepo:
+												(
+													form.elements.namedItem(
+														"gitHubRepo",
+													) as HTMLSelectElement
+												).value || undefined,
+											teamId:
+												(form.elements.namedItem("teamId") as HTMLSelectElement)
+													.value || undefined,
+										};
+										try {
+											const updatedProject = await projectService.updateProject(
+												currentProject.id,
+												data,
+											);
+											setCurrentProject(updatedProject);
+											success(
+												"Settings Saved",
+												"Project details have been updated successfully.",
+											);
+										} catch (err) {
+											console.error("Update failed", err);
+										}
+									}}
+									className="space-y-6 bg-surface border border-border rounded-lg p-6"
+								>
+									<div className="space-y-4">
+										<div>
+											<label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-2">
+												Project Name
+											</label>
+											<input
+												name="name"
+												defaultValue={currentProject.name}
+												className="w-full bg-background border border-border rounded-lg px-4 py-2 text-text-main focus:outline-none focus:border-primary transition-colors"
+												required
+											/>
+										</div>
+										<div>
+											<label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-2">
+												Project Key
+											</label>
+											<input
+												name="key"
+												defaultValue={currentProject.key}
+												className="w-full bg-background border border-border rounded-lg px-4 py-2 text-text-main focus:outline-none focus:border-primary transition-colors uppercase"
+												required
+												maxLength={5}
+											/>
+										</div>
+										<div>
+											<label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-2">
+												Description
+											</label>
+											<textarea
+												name="description"
+												defaultValue={currentProject.description}
+												className="w-full bg-background border border-border rounded-lg px-4 py-2 text-text-main focus:outline-none focus:border-primary transition-colors min-h-[100px]"
+											/>
+										</div>
+										<div>
+											<label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-2">
+												GitHub Repository
+											</label>
+											<select
+												key={`repo-${repos.length}`}
+												name="gitHubRepo"
+												defaultValue={currentProject.gitHubRepo || ""}
+												className="w-full bg-background border border-border rounded-lg px-4 py-2 text-text-main focus:outline-none focus:border-primary transition-colors appearance-none"
+											>
+												<option value="">No Repository Attached</option>
+												{repos.map((repo) => (
+													<option key={repo.fullName} value={repo.fullName}>
+														{repo.name} ({repo.fullName})
+													</option>
+												))}
+											</select>
+										</div>
+										<div>
+											<label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-2">
+												Assigned Team
+											</label>
+											<select
+												key={`team-${workspaceTeams.length}`}
+												name="teamId"
+												defaultValue={currentProject.teamId || ""}
+												className="w-full bg-background border border-border rounded-lg px-4 py-2 text-text-main focus:outline-none focus:border-primary transition-colors appearance-none"
+											>
+												<option value="">No Team Assigned</option>
+												{workspaceTeams.map((team) => (
+													<option key={team.id} value={team.id}>
+														{team.name}
+													</option>
+												))}
+											</select>
+										</div>
+									</div>
+									<div className="pt-4 border-t border-border flex justify-end">
+										<Button
+											type="submit"
+											variant="primary"
+											leftIcon={<Save size={16} />}
+										>
+											Save Settings
+										</Button>
+									</div>
+								</form>
+							</div>
 						</motion.div>
 					)}
 				</AnimatePresence>

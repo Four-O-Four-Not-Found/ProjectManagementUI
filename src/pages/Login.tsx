@@ -49,7 +49,7 @@ const Login: React.FC = () => {
 	}
 
 	const handleGitHubLogin = () => {
-		window.location.href = "https://localhost:7296/api/auth/login-github";
+		window.location.href = "http://localhost:5139/api/auth/login-github";
 	};
 
 	return (

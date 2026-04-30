@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://localhost:7296/api/github';
+const API_URL = 'http://localhost:5139/api/github';
 
 export interface GitHubRepo {
   name: string;

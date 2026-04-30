@@ -52,6 +52,14 @@ const teamService = {
 	joinTeam: async (request: JoinTeamRequest): Promise<void> => {
 		await apiClient.post("/teams/join", request);
 	},
+
+	updateMemberRole: async (
+		teamId: string,
+		profileId: string,
+		role: string,
+	): Promise<void> => {
+		await apiClient.put(`/teams/${teamId}/members/${profileId}/role`, { role });
+	},
 };
 
 export default teamService;

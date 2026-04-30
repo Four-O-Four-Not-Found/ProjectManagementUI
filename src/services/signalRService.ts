@@ -2,7 +2,7 @@ import * as signalR from "@microsoft/signalr";
 
 class SignalRService {
 	private connection: signalR.HubConnection | null = null;
-	private hubUrl: string = "https://localhost:7296/projectHub";
+	private hubUrl: string = "http://localhost:5139/projectHub";
 	private startPromise: Promise<void> | null = null;
 
 	public async startConnection(): Promise<void> {

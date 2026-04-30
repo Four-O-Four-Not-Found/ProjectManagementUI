@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { MoreVertical, UserPlus, Users, Share2, Plus, Loader2 } from "lucide-react";
-import Badge from "../components/atoms/Badge";
+import {
+	MoreVertical,
+	UserPlus,
+	Users,
+	Share2,
+	Plus,
+	Loader2,
+} from "lucide-react";
 import Avatar from "../components/atoms/Avatar";
 import Button from "../components/atoms/Button";
 import GlassCard from "../components/molecules/GlassCard";
@@ -23,25 +29,28 @@ const Team: React.FC = () => {
 	const { user } = useAuthStore();
 	const hasInitialized = useRef(false);
 
-	const fetchTeams = useCallback(async (isInitial = false) => {
-		try {
-			const data = await teamService.getWorkspaceTeams(DEFAULT_WORKSPACE_ID);
-			setTeams(data);
-			
-			if (isInitial && data.length > 0) {
-				try {
-					const fullTeam = await teamService.getTeam(data[0].id);
-					setSelectedTeam(fullTeam);
-				} catch {
-					setSelectedTeam(data[0]);
+	const fetchTeams = useCallback(
+		async (isInitial = false) => {
+			try {
+				const data = await teamService.getWorkspaceTeams(DEFAULT_WORKSPACE_ID);
+				setTeams(data);
+
+				if (isInitial && data.length > 0) {
+					try {
+						const fullTeam = await teamService.getTeam(data[0].id);
+						setSelectedTeam(fullTeam);
+					} catch {
+						setSelectedTeam(data[0]);
+					}
 				}
+			} catch {
+				error("Sync Failed", "Could not synchronize team registry.");
+			} finally {
+				setLoading(false);
 			}
-		} catch {
-			error("Sync Failed", "Could not synchronize team registry.");
-		} finally {
-			setLoading(false);
-		}
-	}, [error]);
+		},
+		[error],
+	);
 
 	useEffect(() => {
 		if (!hasInitialized.current) {
@@ -62,7 +71,10 @@ const Team: React.FC = () => {
 		}
 	};
 
-	const handleCreateTeam = async (data: { name: string; description: string }) => {
+	const handleCreateTeam = async (data: {
+		name: string;
+		description: string;
+	}) => {
 		if (!user) return;
 		try {
 			const newTeam = await teamService.createTeam({
@@ -73,7 +85,10 @@ const Team: React.FC = () => {
 			setTeams([...teams, newTeam]);
 			setSelectedTeam(newTeam);
 			setIsCreateModalOpen(false);
-			success("Team Initialized", `"${data.name}" is now part of the workspace.`);
+			success(
+				"Team Initialized",
+				`"${data.name}" is now part of the workspace.`,
+			);
 		} catch {
 			error("Creation Failed", "Could not initialize new team.");
 		}
@@ -107,6 +122,13 @@ const Team: React.FC = () => {
 							New Team
 						</Button>
 						<Button
+							variant="secondary"
+							leftIcon={<Share2 size={18} />}
+							onClick={() => (window.location.href = "/github")}
+						>
+							Import GitHub Org
+						</Button>
+						<Button
 							leftIcon={<UserPlus size={18} />}
 							onClick={() => setIsInviteModalOpen(true)}
 							disabled={!selectedTeam}
@@ -120,7 +142,9 @@ const Team: React.FC = () => {
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				{/* Team Sidebar */}
 				<GlassCard className="lg:col-span-1 p-4 space-y-4">
-					<h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest px-2">Teams</h3>
+					<h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest px-2">
+						Teams
+					</h3>
 					<div className="space-y-1">
 						{teams.map((team) => (
 							<button
@@ -137,7 +161,9 @@ const Team: React.FC = () => {
 							</button>
 						))}
 						{teams.length === 0 && !loading && (
-							<p className="text-xs text-slate-500 p-2 italic">No teams found.</p>
+							<p className="text-xs text-slate-500 p-2 italic">
+								No teams found.
+							</p>
 						)}
 					</div>
 				</GlassCard>
@@ -147,19 +173,25 @@ const Team: React.FC = () => {
 					{loading ? (
 						<div className="flex flex-col items-center justify-center py-20 space-y-4">
 							<Loader2 className="animate-spin text-primary" size={32} />
-							<p className="text-sm text-slate-500 font-mono">Synchronizing member data...</p>
+							<p className="text-sm text-slate-500 font-mono">
+								Synchronizing member data...
+							</p>
 						</div>
 					) : selectedTeam ? (
 						<div className="overflow-x-auto scrollbar-custom">
 							<div className="p-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.01]">
 								<div>
-									<h2 className="text-lg font-bold text-white">{selectedTeam.name}</h2>
-									<p className="text-xs text-slate-500">{selectedTeam.description || "No description provided."}</p>
+									<h2 className="text-lg font-bold text-white">
+										{selectedTeam.name}
+									</h2>
+									<p className="text-xs text-slate-500">
+										{selectedTeam.description || "No description provided."}
+									</p>
 								</div>
 								<div className="flex gap-2">
-									<Button 
-										variant="ghost" 
-										size="sm" 
+									<Button
+										variant="ghost"
+										size="sm"
 										leftIcon={<Share2 size={16} />}
 										onClick={() => setIsInviteModalOpen(true)}
 									>
@@ -195,17 +227,36 @@ const Team: React.FC = () => {
 														<p className="text-sm font-bold text-white">
 															{member.name}
 														</p>
-														<p className="text-xs text-slate-500">{member.email}</p>
+														<p className="text-xs text-slate-500">
+															{member.email}
+														</p>
 													</div>
 												</div>
 											</td>
 											<td className="px-6 py-4">
-												<Badge
-													variant={member.role === "Admin" ? "purple" : "primary"}
-													size="sm"
+												<span
+													className={`bg-white/[0.05] border border-white/[0.1] rounded px-2 py-1 text-xs font-medium ${
+														["Project Manager", "Product Owner"].includes(
+															member.role,
+														)
+															? "text-purple-400"
+															: [
+																		"Tech Lead",
+																		"Senior Developer",
+																		"DevOps Engineer",
+																  ].includes(member.role)
+																? "text-emerald-400"
+																: ["UI/UX Designer", "QA Engineer"].includes(
+																			member.role,
+																	  )
+																	? "text-amber-400"
+																	: member.role === "Stakeholder"
+																		? "text-slate-400"
+																		: "text-primary"
+													}`}
 												>
 													{member.role}
-												</Badge>
+												</span>
 											</td>
 											<td className="px-6 py-4">
 												<div className="flex items-center gap-2">
@@ -220,9 +271,13 @@ const Team: React.FC = () => {
 											</td>
 										</tr>
 									))}
-									{(!selectedTeam.members || selectedTeam.members.length === 0) && (
+									{(!selectedTeam.members ||
+										selectedTeam.members.length === 0) && (
 										<tr>
-											<td colSpan={4} className="px-6 py-10 text-center text-slate-500 italic">
+											<td
+												colSpan={4}
+												className="px-6 py-10 text-center text-slate-500 italic"
+											>
 												No members in this team yet. Invite someone!
 											</td>
 										</tr>
@@ -233,7 +288,9 @@ const Team: React.FC = () => {
 					) : (
 						<div className="flex flex-col items-center justify-center py-20 space-y-4 opacity-50">
 							<Users size={48} className="text-slate-600" />
-							<p className="text-sm text-slate-500">Select a team to view its members.</p>
+							<p className="text-sm text-slate-500">
+								Select a team to view its members.
+							</p>
 						</div>
 					)}
 				</GlassCard>

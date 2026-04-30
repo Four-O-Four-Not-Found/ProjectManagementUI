@@ -2,15 +2,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import BaseModal from "../molecules/BaseModal";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
-import { Target, Hash, GitBranch, Search, Check } from "lucide-react";
+import { Target, Hash, GitBranch, Search, Check, Users } from "lucide-react";
 import { githubService, type GitHubRepo } from "../../services/githubService";
+import teamService, { type Team } from "../../services/teamService";
 import { useToast } from "../../hooks/useToast";
 import type { Project } from "../../types";
 
 interface ProjectFormModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onSave: (data: Partial<Project> & { githubRepo?: string }) => void;
+	onSave: (
+		data: Partial<Project> & { gitHubRepo?: string; teamId?: string },
+	) => void;
 }
 
 const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
@@ -21,6 +24,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 	const { error: toastError } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [repos, setRepos] = useState<GitHubRepo[]>([]);
+	const [teams, setTeams] = useState<Team[]>([]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
 
@@ -28,18 +32,25 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		name: "",
 		key: "",
 		description: "",
+		teamId: "",
 	});
 
-	const fetchRepos = useCallback(async () => {
+	const fetchData = useCallback(async () => {
 		setLoading(true);
 		try {
-			const data = await githubService.getRepositories();
-			setRepos(data);
+			const [reposData, teamsData] = await Promise.all([
+				githubService.getRepositories().catch(() => []),
+				teamService
+					.getWorkspaceTeams("00000000-0000-0000-0000-000000000001")
+					.catch(() => []),
+			]);
+			setRepos(reposData);
+			setTeams(teamsData);
 		} catch (err) {
-			console.error("Failed to fetch repos:", err);
+			console.error("Failed to fetch data:", err);
 			toastError(
-				"GitHub Error",
-				"Could not fetch repositories. Ensure you are logged in via GitHub.",
+				"Fetch Error",
+				"Could not load repositories or teams. Please ensure you are logged in.",
 			);
 		} finally {
 			setLoading(false);
@@ -50,11 +61,11 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		if (isOpen) {
 			// Defer to avoid cascading renders warning
 			const timer = setTimeout(() => {
-				fetchRepos();
+				fetchData();
 			}, 0);
 			return () => clearTimeout(timer);
 		}
-	}, [isOpen, fetchRepos]);
+	}, [isOpen, fetchData]);
 
 	const filteredRepos = repos.filter(
 		(repo) =>
@@ -66,7 +77,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		e.preventDefault();
 		onSave({
 			...formData,
-			githubRepo: selectedRepo?.fullName,
+			gitHubRepo: selectedRepo?.fullName,
 		});
 		onClose();
 	};
@@ -177,6 +188,29 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 								))
 							)}
 						</div>
+					</div>
+
+					<div className="space-y-2">
+						<label className="text-[10px] font-bold text-muted uppercase tracking-widest block ml-1 flex items-center gap-2">
+							<Users size={12} />
+							Assign Team (Optional)
+						</label>
+						<select
+							className="w-full bg-white/[0.03] border border-white/[0.05] rounded-2xl px-4 py-3 text-sm text-main outline-none focus:border-primary/50 transition-all appearance-none"
+							value={formData.teamId || ""}
+							onChange={(e) =>
+								setFormData({ ...formData, teamId: e.target.value })
+							}
+						>
+							<option value="" className="bg-slate-900">
+								No Team Assigned
+							</option>
+							{teams.map((team) => (
+								<option key={team.id} value={team.id} className="bg-slate-900">
+									{team.name}
+								</option>
+							))}
+						</select>
 					</div>
 
 					<div className="space-y-2">

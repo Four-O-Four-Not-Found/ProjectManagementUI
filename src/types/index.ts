@@ -79,6 +79,9 @@ export interface Project {
 	startDate?: string;
 	endDate?: string;
 	activeSprint?: Sprint;
+	gitHubRepo?: string;
+	teamId?: string;
+	workspaceId?: string;
 }
 
 export interface Activity {
