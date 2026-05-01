@@ -42,14 +42,22 @@ const Login: React.FC = () => {
 		} else if (isAuthenticated) {
 			navigate("/board");
 		}
-	}, [searchParams, setToken, navigate, success, toastWarning, isAuthenticated]);
+	}, [
+		searchParams,
+		setToken,
+		navigate,
+		success,
+		toastWarning,
+		isAuthenticated,
+	]);
 
 	if (isProcessing) {
 		return <LoadingScreen />;
 	}
 
 	const handleGitHubLogin = () => {
-		window.location.href = "http://localhost:5139/api/auth/login-github";
+		const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5139/api";
+		window.location.href = `${apiUrl}/auth/login-github`;
 	};
 
 	return (
