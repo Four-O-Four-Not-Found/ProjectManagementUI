@@ -33,6 +33,10 @@ const teamService = {
 		const response = await apiClient.get(`/teams/workspace/${workspaceId}`);
 		return response.data;
 	},
+	getMyTeams: async (profileId: string): Promise<Team[]> => {
+		const response = await apiClient.get(`/teams/my-teams/${profileId}`);
+		return response.data;
+	},
 
 	getTeam: async (id: string): Promise<Team> => {
 		const response = await apiClient.get(`/teams/${id}`);

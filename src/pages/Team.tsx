@@ -31,8 +31,9 @@ const Team: React.FC = () => {
 
 	const fetchTeams = useCallback(
 		async (isInitial = false) => {
+			if (!user) return;
 			try {
-				const data = await teamService.getWorkspaceTeams(DEFAULT_WORKSPACE_ID);
+				const data = await teamService.getMyTeams(user.id);
 				setTeams(data);
 
 				if (isInitial && data.length > 0) {
@@ -49,7 +50,7 @@ const Team: React.FC = () => {
 				setLoading(false);
 			}
 		},
-		[error],
+		[error, user],
 	);
 
 	useEffect(() => {
@@ -180,9 +181,9 @@ const Team: React.FC = () => {
 								<p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-center mb-4">
 									No teams active
 								</p>
-								<Button 
-									variant="secondary" 
-									size="xs" 
+								<Button
+									variant="secondary"
+									size="xs"
 									className="w-full text-[9px] uppercase tracking-tighter"
 									onClick={() => setIsCreateModalOpen(true)}
 								>
