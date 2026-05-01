@@ -65,6 +65,8 @@ const Board: React.FC = () => {
 		fetchProjects,
 		moveTask,
 		assignTask,
+		createTask,
+		createProject,
 		projects: allProjects,
 	} = useProject();
 	const { success, error } = useToast();
@@ -175,18 +177,21 @@ const Board: React.FC = () => {
 		setIsTaskModalOpen(true);
 	}, []);
 
-	const handleSaveTask = (data: Partial<Task>) => {
+	const handleSaveTask = async (data: Partial<Task>) => {
+		const taskData = { ...data, projectId: data.projectId || projectId };
+		await createTask(taskData);
 		success(
 			"Action Successful",
 			editingTask ? "Task updated." : "New task created.",
 		);
 		setIsTaskModalOpen(false);
-		if (!editingTask && data.projectId && data.projectId !== projectId) {
-			navigate(`/project/${data.projectId}`);
+		if (!editingTask && taskData.projectId && taskData.projectId !== projectId) {
+			navigate(`/project/${taskData.projectId}`);
 		}
 	};
 
-	const handleCreateProject = (data: Partial<Project>) => {
+	const handleCreateProject = async (data: Partial<Project>) => {
+		await createProject(data);
 		success("Workspace Ready", `Project "${data.name}" has been initialized.`);
 		setIsProjectModalOpen(false);
 	};

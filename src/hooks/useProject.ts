@@ -8,7 +8,7 @@ import {
   setError 
 } from '../redux/slices/projectSlice';
 import { projectService } from '../services/projectService';
-import type { Task } from '../types';
+import type { Task, Project } from '../types';
 
 export const useProject = () => {
   const dispatch = useAppDispatch();
@@ -60,6 +60,28 @@ export const useProject = () => {
 		}
 	}, [dispatch]);
 
+	const createTask = useCallback(async (data: Partial<Task>) => {
+		try {
+			await projectService.createTask(data);
+			if (data.projectId) {
+				await fetchTasks(data.projectId);
+			}
+		} catch (err) {
+			console.error("Create task failed:", err);
+			dispatch(setError("Failed to create task"));
+		}
+	}, [dispatch, fetchTasks]);
+
+	const createProject = useCallback(async (data: Partial<Project>) => {
+		try {
+			await projectService.createProject(data);
+			await fetchProjects();
+		} catch (err) {
+			console.error("Create project failed:", err);
+			dispatch(setError("Failed to create project"));
+		}
+	}, [dispatch, fetchProjects]);
+
 	return {
 		projects,
 		activeProject,
@@ -70,5 +92,7 @@ export const useProject = () => {
 		fetchTasks,
 		moveTask,
 		assignTask,
+		createTask,
+		createProject,
 	};
 };
