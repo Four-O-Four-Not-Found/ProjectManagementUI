@@ -7,6 +7,7 @@ import {
 	List as ListIcon,
 	Calendar as CalendarIcon,
 	Users as UsersIcon,
+	Settings as SettingsIcon,
 	ChevronDown,
 	Target,
 	GitBranch,
@@ -23,6 +24,7 @@ import BacklogTab from "../components/organisms/BacklogTab";
 import TeamTab from "../components/organisms/TeamTab";
 import TimelineTab from "../components/organisms/TimelineTab";
 import SprintsTab from "../components/organisms/SprintsTab";
+import SettingsTab from "../components/organisms/SettingsTab";
 import AIPredictor from "../components/molecules/AIPredictor";
 import Button from "../components/atoms/Button";
 import Avatar from "../components/atoms/Avatar";
@@ -197,7 +199,7 @@ const Board: React.FC = () => {
 	}
 
 	return (
-		<div className="h-full flex flex-col space-y-6 pb-10 overflow-hidden relative">
+		<div className="h-full flex flex-col space-y-4 md:space-y-6 pb-10 overflow-hidden relative">
 			<TaskDetailModal
 				isOpen={!!selectedTask}
 				onClose={() => setSelectedTask(null)}
@@ -236,7 +238,7 @@ const Board: React.FC = () => {
 							onClick={() => setIsProjectSelectorOpen(!isProjectSelectorOpen)}
 							className="flex items-center gap-2 hover:bg-surface-hover px-2 py-1 -ml-2 rounded-md transition-all group"
 						>
-							<span className="font-black tracking-tight">
+							<span className="font-black tracking-tight text-xl md:text-2xl">
 								{currentProject.name}
 							</span>
 							<ChevronDown
@@ -291,16 +293,6 @@ const Board: React.FC = () => {
 												</button>
 											))}
 										</div>
-										<button
-											onClick={() => {
-												setIsProjectModalOpen(true);
-												setIsProjectSelectorOpen(false);
-											}}
-											className="w-full p-3 border-t border-border text-xs font-bold text-primary hover:bg-surface-hover transition-all flex items-center justify-center gap-2"
-										>
-											<Plus size={14} />
-											Initialize New Workspace
-										</button>
 									</motion.div>
 								</>
 							)}
@@ -308,11 +300,11 @@ const Board: React.FC = () => {
 					</div>
 				}
 				description={
-					<div className="flex flex-wrap items-center gap-3">
-						<span className="text-text-muted font-medium">
+					<div className="flex flex-wrap items-center gap-2 md:gap-3">
+						<span className="hidden md:inline text-text-muted font-medium text-sm">
 							{currentProject.description}
 						</span>
-						<span className="w-1 h-1 rounded-full bg-border"></span>
+						<span className="hidden md:inline w-1 h-1 rounded-full bg-border"></span>
 						<span className="font-black text-[10px] text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border uppercase tracking-widest">
 							{currentProject.key}
 						</span>
@@ -326,70 +318,44 @@ const Board: React.FC = () => {
 					</div>
 				}
 				actions={
-					<div className="flex items-center justify-between w-full md:w-auto gap-6">
+					<div className="flex items-center justify-between w-full md:w-auto gap-4 md:gap-6 mt-2 md:mt-0">
 						<div className="relative group">
 							<button onClick={() => setIsSprintModalOpen(true)}>
 								<SprintSelector activeSprint={activeSprint || ({} as Sprint)} />
 							</button>
-
-							{sprints.length > 1 && (
-								<div className="absolute top-full left-0 mt-1 w-48 bg-surface border border-border rounded-md shadow-xl z-30 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all p-1">
-									<div className="p-2 border-b border-border mb-1">
-										<span className="text-[9px] font-bold text-text-muted uppercase">
-											Select Sprint
-										</span>
-									</div>
-									<div className="max-h-40 overflow-y-auto space-y-0.5">
-										{sprints.map((s) => (
-											<button
-												key={s.id}
-												onClick={() => setActiveSprint(s)}
-												className={twMerge(
-													"w-full text-left p-2 rounded text-[11px] font-bold transition-colors",
-													activeSprint?.id === s.id
-														? "bg-primary/10 text-primary"
-														: "hover:bg-surface-hover text-text-muted",
-												)}
-											>
-												{s.name}
-											</button>
-										))}
-									</div>
-								</div>
-							)}
 						</div>
 
 						<div className="flex -space-x-2">
-							{[1, 2, 3, 4].map((i) => (
+							{projectTeam?.members?.slice(0, 5).map((member) => (
 								<Avatar
-									key={i}
-									name={`Team Member ${i}`}
+									key={member.profileId}
+									name={member.name}
 									size="sm"
 									className="border-2 border-background hover:z-10 transition-all shadow-md"
-									isClickable
 								/>
 							))}
-							<button
-								onClick={() => setIsProjectModalOpen(true)}
-								className="w-8 h-8 rounded-full border border-border bg-surface flex items-center justify-center text-text-muted hover:text-main transition-all shadow-sm"
-							>
-								<Plus size={16} />
-							</button>
+							{projectTeam?.members && projectTeam.members.length > 5 && (
+								<div className="w-8 h-8 rounded-full bg-surface border-2 border-background flex items-center justify-center text-[10px] font-black text-text-muted hover:z-10 transition-all shadow-md">
+									+{projectTeam.members.length - 5}
+								</div>
+							)}
 						</div>
 						<Button
 							onClick={handleAddTask}
 							variant="primary"
 							size="sm"
+							className="px-6 md:px-4"
 							leftIcon={<Plus size={18} />}
 						>
-							Add Task
+							<span className="hidden md:inline">Add Task</span>
+							<span className="md:hidden">Add</span>
 						</Button>
 					</div>
 				}
 			/>
 
-			{/* Navigation Tabs */}
-			<div className="flex items-center justify-between border-b border-border bg-surface-hover/30 px-2 rounded-t-md shrink-0">
+			{/* Navigation Tabs - Sticky */}
+			<div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-md px-2 rounded-t-md shrink-0">
 				<div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
 					{(
 						[
@@ -399,6 +365,7 @@ const Board: React.FC = () => {
 							"Timeline",
 							"Team",
 							"Repository",
+							"Settings",
 						] as ViewTab[]
 					).map((tab) => {
 						const Icon = {
@@ -408,22 +375,27 @@ const Board: React.FC = () => {
 							Timeline: Clock,
 							Team: UsersIcon,
 							Repository: GitBranch,
+							Settings: SettingsIcon,
 						}[tab];
 
 						return (
 							<button
 								key={tab}
 								onClick={() => setActiveTab(tab)}
-								className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold transition-all relative border-b-2 whitespace-nowrap ${
+								className={`flex items-center gap-2 px-3 md:px-4 py-3 text-xs font-semibold transition-all relative border-b-2 whitespace-nowrap ${
 									activeTab === tab
 										? "border-primary text-text-main"
 										: "border-transparent text-text-muted hover:text-text-main hover:bg-surface-hover/50"
 								}`}
 							>
 								<Icon size={14} />
-								{tab}
+								<span
+									className={twMerge(activeTab !== tab && "hidden md:inline")}
+								>
+									{tab}
+								</span>
 								{tab === "Backlog" && (
-									<span className="ml-1 px-1.5 py-0.5 rounded-full bg-surface border border-border text-[9px] font-bold">
+									<span className="ml-1 px-1 py-0.5 rounded-full bg-surface border border-border text-[8px] font-bold">
 										{tasks.length}
 									</span>
 								)}
@@ -436,14 +408,16 @@ const Board: React.FC = () => {
 					<button
 						onClick={() => setShowAI(!showAI)}
 						className={twMerge(
-							"flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all mr-2",
+							"flex items-center justify-center w-8 h-8 md:w-auto md:h-auto md:px-3 md:py-1.5 rounded-lg transition-all mr-2",
 							showAI
 								? "bg-primary text-white shadow-[0_0_15px_rgba(56,189,248,0.4)]"
 								: "bg-surface border border-border text-text-muted hover:text-primary hover:border-primary/50",
 						)}
 					>
 						<Sparkles size={14} className={showAI ? "animate-pulse" : ""} />
-						AI Insights
+						<span className="hidden md:inline ml-2 text-[10px] font-black uppercase tracking-widest">
+							AI Insights
+						</span>
 					</button>
 				)}
 			</div>
@@ -499,10 +473,10 @@ const Board: React.FC = () => {
 											0 ? (
 												<button
 													onClick={handleAddTask}
-													className="w-full p-4 border border-dashed border-border rounded-lg text-sm text-text-muted hover:border-primary hover:text-primary transition-colors flex flex-col items-center gap-2 h-32 justify-center"
+													className="w-full p-4 border border-dashed border-border rounded-lg text-sm text-text-muted hover:border-primary hover:text-primary transition-colors flex flex-col items-center gap-2 h-24 md:h-32 justify-center"
 												>
 													<Plus size={20} />
-													<span>Add task to start</span>
+													<span className="text-xs">Add task</span>
 												</button>
 											) : (
 												tasks
@@ -561,10 +535,14 @@ const Board: React.FC = () => {
 								initial={{ opacity: 0, x: 20 }}
 								animate={{ opacity: 1, x: 0 }}
 								exit={{ opacity: 0, x: -20 }}
-								className="h-full bg-surface/30 border border-border rounded-md p-8 overflow-y-auto"
+								className="h-full bg-surface/30 border border-border rounded-md p-4 md:p-8 overflow-y-auto"
 							>
 								<RepositoryTab gitHubRepo={currentProject.gitHubRepo} />
 							</motion.div>
+						)}
+
+						{activeTab === "Settings" && (
+							<SettingsTab project={currentProject} />
 						)}
 					</AnimatePresence>
 				</div>
