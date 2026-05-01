@@ -104,4 +104,24 @@ export const githubService = {
 		);
 		return response.data;
 	},
+
+	getRepoDetails: async (
+		owner: string,
+		repoName: string,
+	): Promise<GitHubRepoDetails> => {
+		const response = await apiClient.get(
+			`/github/repos/${owner}/${repoName}/details`,
+		);
+		return response.data;
+	},
 };
+
+export interface GitHubRepoDetails {
+	tree: {
+		path: string;
+		type: string;
+		size?: number;
+	}[];
+	languages: string[];
+	techStackSummary: string;
+}

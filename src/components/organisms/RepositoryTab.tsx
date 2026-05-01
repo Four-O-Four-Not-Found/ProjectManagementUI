@@ -5,12 +5,17 @@ import {
 	GitPullRequest,
 	ExternalLink,
 	Loader2,
+	Folder,
+	FileCode,
+	Cpu,
+	Layers,
 } from "lucide-react";
 import { githubService } from "../../services/githubService";
 import type {
 	GitHubBranch,
 	GitHubCommit,
 	GitHubPullRequest,
+	GitHubRepoDetails,
 } from "../../services/githubService";
 
 interface RepositoryTabProps {
@@ -21,6 +26,9 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 	const [branches, setBranches] = useState<GitHubBranch[]>([]);
 	const [commits, setCommits] = useState<GitHubCommit[]>([]);
 	const [pullRequests, setPullRequests] = useState<GitHubPullRequest[]>([]);
+	const [repoDetails, setRepoDetails] = useState<GitHubRepoDetails | null>(
+		null,
+	);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 
@@ -32,15 +40,17 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 				const parts = gitHubRepo.split("/");
 				if (parts.length === 2) {
 					const [owner, repo] = parts;
-					const [b, c, prs] = await Promise.all([
+					const [b, c, prs, details] = await Promise.all([
 						githubService.getBranches(owner, repo),
 						githubService.getCommits(owner, repo),
 						githubService.getPullRequests(owner, repo),
+						githubService.getRepoDetails(owner, repo),
 					]);
 					if (isMounted) {
 						setBranches(b);
 						setCommits(c);
 						setPullRequests(prs);
+						setRepoDetails(details);
 					}
 				} else {
 					setError("Invalid repository format.");
@@ -77,6 +87,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 
 	return (
 		<div className="space-y-6 animate-fade-in pb-10">
+			{/* Repo Header & Stats */}
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface border border-border p-4 rounded-lg">
 				<div>
 					<h3 className="text-sm font-bold text-text-muted uppercase tracking-widest">
@@ -118,6 +129,95 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 							Recent Commits
 						</span>
 						<span className="text-success font-bold">{commits.length}</span>
+					</div>
+				</div>
+			</div>
+
+			{/* Diagram & Tech Stack Summary */}
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+				{/* Architecture Diagram (File Tree) */}
+				<div className="md:col-span-2 bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
+					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
+						<Layers size={16} className="text-primary" />
+						<h3 className="font-bold text-text-main text-sm">
+							Repository Architecture
+						</h3>
+					</div>
+					<div className="p-4 bg-background/30 max-h-[400px] overflow-y-auto scrollbar-custom font-mono">
+						<div className="space-y-1">
+							{repoDetails?.tree.map((item, idx) => {
+								const depth = (item.path.match(/\//g) || []).length;
+								const fileName = item.path.split("/").pop();
+								return (
+									<div
+										key={idx}
+										className="flex items-center gap-2 text-[11px] hover:bg-primary/5 rounded transition-colors group"
+										style={{ paddingLeft: `${depth * 16}px` }}
+									>
+										<span className="text-text-muted opacity-30">
+											{depth > 0 ? "└─" : ""}
+										</span>
+										{item.type === "tree" ? (
+											<Folder
+												size={12}
+												className="text-primary fill-primary/10"
+											/>
+										) : (
+											<FileCode size={12} className="text-text-muted" />
+										)}
+										<span
+											className={
+												item.type === "tree"
+													? "text-text-main font-bold"
+													: "text-text-muted"
+											}
+										>
+											{fileName}
+										</span>
+										{item.size && (
+											<span className="ml-auto text-[9px] text-text-muted/40 opacity-0 group-hover:opacity-100 transition-opacity">
+												{(item.size / 1024).toFixed(1)} KB
+											</span>
+										)}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				</div>
+
+				{/* Tech Stack Summary */}
+				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
+					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
+						<Cpu size={16} className="text-success" />
+						<h3 className="font-bold text-text-main text-sm">
+							Technology Stack
+						</h3>
+					</div>
+					<div className="p-5 space-y-6">
+						<div>
+							<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest block mb-2">
+								Core Environment
+							</span>
+							<p className="text-lg font-bold text-text-main leading-tight">
+								{repoDetails?.techStackSummary}
+							</p>
+						</div>
+						<div>
+							<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest block mb-3">
+								Detected Languages
+							</span>
+							<div className="flex flex-wrap gap-2">
+								{repoDetails?.languages.map((lang) => (
+									<span
+										key={lang}
+										className="px-2 py-1 bg-primary/10 border border-primary/20 text-primary rounded text-[10px] font-bold"
+									>
+										{lang}
+									</span>
+								))}
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
