@@ -38,6 +38,7 @@ import LoadingScreen from "../components/organisms/LoadingScreen";
 import { projectService } from "../services/projectService";
 import teamService, { type Team } from "../services/teamService";
 import { twMerge } from "tailwind-merge";
+import EmptyState from "../components/molecules/EmptyState";
 
 const columns = [
 	{ id: "Todo", title: "To Do", color: "border-slate-500" },
@@ -58,7 +59,14 @@ type ViewTab =
 const Board: React.FC = () => {
 	const { projectId } = useParams<{ projectId: string }>();
 	const navigate = useNavigate();
-	const { tasks, loading, fetchTasks, moveTask, assignTask } = useProject();
+	const {
+		tasks,
+		fetchTasks,
+		fetchProjects,
+		moveTask,
+		assignTask,
+		projects: allProjects,
+	} = useProject();
 	const { success, error } = useToast();
 
 	const [activeTab, setActiveTab] = useState<ViewTab>("Board");
@@ -72,7 +80,6 @@ const Board: React.FC = () => {
 	const [showAI, setShowAI] = useState(false);
 
 	const [currentProject, setCurrentProject] = useState<Project | null>(null);
-	const [allProjects, setAllProjects] = useState<Project[]>([]);
 	const [projectTeam, setProjectTeam] = useState<Team | null>(null);
 	const [sprints, setSprints] = useState<Sprint[]>([]);
 	const [activeSprint, setActiveSprint] = useState<Sprint | null>(null);
@@ -124,9 +131,7 @@ const Board: React.FC = () => {
 				projectService
 					.getProjectBoard(projectId)
 					.then((p) => isMounted && setCurrentProject(p)),
-				projectService
-					.getProjects()
-					.then((p) => isMounted && setAllProjects(p)),
+				fetchProjects(),
 				projectService.getSprints(projectId).then((s) => {
 					if (isMounted) {
 						setSprints(s);
@@ -148,21 +153,9 @@ const Board: React.FC = () => {
 				});
 			fetchTasks(projectId);
 		} else {
-			projectService
-				.getProjects()
-				.then((projects) => {
-					if (!isMounted) return;
-					if (projects.length > 0) {
-						navigate(`/project/${projects[0].id}`, { replace: true });
-					} else {
-						// If no projects, stop loading so user can see "Create Project" UI
-						setIsInitializing(false);
-						navigate(`/`, { replace: true });
-					}
-				})
-				.catch(() => {
-					if (isMounted) setIsInitializing(false);
-				});
+			fetchProjects().finally(() => {
+				if (isMounted) setIsInitializing(false);
+			});
 		}
 
 		return () => {
@@ -170,7 +163,7 @@ const Board: React.FC = () => {
 			setCurrentProject(null);
 			setIsInitializing(true);
 		};
-	}, [fetchTasks, projectId, navigate, error]);
+	}, [fetchTasks, fetchProjects, projectId, navigate, error]);
 
 	const handleMoveTask = async (taskId: string, newStatus: Task["status"]) => {
 		await moveTask(taskId, newStatus);
@@ -207,7 +200,42 @@ const Board: React.FC = () => {
 		if (projectId) projectService.getSprints(projectId).then(setSprints);
 	};
 
-	if ((loading && tasks.length === 0) || isInitializing || (projectId && !currentProject)) {
+	if (projectId && !currentProject && !isInitializing) {
+		return (
+			<div className="h-[80vh] flex flex-col justify-center">
+				<EmptyState
+					icon={Target}
+					title="Project Not Found"
+					description="The workspace you are looking for does not exist or has been archived."
+					actionLabel="Return to Dashboard"
+					onAction={() => navigate("/")}
+					className="max-w-2xl mx-auto"
+				/>
+			</div>
+		);
+	}
+
+	if (!projectId && allProjects.length === 0 && !isInitializing) {
+		return (
+			<div className="h-[80vh] flex flex-col justify-center">
+				<ProjectFormModal
+					isOpen={isProjectModalOpen}
+					onClose={() => setIsProjectModalOpen(false)}
+					onSave={handleCreateProject}
+				/>
+				<EmptyState
+					icon={Target}
+					title="No Active Workspaces"
+					description="You haven't initialized any projects yet. Create a workspace to start tracking tasks and automated pipelines."
+					actionLabel="Initialize Project"
+					onAction={() => setIsProjectModalOpen(true)}
+					className="max-w-2xl mx-auto"
+				/>
+			</div>
+		);
+	}
+
+	if (isInitializing) {
 		return <LoadingScreen />;
 	}
 
@@ -252,7 +280,7 @@ const Board: React.FC = () => {
 							className="flex items-center gap-2 hover:bg-surface-hover px-2 py-1 -ml-2 rounded-md transition-all group"
 						>
 							<span className="font-black tracking-tight text-xl md:text-2xl">
-								{currentProject.name}
+								{currentProject?.name || "Select Project"}
 							</span>
 							<ChevronDown
 								size={18}

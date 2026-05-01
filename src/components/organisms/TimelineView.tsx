@@ -8,7 +8,9 @@ import {
   parseISO, 
   subDays
 } from 'date-fns';
-import { MOCK_TASKS, MOCK_ACTIVITIES, MOCK_PROJECTS } from '../../mocks/data';
+import { useProject } from '../../hooks/useProject';
+import { useAppSelector } from '../../redux/hooks';
+import EmptyState from '../molecules/EmptyState';
 import Avatar from '../atoms/Avatar';
 import Button from '../atoms/Button';
 import ActivityDetailModal from '../organisms/ActivityDetailModal';
@@ -19,6 +21,8 @@ type ViewMode = 'Week' | 'Month';
 type DataMode = 'Tasks' | 'Projects';
 
 const TimelineView: React.FC = () => {
+  const { projects, tasks, loading } = useProject();
+  const recentActivities = useAppSelector(state => state.project.recentActivities || []);
   const today = startOfToday();
   const [viewMode, setViewMode] = useState<ViewMode>('Week');
   const [dataMode, setDataMode] = useState<DataMode>('Tasks');
@@ -34,11 +38,11 @@ const TimelineView: React.FC = () => {
   }, [timelineStart, daysToShow]);
 
   const filteredItems = useMemo(() => {
-    if (dataMode === 'Projects') return MOCK_PROJECTS;
+    if (dataMode === 'Projects') return projects;
     
-    if (selectedProjectId === 'all') return MOCK_TASKS;
-    return MOCK_TASKS.filter(task => task.projectId === selectedProjectId);
-  }, [dataMode, selectedProjectId]);
+    if (selectedProjectId === 'all') return tasks;
+    return tasks.filter(task => task.projectId === selectedProjectId);
+  }, [dataMode, selectedProjectId, projects, tasks]);
 
   const getPosition = (startDateStr?: string, endDateStr?: string) => {
     if (!startDateStr || !endDateStr) return null;
@@ -75,6 +79,17 @@ const TimelineView: React.FC = () => {
         onClose={() => setSelectedActivity(null)}
         activity={selectedActivity}
       />
+
+      {projects.length === 0 && !loading && (
+        <div className="absolute inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-8">
+           <EmptyState
+             icon={CalendarIcon}
+             title="No Schedule Available"
+             description="Initialize a project and plan your first sprint to visualize your timeline here."
+             className="max-w-md bg-surface shadow-2xl"
+           />
+        </div>
+      )}
 
       {/* Gantt Controls */}
       <div className="p-3 border-b border-border bg-surface flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -120,7 +135,7 @@ const TimelineView: React.FC = () => {
                 className="bg-transparent text-[10px] font-bold text-text-main outline-none cursor-pointer focus:text-primary transition-colors"
               >
                 <option value="all">Team Overview (All Tasks)</option>
-                {MOCK_PROJECTS.map(p => (
+                {projects.map(p => (
                   <option key={p.id} value={p.id}>{p.name} ({p.key})</option>
                 ))}
               </select>
@@ -158,7 +173,7 @@ const TimelineView: React.FC = () => {
                 <p className={`text-xs font-bold ${isSameDay(day, today) ? 'text-primary underline decoration-2 underline-offset-4' : 'text-text-main'}`}>{format(day, 'd')}</p>
                 
                 <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1">
-                  {MOCK_ACTIVITIES.filter(a => a.date && isSameDay(parseISO(a.date), day)).map(activity => (
+                  {recentActivities.filter(a => a.timestamp && isSameDay(new Date(a.timestamp), day)).map(activity => (
                     <button
                       key={activity.id}
                       onClick={() => setSelectedActivity(activity)}

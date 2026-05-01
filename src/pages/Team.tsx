@@ -176,9 +176,19 @@ const Team: React.FC = () => {
 							</button>
 						))}
 						{teams.length === 0 && !loading && (
-							<p className="text-xs text-slate-500 p-2 italic">
-								No teams found.
-							</p>
+							<div className="py-8 px-2">
+								<p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-center mb-4">
+									No teams active
+								</p>
+								<Button 
+									variant="secondary" 
+									size="xs" 
+									className="w-full text-[9px] uppercase tracking-tighter"
+									onClick={() => setIsCreateModalOpen(true)}
+								>
+									Create Team
+								</Button>
+							</div>
 						)}
 					</div>
 				</GlassCard>
