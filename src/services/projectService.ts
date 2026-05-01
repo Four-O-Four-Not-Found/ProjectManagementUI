@@ -51,20 +51,14 @@ export const projectService = {
 		taskId: string,
 		status: TaskStatus,
 	): Promise<void> => {
-		console.log(`Updating task ${taskId} to status ${status}`);
 		await signalRService.invoke("UpdateTaskStatus", { taskId, status });
-		return new Promise((resolve) => setTimeout(resolve, 500));
 	},
 
 	updateTaskType: async (taskId: string, type: TaskType): Promise<void> => {
-		console.log(`Updating task ${taskId} to type ${type}`);
 		await signalRService.invoke("UpdateTaskType", { taskId, type });
-		return new Promise((resolve) => setTimeout(resolve, 500));
 	},
 
 	assignTask: async (taskId: string, profileId: string): Promise<void> => {
-		console.log(`Assigning task ${taskId} to user ${profileId}`);
 		await signalRService.invoke("AssignTask", { taskId, profileId });
-		return new Promise((resolve) => setTimeout(resolve, 500));
 	},
 };
