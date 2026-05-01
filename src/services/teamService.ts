@@ -60,6 +60,9 @@ const teamService = {
 	): Promise<void> => {
 		await apiClient.put(`/teams/${teamId}/members/${profileId}/role`, { role });
 	},
+	syncGithubMembers: async (teamId: string): Promise<void> => {
+		await apiClient.post(`/github/teams/${teamId}/sync`);
+	},
 };
 
 export default teamService;

@@ -82,7 +82,6 @@ export const useAuthStore = create<AuthState>()(
 			},
 			logout: () => {
 				authService.logout(); // Trigger backend logout
-				localStorage.removeItem("token");
 				set({ user: null, token: null, isAuthenticated: false });
 			},
 		}),

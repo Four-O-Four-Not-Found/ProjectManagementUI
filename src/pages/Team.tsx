@@ -94,6 +94,21 @@ const Team: React.FC = () => {
 		}
 	};
 
+	const handleSyncMembers = async () => {
+		if (!selectedTeam) return;
+		setLoading(true);
+		try {
+			await teamService.syncGithubMembers(selectedTeam.id);
+			const updatedTeam = await teamService.getTeam(selectedTeam.id);
+			setSelectedTeam(updatedTeam);
+			success("Sync Complete", `Team members updated from GitHub.`);
+		} catch {
+			error("Sync Failed", "Could not synchronize with GitHub organization.");
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
 		<div className="space-y-8 animate-fade-in pb-10">
 			<TeamInviteModal
@@ -189,6 +204,17 @@ const Team: React.FC = () => {
 									</p>
 								</div>
 								<div className="flex gap-2">
+									{selectedTeam.description?.includes("GitHub") && (
+										<Button
+											variant="ghost"
+											size="sm"
+											leftIcon={<Loader2 size={16} className={loading ? "animate-spin" : ""} />}
+											onClick={() => handleSyncMembers()}
+											disabled={loading}
+										>
+											Sync GitHub
+										</Button>
+									)}
 									<Button
 										variant="ghost"
 										size="sm"

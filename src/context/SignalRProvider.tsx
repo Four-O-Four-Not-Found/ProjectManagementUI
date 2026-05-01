@@ -1,50 +1,58 @@
-import React, { useEffect } from 'react';
-import { signalRService } from '../services/signalRService';
-import { useToast } from '../hooks/useToast';
-import { SignalRContext } from './SignalRContext';
-import { useNotificationStore } from '../store/useNotificationStore';
-import { type Notification } from '../services/notificationService';
+import React, { useEffect } from "react";
+import { signalRService } from "../services/signalRService";
+import { useToast } from "../hooks/useToast";
+import { SignalRContext } from "./SignalRContext";
+import { useNotificationStore } from "../store/useNotificationStore";
+import { type Notification } from "../services/notificationService";
 
-export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { info, success } = useToast();
-  const { addNotification } = useNotificationStore();
+export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({
+	children,
+}) => {
+	const { info, success } = useToast();
+	const { addNotification } = useNotificationStore();
 
-  useEffect(() => {
-    const init = async () => {
-      await signalRService.startConnection();
-      
-      // Setup global listeners with type safety
-      signalRService.on('ReceiveNotification', (data) => {
-        const notification = data as Notification;
-        addNotification(notification);
-        success(notification.title, notification.message);
-      });
+	useEffect(() => {
+		let isSubscribed = true;
 
-      signalRService.on('TaskUpdated', (data) => {
-        const payload = data as { taskId: string };
-        if (payload?.taskId) {
-          info('Live Sync', `Task ${payload.taskId} was updated by another user.`);
-        }
-      });
+		const init = async () => {
+			try {
+				await signalRService.startConnection();
 
-      signalRService.on('UserJoined', (data) => {
-        const payload = data as { userName: string };
-        if (payload?.userName) {
-          info('Collaboration', `${payload.userName} joined the workspace.`);
-        }
-      });
-    };
+				if (!isSubscribed) return;
 
-    init();
+				// Setup global listeners
+				signalRService.on("ReceiveNotification", (data) => {
+					const notification = data as Notification;
+					addNotification(notification);
+					success(notification.title, notification.message);
+				});
 
-    return () => {
-      signalRService.stopConnection();
-    };
-  }, [info, success, addNotification]);
+				signalRService.on("TaskUpdated", (data) => {
+					const payload = data as { taskId: string };
+					if (payload?.taskId) {
+						info("Live Sync", `Task ${payload.taskId} was updated.`);
+					}
+				});
+			} catch {
+				console.debug("SignalR initialization bypassed during reload.");
+			}
+		};
 
-  return (
-    <SignalRContext.Provider value={{ service: signalRService }}>
-      {children}
-    </SignalRContext.Provider>
-  );
+		init();
+
+		return () => {
+			isSubscribed = false;
+			// Small delay before stopping to allow any pending start/negotiation to settle
+			// This is a common workaround for StrictMode rapid cycles
+			setTimeout(() => {
+				signalRService.stopConnection();
+			}, 100);
+		};
+	}, [info, success, addNotification]);
+
+	return (
+		<SignalRContext.Provider value={{ service: signalRService }}>
+			{children}
+		</SignalRContext.Provider>
+	);
 };

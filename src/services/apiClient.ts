@@ -9,9 +9,16 @@ const apiClient = axios.create({
 
 // Interceptor for adding auth token
 apiClient.interceptors.request.use((config) => {
-	const token = localStorage.getItem("token");
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
+	const authStorage = localStorage.getItem("auth-storage");
+	if (authStorage) {
+		try {
+			const { state } = JSON.parse(authStorage);
+			if (state.token) {
+				config.headers.Authorization = `Bearer ${state.token}`;
+			}
+		} catch (e) {
+			console.error("Failed to parse auth-storage", e);
+		}
 	}
 	return config;
 });
