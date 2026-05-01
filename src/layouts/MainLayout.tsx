@@ -198,14 +198,14 @@ const MainLayout: React.FC = () => {
 				</header>
 
 				{/* Content Outlet */}
-				<div className="flex-1 overflow-auto scrollbar-custom p-4 md:p-6 bg-background pb-20 lg:pb-6">
+				<div className="flex-1 overflow-auto scrollbar-custom p-4 md:p-6 bg-background pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-6">
 					<div className="max-w-[1400px] mx-auto">
 						<Outlet />
 					</div>
 				</div>
 
 				{/* Mobile Bottom Navigation */}
-				<nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-xl border-t border-border z-[80] flex items-center justify-around px-2">
+				<nav className="lg:hidden fixed bottom-0 left-0 right-0 h-[calc(4rem+env(safe-area-inset-bottom))] bg-surface/80 backdrop-blur-xl border-t border-border z-[80] flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
 					<NavLink 
 						to="/"
 						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isDashActive ? 'text-primary' : 'text-text-muted hover:text-primary'}`}

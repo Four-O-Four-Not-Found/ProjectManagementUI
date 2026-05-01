@@ -68,6 +68,20 @@
     transition: background-color 0.2s ease, color 0.2s ease;
     margin: 0;
     -webkit-font-smoothing: antialiased;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-pb {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
   select option {
