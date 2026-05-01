@@ -17,10 +17,52 @@ import type {
 	GitHubPullRequest,
 	GitHubRepoDetails,
 } from "../../services/githubService";
+import { twMerge } from "tailwind-merge";
+import CommitDetailModal from "./CommitDetailModal";
 
 interface RepositoryTabProps {
 	gitHubRepo: string;
 }
+
+const TreeNode: React.FC<{
+	item: { path: string; type: string; size?: number };
+	depth: number;
+}> = ({ item, depth }) => {
+	const parts = item.path.split("/");
+	const fileName = parts[parts.length - 1];
+	const isFolder = item.type === "tree";
+
+	return (
+		<div className="flex flex-col">
+			<div
+				className="flex items-center gap-2 py-1 px-2 rounded hover:bg-primary/10 transition-all cursor-default group select-none"
+				style={{ paddingLeft: `${depth * 16 + 8}px` }}
+			>
+				<span className="text-text-muted/30 w-4 flex justify-center">
+					{depth > 0 ? "│" : ""}
+				</span>
+				{isFolder ? (
+					<Folder size={14} className="text-primary fill-primary/20 shrink-0" />
+				) : (
+					<FileCode size={14} className="text-text-muted shrink-0" />
+				)}
+				<span
+					className={twMerge(
+						"text-[12px] truncate",
+						isFolder ? "text-text-main font-bold" : "text-text-muted",
+					)}
+				>
+					{fileName}
+				</span>
+				{item.size && (
+					<span className="ml-auto text-[9px] text-text-muted/40 opacity-0 group-hover:opacity-100 transition-opacity font-mono">
+						{(item.size / 1024).toFixed(1)} KB
+					</span>
+				)}
+			</div>
+		</div>
+	);
+};
 
 const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 	const [branches, setBranches] = useState<GitHubBranch[]>([]);
@@ -31,6 +73,9 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 	);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+	const [selectedCommitSha, setSelectedCommitSha] = useState<string | null>(
+		null,
+	);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -85,258 +130,268 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 		);
 	}
 
+	const parts = gitHubRepo.split("/");
+	const owner = parts[0];
+	const repo = parts[1];
+
 	return (
 		<div className="space-y-6 animate-fade-in pb-10">
+			<CommitDetailModal
+				isOpen={!!selectedCommitSha}
+				onClose={() => setSelectedCommitSha(null)}
+				owner={owner}
+				repo={repo}
+				sha={selectedCommitSha}
+			/>
+
 			{/* Repo Header & Stats */}
-			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface border border-border p-4 rounded-lg">
-				<div>
-					<h3 className="text-sm font-bold text-text-muted uppercase tracking-widest">
-						Connected Repository
-					</h3>
-					<div className="flex items-center gap-2 mt-1">
-						<span className="text-xl font-bold text-text-main">
-							{gitHubRepo}
-						</span>
-						<a
-							href={`https://github.com/${gitHubRepo}`}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="p-1.5 rounded-md hover:bg-background text-text-muted hover:text-primary transition-colors"
-						>
-							<ExternalLink size={18} />
-						</a>
+			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface border border-border p-4 rounded-lg shadow-sm">
+				<div className="flex items-center gap-4">
+					<div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-inner">
+						<Layers size={24} />
 					</div>
-				</div>
-				<div className="flex items-center gap-6 text-sm">
-					<div className="flex flex-col">
-						<span className="text-text-muted text-[10px] font-bold uppercase tracking-tighter">
-							Total Branches
-						</span>
-						<span className="text-text-main font-bold">{branches.length}</span>
-					</div>
-					<div className="w-px h-8 bg-border"></div>
-					<div className="flex flex-col">
-						<span className="text-text-muted text-[10px] font-bold uppercase tracking-tighter">
-							Open Pull Requests
-						</span>
-						<span className="text-accent-purple font-bold">
-							{pullRequests.length}
-						</span>
-					</div>
-					<div className="w-px h-8 bg-border"></div>
-					<div className="flex flex-col">
-						<span className="text-text-muted text-[10px] font-bold uppercase tracking-tighter">
-							Recent Commits
-						</span>
-						<span className="text-success font-bold">{commits.length}</span>
-					</div>
-				</div>
-			</div>
-
-			{/* Diagram & Tech Stack Summary */}
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-				{/* Architecture Diagram (File Tree) */}
-				<div className="md:col-span-2 bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
-					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
-						<Layers size={16} className="text-primary" />
-						<h3 className="font-bold text-text-main text-sm">
-							Repository Architecture
+					<div>
+						<h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest leading-none mb-1">
+							Source Integration
 						</h3>
-					</div>
-					<div className="p-4 bg-background/30 max-h-[400px] overflow-y-auto scrollbar-custom font-mono">
-						<div className="space-y-1">
-							{repoDetails?.tree.map((item, idx) => {
-								const depth = (item.path.match(/\//g) || []).length;
-								const fileName = item.path.split("/").pop();
-								return (
-									<div
-										key={idx}
-										className="flex items-center gap-2 text-[11px] hover:bg-primary/5 rounded transition-colors group"
-										style={{ paddingLeft: `${depth * 16}px` }}
-									>
-										<span className="text-text-muted opacity-30">
-											{depth > 0 ? "└─" : ""}
-										</span>
-										{item.type === "tree" ? (
-											<Folder
-												size={12}
-												className="text-primary fill-primary/10"
-											/>
-										) : (
-											<FileCode size={12} className="text-text-muted" />
-										)}
-										<span
-											className={
-												item.type === "tree"
-													? "text-text-main font-bold"
-													: "text-text-muted"
-											}
-										>
-											{fileName}
-										</span>
-										{item.size && (
-											<span className="ml-auto text-[9px] text-text-muted/40 opacity-0 group-hover:opacity-100 transition-opacity">
-												{(item.size / 1024).toFixed(1)} KB
-											</span>
-										)}
-									</div>
-								);
-							})}
+						<div className="flex items-center gap-2">
+							<span className="text-lg font-black text-text-main tracking-tight">
+								{gitHubRepo}
+							</span>
+							<a
+								href={`https://github.com/${gitHubRepo}`}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-1.5 rounded-lg hover:bg-background text-text-muted hover:text-primary transition-all active:scale-95"
+							>
+								<ExternalLink size={16} />
+							</a>
 						</div>
 					</div>
 				</div>
-
-				{/* Tech Stack Summary */}
-				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
-					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
-						<Cpu size={16} className="text-success" />
-						<h3 className="font-bold text-text-main text-sm">
-							Technology Stack
-						</h3>
-					</div>
-					<div className="p-5 space-y-6">
-						<div>
-							<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest block mb-2">
-								Core Environment
-							</span>
-							<p className="text-lg font-bold text-text-main leading-tight">
-								{repoDetails?.techStackSummary}
-							</p>
-						</div>
-						<div>
-							<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest block mb-3">
-								Detected Languages
-							</span>
-							<div className="flex flex-wrap gap-2">
-								{repoDetails?.languages.map((lang) => (
-									<span
-										key={lang}
-										className="px-2 py-1 bg-primary/10 border border-primary/20 text-primary rounded text-[10px] font-bold"
-									>
-										{lang}
-									</span>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-				{/* Branches */}
-				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
-					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
-						<GitBranch size={16} className="text-primary" />
-						<h3 className="font-bold text-text-main text-sm">Branches</h3>
-						<span className="ml-auto text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+				<div className="flex items-center gap-4 md:gap-8 bg-background/40 p-2 md:p-3 rounded-xl border border-border/50">
+					<div className="flex flex-col items-center">
+						<span className="text-text-muted text-[9px] font-bold uppercase tracking-tighter mb-0.5">
+							Branches
+						</span>
+						<span className="text-text-main font-black text-base leading-none">
 							{branches.length}
 						</span>
 					</div>
-					<div className="flex-1 overflow-y-auto p-2 space-y-1 max-h-[400px] scrollbar-custom">
-						{branches.map((b) => (
-							<div
-								key={b.name}
-								className="flex flex-col p-2 md:p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border"
-							>
-								<span className="font-bold text-xs md:text-sm text-text-main">
-									{b.name}
-								</span>
-								<span className="text-[9px] md:text-[10px] text-text-muted font-mono">
-									{b.commitSha.substring(0, 7)}
-								</span>
-							</div>
-						))}
-					</div>
-				</div>
-
-				{/* Pull Requests */}
-				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
-					<div className="p-3 md:p-4 border-b border-border bg-surface-hover flex items-center gap-2">
-						<GitPullRequest size={16} className="text-accent-purple" />
-						<h3 className="font-bold text-text-main text-xs md:text-sm">
-							Pull Requests
-						</h3>
-						<span className="ml-auto text-[10px] md:text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+					<div className="w-px h-6 bg-border/50"></div>
+					<div className="flex flex-col items-center">
+						<span className="text-text-muted text-[9px] font-bold uppercase tracking-tighter mb-0.5">
+							Open PRs
+						</span>
+						<span className="text-accent-purple font-black text-base leading-none">
 							{pullRequests.length}
 						</span>
 					</div>
-					<div className="flex-1 overflow-y-auto p-1.5 md:p-2 space-y-1 max-h-[300px] md:max-h-[400px] scrollbar-custom">
-						{pullRequests.length === 0 ? (
-							<div className="p-4 text-center text-xs text-text-muted">
-								No open pull requests.
-							</div>
-						) : (
-							pullRequests.map((pr) => (
-								<a
-									key={pr.number}
-									href={pr.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex flex-col p-2 md:p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border group"
-								>
-									<div className="flex justify-between items-start gap-2">
-										<span className="font-bold text-xs md:text-sm text-text-main group-hover:text-primary transition-colors">
-											{pr.title}
-										</span>
-										<ExternalLink size={10} className="text-text-muted mt-1" />
-									</div>
-									<div className="flex justify-between items-center mt-1 md:mt-2">
-										<span className="text-[9px] md:text-[10px] text-text-muted font-bold">
-											#{pr.number} by {pr.author}
-										</span>
-										<span className="text-[8px] md:text-[10px] px-1.5 py-0.5 rounded-sm bg-accent-purple/10 text-accent-purple font-bold uppercase">
-											{pr.state}
-										</span>
-									</div>
-								</a>
-							))
-						)}
-					</div>
-				</div>
-
-				{/* Commits */}
-				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col col-span-2 md:col-span-1">
-					<div className="p-3 md:p-4 border-b border-border bg-surface-hover flex items-center gap-2">
-						<GitCommit size={16} className="text-success" />
-						<h3 className="font-bold text-text-main text-xs md:text-sm">
-							Recent Commits
-						</h3>
-						<span className="ml-auto text-[10px] md:text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+					<div className="w-px h-6 bg-border/50"></div>
+					<div className="flex flex-col items-center">
+						<span className="text-text-muted text-[9px] font-bold uppercase tracking-tighter mb-0.5">
+							Commits
+						</span>
+						<span className="text-success font-black text-base leading-none">
 							{commits.length}
 						</span>
 					</div>
-					<div className="flex-1 overflow-y-auto p-1.5 md:p-2 space-y-1 max-h-[300px] md:max-h-[400px] scrollbar-custom">
+				</div>
+			</div>
+
+			{/* Tech Stack Summary */}
+			<div className="bg-surface border border-border rounded-xl overflow-hidden shadow-lg shadow-black/20">
+				<div className="px-5 py-3 border-b border-border bg-surface-hover/30 flex items-center gap-2">
+					<Cpu size={14} className="text-success" />
+					<h3 className="font-extrabold text-text-main text-[10px] uppercase tracking-wider">
+						Stack Profile & Repository DNA
+					</h3>
+				</div>
+				<div className="p-4 flex flex-col md:flex-row items-center gap-6 md:gap-12">
+					<div className="flex flex-col min-w-[200px]">
+						<span className="text-[9px] font-bold text-text-muted uppercase tracking-widest block mb-1 opacity-60">
+							Architecture
+						</span>
+						<p className="text-base font-black text-text-main leading-tight tracking-tight">
+							{repoDetails?.techStackSummary || "Undetermined"}
+						</p>
+					</div>
+
+					<div className="hidden md:block w-px h-8 bg-border" />
+
+					<div className="flex flex-col flex-1">
+						<span className="text-[9px] font-bold text-text-muted uppercase tracking-widest block mb-2 opacity-60">
+							Language DNA
+						</span>
+						<div className="flex flex-wrap gap-2">
+							{repoDetails?.languages.map((lang) => (
+								<div
+									key={lang}
+									className="flex items-center gap-2 px-2 py-1 bg-background border border-border rounded-md group hover:border-primary/50 transition-all cursor-default"
+								>
+									<div className="w-1.5 h-1.5 rounded-full bg-primary" />
+									<span className="text-[10px] font-black text-text-main group-hover:text-primary transition-colors">
+										{lang}
+									</span>
+								</div>
+							))}
+						</div>
+					</div>
+
+					<div className="hidden md:block w-px h-8 bg-border" />
+
+					<div className="flex-1 italic text-[10px] text-text-muted bg-primary/5 p-2 rounded-lg border border-primary/10">
+						"This repository follows a
+						<span className="text-primary font-bold not-italic px-1">
+							{repoDetails?.techStackSummary.includes(",")
+								? "Polyglot"
+								: "Monolith"}
+						</span>
+						pattern with {repoDetails?.languages.length} distinct signatures."
+					</div>
+				</div>
+			</div>
+
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+				{/* Architecture Diagram (File Tree) */}
+				<div className="md:col-span-2 bg-surface border border-border rounded-xl overflow-hidden flex flex-col shadow-lg shadow-black/20">
+					<div className="px-5 py-4 border-b border-border bg-surface-hover/50 flex justify-between items-center">
+						<div className="flex items-center gap-2">
+							<Layers size={16} className="text-primary" />
+							<h3 className="font-extrabold text-text-main text-xs uppercase tracking-wider">
+								Infrastructure Map
+							</h3>
+						</div>
+						<span className="text-[10px] font-bold text-text-muted bg-background px-2 py-0.5 rounded border border-border">
+							{repoDetails?.tree.length || 0} Objects Detected
+						</span>
+					</div>
+					<div className="p-4 bg-background/20 max-h-[450px] overflow-y-auto scrollbar-custom font-mono">
+						<div className="space-y-0.5">
+							{repoDetails ? (
+								repoDetails.tree.map((item, idx) => (
+									<TreeNode
+										key={`${item.path}-${idx}`}
+										item={item}
+										depth={(item.path.match(/\//g) || []).length}
+									/>
+								))
+							) : (
+								<div className="py-20 text-center text-text-muted text-xs italic">
+									No structure data available.
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
+
+				<div className="space-y-6">
+					{/* Branches */}
+					<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col h-[215px]">
+						<div className="p-3 border-b border-border bg-surface-hover flex items-center gap-2">
+							<GitBranch size={14} className="text-primary" />
+							<h3 className="font-bold text-text-main text-xs">Branches</h3>
+							<span className="ml-auto text-[10px] font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+								{branches.length}
+							</span>
+						</div>
+						<div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom">
+							{branches.map((b) => (
+								<div
+									key={b.name}
+									className="flex flex-col p-2 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border"
+								>
+									<span className="font-bold text-[11px] text-text-main">
+										{b.name}
+									</span>
+									<span className="text-[9px] text-text-muted font-mono">
+										{b.commitSha.substring(0, 7)}
+									</span>
+								</div>
+							))}
+						</div>
+					</div>
+
+					{/* Pull Requests */}
+					<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col h-[215px]">
+						<div className="p-3 border-b border-border bg-surface-hover flex items-center gap-2">
+							<GitPullRequest size={14} className="text-accent-purple" />
+							<h3 className="font-bold text-text-main text-xs">PRs</h3>
+							<span className="ml-auto text-[10px] font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+								{pullRequests.length}
+							</span>
+						</div>
+						<div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom">
+							{pullRequests.length === 0 ? (
+								<div className="p-4 text-center text-[10px] text-text-muted italic">
+									No open PRs.
+								</div>
+							) : (
+								pullRequests.map((pr) => (
+									<a
+										key={pr.number}
+										href={pr.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="flex flex-col p-2 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border group"
+									>
+										<div className="flex justify-between items-start gap-2">
+											<span className="font-bold text-[11px] text-text-main group-hover:text-primary truncate">
+												{pr.title}
+											</span>
+											<ExternalLink size={10} className="text-text-muted mt-0.5" />
+										</div>
+										<div className="flex justify-between items-center mt-1">
+											<span className="text-[8px] text-text-muted">
+												#{pr.number} by {pr.author}
+											</span>
+										</div>
+									</a>
+								))
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div className="grid grid-cols-1 gap-6">
+				{/* Commits (Wide view at bottom) */}
+				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col shadow-lg shadow-black/20">
+					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
+						<GitCommit size={16} className="text-success" />
+						<h3 className="font-bold text-text-main text-sm">Recent Commits</h3>
+						<span className="ml-auto text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+							{commits.length}
+						</span>
+					</div>
+					<div className="p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[300px] overflow-y-auto scrollbar-custom">
 						{commits.map((c) => (
-							<a
+							<div
 								key={c.sha}
-								href={c.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex flex-col p-2 md:p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border group"
+								onClick={() => setSelectedCommitSha(c.sha)}
+								className="flex flex-col p-3 rounded-xl hover:bg-background transition-all border border-transparent hover:border-border group cursor-pointer"
 							>
 								<div className="flex justify-between items-start gap-2">
-									<span className="font-bold text-xs md:text-sm text-text-main truncate group-hover:text-primary transition-colors">
+									<span className="font-bold text-xs text-text-main group-hover:text-primary transition-colors line-clamp-1">
 										{c.message.split("\n")[0]}
 									</span>
 									<ExternalLink
 										size={10}
-										className="text-text-muted mt-1 flex-shrink-0"
+										className="text-text-muted flex-shrink-0"
 									/>
 								</div>
-								<div className="flex justify-between items-center mt-1 md:mt-2">
-									<div className="flex items-center gap-1">
-										<div className="w-3.5 h-3.5 rounded-full bg-text-muted flex items-center justify-center text-[7px] text-background font-bold">
+								<div className="flex justify-between items-center mt-2">
+									<div className="flex items-center gap-1.5">
+										<div className="w-4 h-4 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-[8px] text-primary font-bold">
 											{c.author.charAt(0).toUpperCase()}
 										</div>
-										<span className="text-[9px] md:text-[10px] text-text-muted">
-											{c.author}
-										</span>
+										<span className="text-[10px] text-text-muted">{c.author}</span>
 									</div>
-									<span className="text-[9px] md:text-[10px] text-text-muted font-mono">
+									<span className="text-[10px] text-text-muted font-mono font-bold">
 										{c.sha.substring(0, 7)}
 									</span>
 								</div>
-							</a>
+							</div>
 						))}
 					</div>
 				</div>

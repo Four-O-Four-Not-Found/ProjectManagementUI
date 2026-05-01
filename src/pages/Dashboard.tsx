@@ -25,6 +25,8 @@ import type { Task, Project, Activity } from "../types";
 import { projectService } from "../services/projectService";
 import apiClient from "../services/apiClient";
 import BurndownChart from "../components/molecules/BurndownChart";
+import WorkloadChart from "../components/molecules/WorkloadChart";
+import { twMerge } from "tailwind-merge";
 
 interface DashboardStats {
 	totalTasks: number;
@@ -32,6 +34,7 @@ interface DashboardStats {
 	teamMembers: number;
 	openPullRequests: number;
 	burndownData: { day: string; ideal: number; actual: number }[];
+	workloadData: { name: string; tasks: number; color: string }[];
 	assignedTasks: Task[];
 	recentActivities: Activity[];
 }
@@ -294,20 +297,38 @@ const Dashboard: React.FC = () => {
 						</div>
 					</GlassCard>
 
-					{/* Velocity Chart */}
-					<GlassCard className="p-6 flex flex-col min-h-[350px]">
-						<div className="flex justify-between items-center mb-6">
-							<div>
-								<h3 className="font-bold text-text-main text-sm">
-									Workspace Performance
-								</h3>
-								<p className="text-[10px] text-text-muted">
-									Velocity trend across all connected projects
-								</p>
+					{/* Performance & Workload Section */}
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						{/* Velocity Chart */}
+						<GlassCard className="p-6 flex flex-col min-h-[350px]">
+							<div className="flex justify-between items-center mb-6">
+								<div>
+									<h3 className="font-bold text-text-main text-sm">
+										Workspace Performance
+									</h3>
+									<p className="text-[10px] text-text-muted">
+										Velocity trend across all connected projects
+									</p>
+								</div>
 							</div>
-						</div>
-						<BurndownChart data={stats.burndownData} />
-					</GlassCard>
+							<BurndownChart data={stats.burndownData} />
+						</GlassCard>
+
+						{/* Workload Distribution */}
+						<GlassCard className="p-6 flex flex-col min-h-[350px]">
+							<div className="flex justify-between items-center mb-6">
+								<div>
+									<h3 className="font-bold text-text-main text-sm">
+										Workload Balance
+									</h3>
+									<p className="text-[10px] text-text-muted">
+										Current task distribution across top contributors
+									</p>
+								</div>
+							</div>
+							<WorkloadChart data={stats.workloadData} />
+						</GlassCard>
+					</div>
 				</div>
 
 				{/* Right Column: Activity Feed & Projects */}
@@ -360,34 +381,80 @@ const Dashboard: React.FC = () => {
 						</button>
 					</GlassCard>
 
-					{/* Projects Mini-List */}
-					<GlassCard className="p-4 bg-primary/5 border-primary/20">
-						<h3 className="text-xs font-bold text-primary mb-4 uppercase tracking-widest">
-							Active Workspaces
-						</h3>
-						<div className="space-y-2">
-							{projects.slice(0, 4).map((project) => (
-								<div
-									key={project.id}
-									onClick={() => navigate(`/project/${project.id}`)}
-									className="p-2.5 md:p-3 bg-surface border border-border rounded-lg md:rounded-xl hover:border-primary transition-all cursor-pointer flex items-center justify-between group"
-								>
-									<div className="min-w-0">
-										<h4 className="text-[11px] md:text-xs font-bold text-text-main group-hover:text-primary transition-colors truncate">
-											{project.name}
-										</h4>
-										<p className="text-[8px] md:text-[9px] text-text-muted">
-											{project.key}
-										</p>
-									</div>
-									<ChevronRight
-										size={12}
-										className="text-text-muted md:w-[14px] group-hover:translate-x-1 transition-transform"
-									/>
-								</div>
-							))}
+					{/* Projects High-Density Grid */}
+					<div className="space-y-4">
+						<div className="flex items-center justify-between">
+							<h3 className="text-xs font-extrabold text-primary uppercase tracking-widest">
+								Active Workspaces
+							</h3>
+							<span className="text-[10px] font-bold text-text-muted hover:text-primary cursor-pointer transition-colors">
+								View All
+							</span>
 						</div>
-					</GlassCard>
+						<div className="space-y-3">
+							{projects.slice(0, 4).map((project, idx) => {
+								// Simulated progress for demonstration
+								const progress = [75, 40, 92, 15][idx % 4];
+								const status =
+									progress > 70
+										? "On Track"
+										: progress > 30
+											? "Active"
+											: "Early Stage";
+
+								return (
+									<div
+										key={project.id}
+										onClick={() => navigate(`/project/${project.id}`)}
+										className="p-4 bg-surface border border-border rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer group relative overflow-hidden"
+									>
+										<div className="flex justify-between items-start mb-3">
+											<div className="min-w-0">
+												<div className="flex items-center gap-2 mb-1">
+													<div className="w-2 h-2 rounded-full bg-primary" />
+													<h4 className="text-xs font-black text-text-main group-hover:text-primary transition-colors truncate">
+														{project.name}
+													</h4>
+												</div>
+												<p className="text-[9px] text-text-muted font-bold uppercase tracking-wider">
+													{project.key} • {status}
+												</p>
+											</div>
+											<ChevronRight
+												size={14}
+												className="text-text-muted group-hover:translate-x-1 group-hover:text-primary transition-all"
+											/>
+										</div>
+
+										<div className="space-y-2">
+											<div className="flex justify-between items-end">
+												<span className="text-[9px] font-bold text-text-muted">
+													Sprint Velocity
+												</span>
+												<span className="text-[10px] font-black text-text-main">
+													{progress}%
+												</span>
+											</div>
+											<div className="h-1.5 w-full bg-background rounded-full overflow-hidden border border-border/50">
+												<motion.div
+													initial={{ width: 0 }}
+													animate={{ width: `${progress}%` }}
+													className={twMerge(
+														"h-full rounded-full",
+														progress > 70
+															? "bg-success"
+															: progress > 30
+																? "bg-primary"
+																: "bg-warning",
+													)}
+												/>
+											</div>
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

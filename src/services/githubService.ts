@@ -29,6 +29,19 @@ export interface GitHubCommit {
 	url: string;
 }
 
+export interface GitHubCommitDetail extends GitHubCommit {
+	files: {
+		filename: string;
+		status: string;
+		additions: number;
+		deletions: number;
+		patch: string;
+	}[];
+	additions: number;
+	deletions: number;
+	totalChanges: number;
+}
+
 export interface GitHubPullRequest {
 	number: number;
 	title: string;
@@ -75,6 +88,17 @@ export const githubService = {
 	): Promise<GitHubCommit[]> => {
 		const response = await apiClient.get(
 			`/github/repos/${owner}/${repoName}/commits`,
+		);
+		return response.data;
+	},
+
+	getCommitDetails: async (
+		owner: string,
+		repoName: string,
+		sha: string,
+	): Promise<GitHubCommitDetail> => {
+		const response = await apiClient.get(
+			`/github/repos/${owner}/${repoName}/commits/${sha}`,
 		);
 		return response.data;
 	},
