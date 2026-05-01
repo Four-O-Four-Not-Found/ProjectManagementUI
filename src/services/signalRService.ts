@@ -2,7 +2,8 @@ import * as signalR from "@microsoft/signalr";
 
 class SignalRService {
 	private connection: signalR.HubConnection | null = null;
-	private hubUrl: string = "http://localhost:5139/projectHub";
+	private hubUrl: string =
+		import.meta.env.VITE_HUB_URL || "http://localhost:5139/projectHub";
 	private startPromise: Promise<void> | null = null;
 
 	constructor() {
@@ -14,33 +15,44 @@ class SignalRService {
 		}
 	}
 
-	private async showNativeNotification(title: string, options?: NotificationOptions) {
-		if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+	private async showNativeNotification(
+		title: string,
+		options?: NotificationOptions,
+	) {
+		if (
+			typeof window !== "undefined" &&
+			"Notification" in window &&
+			Notification.permission === "granted"
+		) {
 			new Notification(title, {
 				icon: "/logo192.png", // Fallback icon
-				...options
+				...options,
 			});
 		}
 	}
 
 	public async startConnection(): Promise<void> {
 		if (this.startPromise) return this.startPromise;
-		
-		if (this.connection?.state === signalR.HubConnectionState.Connected || 
-			this.connection?.state === signalR.HubConnectionState.Connecting) {
+
+		if (
+			this.connection?.state === signalR.HubConnectionState.Connected ||
+			this.connection?.state === signalR.HubConnectionState.Connecting
+		) {
 			return;
 		}
 
 		this.startPromise = (async () => {
 			try {
-				const authData = localStorage.getItem('auth-storage');
+				const authData = localStorage.getItem("auth-storage");
 				const token = authData ? JSON.parse(authData).state.token : null;
 
 				this.connection = new signalR.HubConnectionBuilder()
 					.withUrl(this.hubUrl, {
 						accessTokenFactory: () => token || "",
 						skipNegotiation: false,
-						transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling
+						transport:
+							signalR.HttpTransportType.WebSockets |
+							signalR.HttpTransportType.LongPolling,
 					})
 					.withAutomaticReconnect()
 					.configureLogging(signalR.LogLevel.Warning)
@@ -96,9 +108,11 @@ class SignalRService {
 	public async stopConnection(): Promise<void> {
 		if (this.connection) {
 			const conn = this.connection;
-			
-			if (conn.state === signalR.HubConnectionState.Disconnecting || 
-				conn.state === signalR.HubConnectionState.Disconnected) {
+
+			if (
+				conn.state === signalR.HubConnectionState.Disconnecting ||
+				conn.state === signalR.HubConnectionState.Disconnected
+			) {
 				this.connection = null;
 				return;
 			}
@@ -109,8 +123,10 @@ class SignalRService {
 				await conn.stop();
 			} catch (err) {
 				const error = err as Error;
-				if (!error.message?.includes("stopped during negotiation") && 
-					!error.message?.includes("connection was stopped")) {
+				if (
+					!error.message?.includes("stopped during negotiation") &&
+					!error.message?.includes("connection was stopped")
+				) {
 					console.debug("SignalR: Connection stopped gracefully.");
 				}
 			}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { User } from "../types";
 
-const API_URL = "http://localhost:5139/api/auth";
+const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:5139/api"}/auth`;
 
 const authService = {
 	// Existing login remains mock for now as it's handled via GitHub redirect
