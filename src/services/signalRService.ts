@@ -5,6 +5,24 @@ class SignalRService {
 	private hubUrl: string = "http://localhost:5139/projectHub";
 	private startPromise: Promise<void> | null = null;
 
+	constructor() {
+		// Request notification permission on init if available
+		if (typeof window !== "undefined" && "Notification" in window) {
+			if (Notification.permission === "default") {
+				Notification.requestPermission();
+			}
+		}
+	}
+
+	private async showNativeNotification(title: string, options?: NotificationOptions) {
+		if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+			new Notification(title, {
+				icon: "/logo192.png", // Fallback icon
+				...options
+			});
+		}
+	}
+
 	public async startConnection(): Promise<void> {
 		if (this.startPromise) return this.startPromise;
 		
@@ -28,6 +46,11 @@ class SignalRService {
 					.configureLogging(signalR.LogLevel.Warning)
 					.build();
 
+				// Listen for notifications
+				this.connection.on("ReceiveNotification", (message: string) => {
+					this.showNativeNotification("Project Update", { body: message });
+				});
+
 				console.log("SignalR: Connecting...");
 				await this.connection.start();
 				console.log("SignalR: Connected");
@@ -41,7 +64,6 @@ class SignalRService {
 				if (!isAbortError) {
 					console.error("SignalR: Connection failed:", error);
 				} else {
-					// Silent warning for expected dev-mode behavior
 					console.debug("SignalR: Connection attempt synchronized.");
 				}
 			} finally {
@@ -75,7 +97,6 @@ class SignalRService {
 		if (this.connection) {
 			const conn = this.connection;
 			
-			// If we're already disconnecting, just return
 			if (conn.state === signalR.HubConnectionState.Disconnecting || 
 				conn.state === signalR.HubConnectionState.Disconnected) {
 				this.connection = null;
@@ -87,7 +108,6 @@ class SignalRService {
 			try {
 				await conn.stop();
 			} catch (err) {
-				// Silently catch abort errors during stop
 				const error = err as Error;
 				if (!error.message?.includes("stopped during negotiation") && 
 					!error.message?.includes("connection was stopped")) {

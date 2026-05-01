@@ -129,6 +129,41 @@ export const githubService = {
 		return response.data;
 	},
 
+	deleteBranch: async (
+		owner: string,
+		repoName: string,
+		branchName: string,
+	): Promise<void> => {
+		await apiClient.delete(
+			`/github/repos/${owner}/${repoName}/branches/${branchName}`,
+		);
+	},
+
+	deletePullRequest: async (
+		owner: string,
+		repoName: string,
+		number: number,
+	): Promise<void> => {
+		await apiClient.delete(
+			`/github/repos/${owner}/${repoName}/pulls/${number}`,
+		);
+	},
+
+	createRepository: async (
+		name: string,
+		description: string,
+		isPrivate: boolean = true,
+		orgName?: string,
+	): Promise<GitHubRepo> => {
+		const url = orgName ? `/github/orgs/${orgName}/repos` : "/github/repos";
+		const response = await apiClient.post(url, {
+			name,
+			description,
+			isPrivate,
+		});
+		return response.data;
+	},
+
 	getRepoDetails: async (
 		owner: string,
 		repoName: string,
@@ -137,6 +172,22 @@ export const githubService = {
 			`/github/repos/${owner}/${repoName}/details`,
 		);
 		return response.data;
+	},
+
+	updateFile: async (
+		owner: string,
+		repoName: string,
+		path: string,
+		content: string,
+		message: string,
+		branch: string,
+	): Promise<void> => {
+		await apiClient.put(`/github/repos/${owner}/${repoName}/files`, {
+			path,
+			content,
+			message,
+			branch,
+		});
 	},
 };
 

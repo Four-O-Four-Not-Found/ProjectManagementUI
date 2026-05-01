@@ -8,6 +8,7 @@ import {
 	Lightbulb,
 	AlertCircle,
 	Bookmark,
+	Calendar,
 } from "lucide-react";
 import Badge from "../atoms/Badge";
 import Avatar from "../atoms/Avatar";
@@ -72,8 +73,11 @@ const TaskCard: React.FC<TaskCardProps> = ({
 		}
 	};
 
-	const hasImage = task.attachments?.some((a) => a.type === "image");
-	const thumbnail = task.attachments?.find((a) => a.type === "image")?.url;
+	// Check if task is overdue
+	const isOverdue =
+		task.dueDate &&
+		new Date(task.dueDate) < new Date() &&
+		task.status !== "Done";
 
 	return (
 		<motion.div
@@ -83,7 +87,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
 			exit={{ opacity: 0, scale: 0.95 }}
 			onClick={onClick}
 			className={twMerge(
-				"glass-card p-3 md:p-4 rounded-xl md:rounded-2xl cursor-grab active:cursor-grabbing group hover:bg-surface-hover/50 mb-2 md:mb-3 relative overflow-hidden",
+				"glass-card p-3 md:p-4 rounded-xl md:rounded-2xl cursor-grab active:cursor-grabbing group hover:bg-surface-hover/50 mb-2 md:mb-3 relative overflow-hidden flex flex-col h-[160px] md:h-[180px]",
+				isOverdue && "border-danger/30 shadow-[0_0_15px_rgba(239,68,68,0.1)]",
 				className,
 			)}
 		>
@@ -93,16 +98,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
 			>
 				<ArrowRightLeft size={14} />
 			</button>
-
-			{hasImage && thumbnail && (
-				<div className="mb-2 md:mb-3 rounded-lg md:rounded-xl overflow-hidden h-24 md:h-32 border border-border">
-					<img
-						src={thumbnail}
-						alt="Thumbnail"
-						className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-					/>
-				</div>
-			)}
 
 			<div className="flex justify-between items-start mb-2 md:mb-3">
 				<div className="flex items-center gap-1.5 md:gap-2">
@@ -114,11 +109,32 @@ const TaskCard: React.FC<TaskCardProps> = ({
 				<PriorityBadge priority={task.priority} />
 			</div>
 
-			<h4 className="text-xs md:text-sm font-bold text-text-main mb-3 md:mb-4 line-clamp-2 leading-tight md:leading-snug group-hover:text-primary transition-colors">
-				{task.title}
-			</h4>
+			<div className="flex-1 flex flex-col gap-2 min-w-0">
+				<h4 className="text-xs md:text-sm font-bold text-text-main line-clamp-2 leading-tight md:leading-snug group-hover:text-primary transition-colors">
+					{task.title}
+				</h4>
 
-			<div className="flex justify-between items-center">
+				<div className="flex items-center gap-2 mt-auto">
+					{task.dueDate && (
+						<div
+							className={twMerge(
+								"flex items-center gap-1 text-[9px] md:text-[10px] font-black uppercase tracking-tight px-1.5 py-0.5 rounded border transition-colors",
+								isOverdue
+									? "text-danger bg-danger/10 border-danger/20"
+									: "text-text-muted bg-background border-border",
+							)}
+						>
+							<Calendar size={10} />
+							{new Date(task.dueDate).toLocaleDateString(undefined, {
+								month: "short",
+								day: "numeric",
+							})}
+						</div>
+					)}
+				</div>
+			</div>
+
+			<div className="flex justify-between items-center mt-auto pt-2 md:pt-3 border-t border-border/30">
 				<div className="flex items-center -space-x-1.5 md:-space-x-2">
 					<Avatar
 						name={task.assignee?.name || "Unassigned"}

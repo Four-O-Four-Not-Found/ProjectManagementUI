@@ -55,6 +55,7 @@ export interface Task {
 	};
 	startDate?: string;
 	endDate?: string;
+	dueDate?: string;
 	progress?: number; // 0-100
 	dependencies?: string[]; // IDs of tasks this task depends on
 	attachments?: Attachment[];

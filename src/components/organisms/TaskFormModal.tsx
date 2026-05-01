@@ -9,6 +9,7 @@ import {
 	User,
 	Image as ImageIcon,
 	X,
+	Calendar,
 } from "lucide-react";
 import type {
 	Task,
@@ -52,6 +53,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			projectId: defaultProjectId || "",
 			assigneeId: "",
 			status: "Todo",
+			dueDate: "",
 		},
 	);
 
@@ -85,9 +87,9 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					.getBranches(parts[0], parts[1])
 					.then((data) => {
 						setBranches(data);
-						if (data.length > 0 && !data.find(b => b.name === "main")) {
+						if (data.length > 0 && !data.find((b) => b.name === "main")) {
 							setBaseBranch(data[0].name);
-						} else if (data.find(b => b.name === "main")) {
+						} else if (data.find((b) => b.name === "main")) {
 							setBaseBranch("main");
 						}
 					})
@@ -143,7 +145,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							parts[0],
 							parts[1],
 							newBranchName,
-							baseBranch
+							baseBranch,
 						);
 						updatedFormData = { ...updatedFormData, gitHubBranch: branch.name };
 					}
@@ -184,7 +186,6 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 				/>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-					{/* Project Selection - MANDATORY */}
 					<div className="space-y-1.5">
 						<label className="text-xs font-semibold text-text-main block ml-0.5">
 							Workspace Destination
@@ -218,7 +219,6 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						)}
 					</div>
 
-					{/* Assignee Selection */}
 					<div className="space-y-1.5">
 						<label className="text-xs font-semibold text-text-main block ml-0.5">
 							Assignee
@@ -242,6 +242,49 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 									</option>
 								))}
 							</select>
+						</div>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div className="space-y-1.5">
+						<label className="text-xs font-semibold text-text-main block ml-0.5">
+							Deadline (Due Date)
+						</label>
+						<div className="relative">
+							<Calendar
+								size={16}
+								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+							/>
+							<input
+								type="date"
+								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+								value={formData.dueDate ? formData.dueDate.split("T")[0] : ""}
+								onChange={(e) =>
+									setFormData({ ...formData, dueDate: e.target.value })
+								}
+							/>
+						</div>
+					</div>
+
+					<div className="space-y-1.5">
+						<label className="text-xs font-semibold text-text-main block ml-0.5">
+							Classification
+						</label>
+						<div className="flex gap-2">
+							{(["Feature", "Bug", "Issue"] as TaskType[]).map((type) => (
+								<button
+									key={type}
+									onClick={() => setFormData({ ...formData, type })}
+									className={`flex-1 py-2 px-3 rounded-md border text-[10px] font-bold uppercase tracking-wider transition-all ${
+										formData.type === type
+											? "bg-primary/10 border-primary text-primary shadow-sm"
+											: "border-border text-text-muted hover:border-text-muted bg-surface"
+									}`}
+								>
+									{type}
+								</button>
+							))}
 						</div>
 					</div>
 				</div>
@@ -291,49 +334,26 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-					<div className="space-y-1.5">
-						<label className="text-xs font-semibold text-text-main block ml-0.5">
-							Classification
-						</label>
-						<div className="flex gap-2">
-							{(["Feature", "Bug", "Issue"] as TaskType[]).map((type) => (
+				<div className="space-y-1.5">
+					<label className="text-xs font-semibold text-text-main block ml-0.5">
+						Priority Level
+					</label>
+					<div className="flex gap-2">
+						{(["Low", "Medium", "High", "Urgent"] as Priority[]).map(
+							(priority) => (
 								<button
-									key={type}
-									onClick={() => setFormData({ ...formData, type })}
-									className={`flex-1 py-2 px-3 rounded-md border text-[10px] font-bold uppercase tracking-wider transition-all ${
-										formData.type === type
-											? "bg-primary/10 border-primary text-primary shadow-sm"
+									key={priority}
+									onClick={() => setFormData({ ...formData, priority })}
+									className={`flex-1 py-2 px-2 rounded-md border text-[9px] font-bold uppercase tracking-tight transition-all ${
+										formData.priority === priority
+											? "bg-merged/10 border-merged text-merged shadow-sm"
 											: "border-border text-text-muted hover:border-text-muted bg-surface"
 									}`}
 								>
-									{type}
+									{priority}
 								</button>
-							))}
-						</div>
-					</div>
-
-					<div className="space-y-1.5">
-						<label className="text-xs font-semibold text-text-main block ml-0.5">
-							Priority
-						</label>
-						<div className="flex gap-2">
-							{(["Low", "Medium", "High", "Urgent"] as Priority[]).map(
-								(priority) => (
-									<button
-										key={priority}
-										onClick={() => setFormData({ ...formData, priority })}
-										className={`flex-1 py-2 px-2 rounded-md border text-[9px] font-bold uppercase tracking-tight transition-all ${
-											formData.priority === priority
-												? "bg-merged/10 border-merged text-merged shadow-sm"
-												: "border-border text-text-muted hover:border-text-muted bg-surface"
-										}`}
-									>
-										{priority}
-									</button>
-								),
-							)}
-						</div>
+							),
+						)}
 					</div>
 				</div>
 

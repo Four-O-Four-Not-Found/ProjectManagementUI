@@ -10,6 +10,7 @@ import {
 	Lightbulb,
 	CheckCircle2,
 	User,
+	Calendar,
 } from "lucide-react";
 import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
@@ -264,7 +265,39 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 					<div>
 						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
-							Timeline
+							Deadline
+						</h3>
+						{task.dueDate ? (
+							<div
+								className={`flex items-center gap-3 p-2.5 rounded-xl border ${new Date(task.dueDate) < new Date() && task.status !== "Done" ? "bg-danger/10 border-danger/20 text-danger" : "bg-background border-border text-text-main"}`}
+							>
+								<Calendar size={16} />
+								<div className="min-w-0">
+									<p className="text-[11px] font-bold">
+										{new Date(task.dueDate).toLocaleDateString(undefined, {
+											month: "long",
+											day: "numeric",
+											year: "numeric",
+										})}
+									</p>
+									<p className="text-[9px] opacity-70">
+										{new Date(task.dueDate) < new Date() &&
+										task.status !== "Done"
+											? "Overdue"
+											: "Scheduled Completion"}
+									</p>
+								</div>
+							</div>
+						) : (
+							<p className="text-[10px] text-text-muted italic px-1">
+								No deadline set.
+							</p>
+						)}
+					</div>
+
+					<div>
+						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
+							History
 						</h3>
 						<div className="space-y-2.5">
 							<div className="flex items-center gap-2 text-[10px] text-text-muted">
