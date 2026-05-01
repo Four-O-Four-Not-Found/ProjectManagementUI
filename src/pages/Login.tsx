@@ -36,11 +36,11 @@ const Login: React.FC = () => {
 					"Authentication Successful",
 					"Welcome to your FlowState workspace.",
 				);
-				navigate("/board");
+				navigate("/");
 			}, 1500);
 			return () => clearTimeout(timer);
 		} else if (isAuthenticated) {
-			navigate("/board");
+			navigate("/");
 		}
 	}, [
 		searchParams,
