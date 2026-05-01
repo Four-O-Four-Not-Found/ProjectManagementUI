@@ -56,7 +56,7 @@ const Login: React.FC = () => {
 	}
 
 	const handleGitHubLogin = () => {
-		const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5139/api";
+		const apiUrl = import.meta.env.VITE_API_URL;
 		window.location.href = `${apiUrl}/auth/login-github`;
 	};
 

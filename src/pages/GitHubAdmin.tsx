@@ -74,7 +74,7 @@ const GitHubAdmin: React.FC = () => {
 							: (error.response.data as { message?: string })?.message || errorMessage;
 					} else if (error.request) {
 						// Request was made but no response (Network error / SSL / CORS)
-						errorMessage = "Network Error: The server is unreachable. Please ensure the backend is running and you have accepted its SSL certificate at http://localhost:5139/api/github/repos";
+						errorMessage = `Network Error: The server is unreachable. Please ensure the backend is running and you have accepted its SSL certificate at ${import.meta.env.VITE_API_URL}/github/repos`;
 					} else {
 						errorMessage = error.message || errorMessage;
 					}

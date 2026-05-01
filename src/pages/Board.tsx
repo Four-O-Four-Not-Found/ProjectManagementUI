@@ -207,7 +207,7 @@ const Board: React.FC = () => {
 		if (projectId) projectService.getSprints(projectId).then(setSprints);
 	};
 
-	if ((loading && tasks.length === 0) || isInitializing || !currentProject) {
+	if ((loading && tasks.length === 0) || isInitializing || (projectId && !currentProject)) {
 		return <LoadingScreen />;
 	}
 

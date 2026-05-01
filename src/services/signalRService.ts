@@ -2,8 +2,7 @@ import * as signalR from "@microsoft/signalr";
 
 class SignalRService {
 	private connection: signalR.HubConnection | null = null;
-	private hubUrl: string =
-		import.meta.env.VITE_HUB_URL || "http://localhost:5139/projectHub";
+	private hubUrl: string = import.meta.env.VITE_HUB_URL;
 	private startPromise: Promise<void> | null = null;
 
 	constructor() {
