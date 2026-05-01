@@ -215,22 +215,99 @@ const Board: React.FC = () => {
 		);
 	}
 
-	if (!projectId && allProjects.length === 0 && !isInitializing) {
+	if (!projectId && !isInitializing) {
 		return (
-			<div className="h-[80vh] flex flex-col justify-center">
+			<div className="h-full flex flex-col space-y-8 p-4 md:p-8 animate-fade-in overflow-y-auto scrollbar-custom">
 				<ProjectFormModal
 					isOpen={isProjectModalOpen}
 					onClose={() => setIsProjectModalOpen(false)}
 					onSave={handleCreateProject}
 				/>
-				<EmptyState
-					icon={Target}
-					title="No Active Workspaces"
-					description="You haven't initialized any projects yet. Create a workspace to start tracking tasks and automated pipelines."
-					actionLabel="Initialize Project"
-					onAction={() => setIsProjectModalOpen(true)}
-					className="max-w-2xl mx-auto"
-				/>
+				
+				<div className="max-w-6xl mx-auto w-full space-y-10">
+					<div className="text-center space-y-4">
+						<h1 className="text-4xl font-black tracking-tight text-white">
+							Choose your <span className="text-primary">Workspace</span>
+						</h1>
+						<p className="text-text-muted max-w-xl mx-auto text-sm">
+							Select an active project below to open its task board, sprints, and automated repository metrics.
+						</p>
+					</div>
+
+					{allProjects.length === 0 ? (
+						<EmptyState
+							icon={Target}
+							title="No Active Workspaces"
+							description="You haven't initialized any projects yet. Create a workspace to start tracking tasks and automated pipelines."
+							actionLabel="Initialize Project"
+							onAction={() => setIsProjectModalOpen(true)}
+							className="max-w-2xl mx-auto"
+						/>
+					) : (
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+							{allProjects.map((project) => (
+								<motion.div
+									key={project.id}
+									whileHover={{ y: -5, scale: 1.02 }}
+									onClick={() => navigate(`/project/${project.id}`)}
+									className="group relative bg-surface border border-border rounded-3xl p-6 cursor-pointer hover:border-primary/50 transition-all overflow-hidden"
+								>
+									<div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+										<Target size={80} />
+									</div>
+									
+									<div className="relative z-10 space-y-4">
+										<div className="flex items-center gap-3">
+											<div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+												<Layout size={20} />
+											</div>
+											<div>
+												<h3 className="font-black text-white group-hover:text-primary transition-colors">
+													{project.name}
+												</h3>
+												<span className="text-[10px] font-mono text-text-muted uppercase">
+													{project.key}
+												</span>
+											</div>
+										</div>
+										
+										<p className="text-xs text-text-muted line-clamp-2 min-h-[32px]">
+											{project.description || "No description provided for this workspace."}
+										</p>
+										
+										<div className="pt-4 flex items-center justify-between border-t border-border/50">
+											<div className="flex -space-x-2">
+												{[1, 2, 3].map(i => (
+													<div key={i} className="w-6 h-6 rounded-full border-2 border-surface bg-surface-hover flex items-center justify-center">
+														<div className="w-full h-full rounded-full bg-primary/20 scale-75" />
+													</div>
+												))}
+											</div>
+											<span className="text-[10px] font-bold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+												Open Board <ChevronDown size={14} className="-rotate-90" />
+											</span>
+										</div>
+									</div>
+								</motion.div>
+							))}
+							
+							{/* Create New Project Card */}
+							<motion.button
+								whileHover={{ scale: 1.02 }}
+								onClick={() => setIsProjectModalOpen(true)}
+								className="group border-2 border-dashed border-border hover:border-primary/50 rounded-3xl p-6 flex flex-col items-center justify-center gap-4 transition-all bg-surface/10"
+							>
+								<div className="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-text-muted group-hover:text-primary group-hover:bg-primary/10 transition-all">
+									<Plus size={24} />
+								</div>
+								<div className="text-center">
+									<span className="block font-bold text-white text-sm">New Workspace</span>
+									<span className="text-[10px] text-text-muted">Expand your registry</span>
+								</div>
+							</motion.button>
+						</div>
+					)}
+				</div>
 			</div>
 		);
 	}
@@ -343,11 +420,11 @@ const Board: React.FC = () => {
 				description={
 					<div className="flex flex-wrap items-center gap-2 md:gap-3">
 						<span className="hidden md:inline text-text-muted font-medium text-sm">
-							{currentProject.description}
+							{currentProject?.description}
 						</span>
 						<span className="hidden md:inline w-1 h-1 rounded-full bg-border"></span>
 						<span className="font-black text-[10px] text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border uppercase tracking-widest">
-							{currentProject.key}
+							{currentProject?.key}
 						</span>
 						<span className="w-1 h-1 rounded-full bg-border"></span>
 						<span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded">
@@ -578,7 +655,7 @@ const Board: React.FC = () => {
 								exit={{ opacity: 0, x: -20 }}
 								className="h-full bg-surface/30 border border-border rounded-md p-4 md:p-8 overflow-y-auto"
 							>
-								<RepositoryTab gitHubRepo={currentProject.gitHubRepo} />
+								<RepositoryTab gitHubRepo={currentProject?.gitHubRepo || ""} />
 							</motion.div>
 						)}
 

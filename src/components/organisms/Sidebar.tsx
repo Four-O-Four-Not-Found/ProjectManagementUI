@@ -21,7 +21,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 	const menuItems = [
 		{ to: "/", icon: LayoutDashboard, label: "Dashboard" },
-		{ to: "/board", icon: Kanban, label: "Board" },
+		{ to: "/board", icon: Kanban, label: "Workspaces" },
 		{ to: "/list", icon: List, label: "List View" },
 		{ to: "/github", icon: GitBranch, label: "GitHub Admin" },
 		{ to: "/team", icon: Users, label: "Team & Access" },
