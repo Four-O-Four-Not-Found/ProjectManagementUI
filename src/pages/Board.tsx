@@ -226,7 +226,7 @@ const Board: React.FC = () => {
 				onClose={() => setIsTaskModalOpen(false)}
 				task={editingTask}
 				onSave={handleSaveTask}
-				gitHubRepo={currentProject.gitHubRepo}
+				gitHubRepo={currentProject?.gitHubRepo}
 				defaultProjectId={projectId}
 				projects={allProjects}
 				teamMembers={projectTeam?.members || []}
