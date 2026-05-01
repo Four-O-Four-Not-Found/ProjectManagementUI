@@ -414,12 +414,12 @@ const Board: React.FC = () => {
 							initial={{ opacity: 0, x: 20 }}
 							animate={{ opacity: 1, x: 0 }}
 							exit={{ opacity: 0, x: -20 }}
-							className="h-full flex gap-4 md:gap-6 overflow-x-auto pb-4 scrollbar-custom min-h-0 px-2 md:px-0"
+							className="h-full grid grid-cols-2 md:flex gap-3 md:gap-6 overflow-y-auto md:overflow-x-auto pb-4 scrollbar-custom min-h-0 px-2 md:px-0"
 						>
 							{columns.map((col) => (
 								<div
 									key={col.id}
-									className="flex-shrink-0 w-[85vw] sm:w-80 flex flex-col"
+									className="flex flex-col min-w-0 md:w-80 md:flex-shrink-0"
 								>
 									<ColumnHeader
 										title={col.title}

@@ -122,7 +122,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+			<div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
 				{/* Branches */}
 				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
 					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
@@ -136,12 +136,12 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 						{branches.map((b) => (
 							<div
 								key={b.name}
-								className="flex flex-col p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border"
+								className="flex flex-col p-2 md:p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border"
 							>
-								<span className="font-bold text-sm text-text-main">
+								<span className="font-bold text-xs md:text-sm text-text-main">
 									{b.name}
 								</span>
-								<span className="text-[10px] text-text-muted font-mono">
+								<span className="text-[9px] md:text-[10px] text-text-muted font-mono">
 									{b.commitSha.substring(0, 7)}
 								</span>
 							</div>
@@ -151,14 +151,16 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 
 				{/* Pull Requests */}
 				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
-					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
+					<div className="p-3 md:p-4 border-b border-border bg-surface-hover flex items-center gap-2">
 						<GitPullRequest size={16} className="text-accent-purple" />
-						<h3 className="font-bold text-text-main text-sm">Pull Requests</h3>
-						<span className="ml-auto text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+						<h3 className="font-bold text-text-main text-xs md:text-sm">
+							Pull Requests
+						</h3>
+						<span className="ml-auto text-[10px] md:text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
 							{pullRequests.length}
 						</span>
 					</div>
-					<div className="flex-1 overflow-y-auto p-2 space-y-1 max-h-[400px] scrollbar-custom">
+					<div className="flex-1 overflow-y-auto p-1.5 md:p-2 space-y-1 max-h-[300px] md:max-h-[400px] scrollbar-custom">
 						{pullRequests.length === 0 ? (
 							<div className="p-4 text-center text-xs text-text-muted">
 								No open pull requests.
@@ -170,19 +172,19 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 									href={pr.url}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="flex flex-col p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border group"
+									className="flex flex-col p-2 md:p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border group"
 								>
 									<div className="flex justify-between items-start gap-2">
-										<span className="font-bold text-sm text-text-main group-hover:text-primary transition-colors">
+										<span className="font-bold text-xs md:text-sm text-text-main group-hover:text-primary transition-colors">
 											{pr.title}
 										</span>
-										<ExternalLink size={12} className="text-text-muted mt-1" />
+										<ExternalLink size={10} className="text-text-muted mt-1" />
 									</div>
-									<div className="flex justify-between items-center mt-2">
-										<span className="text-[10px] text-text-muted font-bold">
+									<div className="flex justify-between items-center mt-1 md:mt-2">
+										<span className="text-[9px] md:text-[10px] text-text-muted font-bold">
 											#{pr.number} by {pr.author}
 										</span>
-										<span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-accent-purple/10 text-accent-purple font-bold uppercase">
+										<span className="text-[8px] md:text-[10px] px-1.5 py-0.5 rounded-sm bg-accent-purple/10 text-accent-purple font-bold uppercase">
 											{pr.state}
 										</span>
 									</div>
@@ -193,42 +195,44 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 				</div>
 
 				{/* Commits */}
-				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col">
-					<div className="p-4 border-b border-border bg-surface-hover flex items-center gap-2">
+				<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col col-span-2 md:col-span-1">
+					<div className="p-3 md:p-4 border-b border-border bg-surface-hover flex items-center gap-2">
 						<GitCommit size={16} className="text-success" />
-						<h3 className="font-bold text-text-main text-sm">Recent Commits</h3>
-						<span className="ml-auto text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
+						<h3 className="font-bold text-text-main text-xs md:text-sm">
+							Recent Commits
+						</h3>
+						<span className="ml-auto text-[10px] md:text-xs font-bold text-text-muted bg-background px-2 py-0.5 rounded-full">
 							{commits.length}
 						</span>
 					</div>
-					<div className="flex-1 overflow-y-auto p-2 space-y-1 max-h-[400px] scrollbar-custom">
+					<div className="flex-1 overflow-y-auto p-1.5 md:p-2 space-y-1 max-h-[300px] md:max-h-[400px] scrollbar-custom">
 						{commits.map((c) => (
 							<a
 								key={c.sha}
 								href={c.url}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="flex flex-col p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border group"
+								className="flex flex-col p-2 md:p-3 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border group"
 							>
 								<div className="flex justify-between items-start gap-2">
-									<span className="font-bold text-sm text-text-main truncate group-hover:text-primary transition-colors">
+									<span className="font-bold text-xs md:text-sm text-text-main truncate group-hover:text-primary transition-colors">
 										{c.message.split("\n")[0]}
 									</span>
 									<ExternalLink
-										size={12}
+										size={10}
 										className="text-text-muted mt-1 flex-shrink-0"
 									/>
 								</div>
-								<div className="flex justify-between items-center mt-2">
-									<div className="flex items-center gap-1.5">
-										<div className="w-4 h-4 rounded-full bg-text-muted flex items-center justify-center text-[8px] text-background font-bold">
+								<div className="flex justify-between items-center mt-1 md:mt-2">
+									<div className="flex items-center gap-1">
+										<div className="w-3.5 h-3.5 rounded-full bg-text-muted flex items-center justify-center text-[7px] text-background font-bold">
 											{c.author.charAt(0).toUpperCase()}
 										</div>
-										<span className="text-[10px] text-text-muted">
+										<span className="text-[9px] md:text-[10px] text-text-muted">
 											{c.author}
 										</span>
 									</div>
-									<span className="text-[10px] text-text-muted font-mono">
+									<span className="text-[9px] md:text-[10px] text-text-muted font-mono">
 										{c.sha.substring(0, 7)}
 									</span>
 								</div>

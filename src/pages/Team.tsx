@@ -208,7 +208,12 @@ const Team: React.FC = () => {
 										<Button
 											variant="ghost"
 											size="sm"
-											leftIcon={<Loader2 size={16} className={loading ? "animate-spin" : ""} />}
+											leftIcon={
+												<Loader2
+													size={16}
+													className={loading ? "animate-spin" : ""}
+												/>
+											}
 											onClick={() => handleSyncMembers()}
 											disabled={loading}
 										>
@@ -225,7 +230,8 @@ const Team: React.FC = () => {
 									</Button>
 								</div>
 							</div>
-							<table className="w-full text-left border-collapse min-w-[800px] md:min-w-0">
+							{/* Desktop Table View */}
+							<table className="hidden md:table w-full text-left border-collapse min-w-[800px] md:min-w-0">
 								<thead>
 									<tr className="border-b border-white/[0.05] bg-white/[0.02]">
 										<th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
@@ -270,11 +276,14 @@ const Team: React.FC = () => {
 																		"Tech Lead",
 																		"Senior Developer",
 																		"DevOps Engineer",
+																		"Architect",
 																  ].includes(member.role)
 																? "text-emerald-400"
-																: ["UI/UX Designer", "QA Engineer"].includes(
-																			member.role,
-																	  )
+																: [
+																			"UI/UX Designer",
+																			"QA Engineer",
+																			"Designer",
+																	  ].includes(member.role)
 																	? "text-amber-400"
 																	: member.role === "Stakeholder"
 																		? "text-slate-400"
@@ -297,19 +306,75 @@ const Team: React.FC = () => {
 											</td>
 										</tr>
 									))}
-									{(!selectedTeam.members ||
-										selectedTeam.members.length === 0) && (
-										<tr>
-											<td
-												colSpan={4}
-												className="px-6 py-10 text-center text-slate-500 italic"
-											>
-												No members in this team yet. Invite someone!
-											</td>
-										</tr>
-									)}
 								</tbody>
 							</table>
+
+							{/* Mobile Card View */}
+							<div className="md:hidden divide-y divide-white/[0.05]">
+								{selectedTeam.members?.map((member) => (
+									<div
+										key={member.profileId}
+										className="p-4 space-y-3 active:bg-white/[0.02]"
+									>
+										<div className="flex justify-between items-start">
+											<div className="flex items-center gap-3">
+												<Avatar name={member.name} size="md" />
+												<div>
+													<p className="text-sm font-bold text-white">
+														{member.name}
+													</p>
+													<p className="text-[10px] text-slate-500">
+														{member.email}
+													</p>
+												</div>
+											</div>
+											<Button variant="ghost" size="sm" className="p-1 h-auto">
+												<MoreVertical size={16} />
+											</Button>
+										</div>
+										<div className="flex items-center justify-between">
+											<span
+												className={`bg-white/[0.05] border border-white/[0.1] rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${
+													["Project Manager", "Product Owner"].includes(
+														member.role,
+													)
+														? "text-purple-400"
+														: [
+																	"Tech Lead",
+																	"Senior Developer",
+																	"DevOps Engineer",
+																	"Architect",
+															  ].includes(member.role)
+															? "text-emerald-400"
+															: [
+																		"UI/UX Designer",
+																		"QA Engineer",
+																		"Designer",
+																  ].includes(member.role)
+																? "text-amber-400"
+																: member.role === "Stakeholder"
+																	? "text-slate-400"
+																	: "text-primary"
+												}`}
+											>
+												{member.role}
+											</span>
+											<div className="flex items-center gap-1.5">
+												<div className="w-1 h-1 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+												<span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+													Active
+												</span>
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+
+							{(!selectedTeam.members || selectedTeam.members.length === 0) && (
+								<div className="px-6 py-10 text-center text-slate-500 italic text-sm">
+									No members in this team yet. Invite someone!
+								</div>
+							)}
 						</div>
 					) : (
 						<div className="flex flex-col items-center justify-center py-20 space-y-4 opacity-50">

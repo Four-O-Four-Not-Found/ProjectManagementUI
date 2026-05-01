@@ -61,6 +61,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 		useState<TeamMember[]>(teamMembers);
 	const [isCreatingBranch, setIsCreatingBranch] = useState(false);
 	const [newBranchName, setNewBranchName] = useState("");
+	const [baseBranch, setBaseBranch] = useState("main");
 	const [isSaving, setIsSaving] = useState(false);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -82,7 +83,14 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			if (parts.length === 2) {
 				githubService
 					.getBranches(parts[0], parts[1])
-					.then(setBranches)
+					.then((data) => {
+						setBranches(data);
+						if (data.length > 0 && !data.find(b => b.name === "main")) {
+							setBaseBranch(data[0].name);
+						} else if (data.find(b => b.name === "main")) {
+							setBaseBranch("main");
+						}
+					})
 					.catch(console.error);
 			}
 		}
@@ -135,6 +143,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							parts[0],
 							parts[1],
 							newBranchName,
+							baseBranch
 						);
 						updatedFormData = { ...updatedFormData, gitHubBranch: branch.name };
 					}
@@ -364,18 +373,37 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						</div>
 
 						{isCreatingBranch ? (
-							<div className="relative">
-								<GitBranch
-									size={16}
-									className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
-								/>
-								<input
-									type="text"
-									className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-									placeholder="e.g. feature/new-login"
-									value={newBranchName}
-									onChange={(e) => setNewBranchName(e.target.value)}
-								/>
+							<div className="space-y-3">
+								<div className="relative">
+									<GitBranch
+										size={16}
+										className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+									/>
+									<input
+										type="text"
+										className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+										placeholder="e.g. feature/new-login"
+										value={newBranchName}
+										onChange={(e) => setNewBranchName(e.target.value)}
+									/>
+								</div>
+								<div className="relative">
+									<GitBranch
+										size={14}
+										className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted opacity-50"
+									/>
+									<select
+										className="w-full bg-background/50 border border-border rounded-md py-1.5 pl-10 pr-4 text-xs text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+										value={baseBranch}
+										onChange={(e) => setBaseBranch(e.target.value)}
+									>
+										{branches.map((b) => (
+											<option key={b.name} value={b.name}>
+												Branch out from: {b.name}
+											</option>
+										))}
+									</select>
+								</div>
 							</div>
 						) : (
 							<div className="relative">
@@ -401,7 +429,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						)}
 						<p className="text-[10px] text-text-muted ml-1">
 							{isCreatingBranch
-								? "A new branch will be created from main."
+								? `A new branch will be created from ${baseBranch}.`
 								: "Select an existing branch to link."}
 						</p>
 					</div>

@@ -176,7 +176,7 @@ const Dashboard: React.FC = () => {
 				}
 			/>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+			<div className="grid grid-cols-2 gap-3 md:gap-6">
 				<StatCard
 					label="Total Tasks"
 					value={stats.totalTasks.toString()}
@@ -258,19 +258,19 @@ const Dashboard: React.FC = () => {
 									All clear! No tasks currently assigned to you.
 								</div>
 							) : (
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+								<div className="grid grid-cols-2 gap-2 md:gap-3">
 									{stats.assignedTasks.map((task) => (
 										<div
 											key={task.id}
 											onClick={() => navigate(`/project/${task.projectId}`)}
-											className="p-3 bg-surface border border-border rounded-xl hover:border-primary transition-all cursor-pointer group"
+											className="p-2 md:p-3 bg-surface border border-border rounded-lg md:rounded-xl hover:border-primary transition-all cursor-pointer group"
 										>
-											<div className="flex justify-between items-start mb-2">
-												<span className="text-[9px] font-mono text-text-muted">
+											<div className="flex justify-between items-start mb-1 md:mb-2">
+												<span className="text-[8px] md:text-[9px] font-mono text-text-muted">
 													{task.taskId}
 												</span>
 												<div
-													className={`w-1.5 h-1.5 rounded-full ${
+													className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${
 														task.priority === "Urgent"
 															? "bg-danger shadow-[0_0_8px_rgba(239,68,68,0.5)]"
 															: task.priority === "High"
@@ -279,11 +279,11 @@ const Dashboard: React.FC = () => {
 													}`}
 												/>
 											</div>
-											<h4 className="text-xs font-bold text-text-main group-hover:text-primary transition-colors line-clamp-1">
+											<h4 className="text-[11px] md:text-xs font-bold text-text-main group-hover:text-primary transition-colors line-clamp-1 leading-tight">
 												{task.title}
 											</h4>
-											<div className="flex items-center gap-2 mt-2">
-												<div className="px-1.5 py-0.5 rounded bg-background border border-border text-[8px] font-bold text-text-muted uppercase">
+											<div className="flex items-center gap-2 mt-1.5 md:mt-2">
+												<div className="px-1 py-0.5 rounded bg-background border border-border text-[7px] md:text-[8px] font-bold text-text-muted uppercase">
 													{task.status}
 												</div>
 											</div>
@@ -370,17 +370,19 @@ const Dashboard: React.FC = () => {
 								<div
 									key={project.id}
 									onClick={() => navigate(`/project/${project.id}`)}
-									className="p-3 bg-surface border border-border rounded-xl hover:border-primary transition-all cursor-pointer flex items-center justify-between group"
+									className="p-2.5 md:p-3 bg-surface border border-border rounded-lg md:rounded-xl hover:border-primary transition-all cursor-pointer flex items-center justify-between group"
 								>
 									<div className="min-w-0">
-										<h4 className="text-xs font-bold text-text-main group-hover:text-primary transition-colors truncate">
+										<h4 className="text-[11px] md:text-xs font-bold text-text-main group-hover:text-primary transition-colors truncate">
 											{project.name}
 										</h4>
-										<p className="text-[9px] text-text-muted">{project.key}</p>
+										<p className="text-[8px] md:text-[9px] text-text-muted">
+											{project.key}
+										</p>
 									</div>
 									<ChevronRight
-										size={14}
-										className="text-text-muted group-hover:translate-x-1 transition-transform"
+										size={12}
+										className="text-text-muted md:w-[14px] group-hover:translate-x-1 transition-transform"
 									/>
 								</div>
 							))}
