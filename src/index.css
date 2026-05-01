@@ -141,3 +141,31 @@
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* UI Density: Compact Mode */
+.compact-mode {
+  font-size: 13px;
+}
+
+.compact-mode .p-4 { padding: 0.75rem !important; }
+.compact-mode .p-6 { padding: 1rem !important; }
+.compact-mode .p-8 { padding: 1.5rem !important; }
+.compact-mode .gap-8 { gap: 1.5rem !important; }
+
+/* Glassmorphism Intensity */
+[data-glass="low"] .glass-card {
+  background-color: var(--surface);
+  backdrop-filter: none;
+}
+
+[data-glass="medium"] .glass-card {
+  background-color: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+[data-glass="high"] .glass-card {
+  background-color: color-mix(in srgb, var(--surface) 40%, transparent);
+  backdrop-filter: blur(16px);
+  border-color: color-mix(in srgb, var(--border) 50%, white 10%);
+}
+
