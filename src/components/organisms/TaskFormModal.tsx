@@ -1,139 +1,414 @@
-import React, { useState } from 'react';
-import BaseModal from '../molecules/BaseModal';
-import Button from '../atoms/Button';
-import Input from '../atoms/Input';
-import { Target } from 'lucide-react';
-import type { Task, TaskType, Priority } from '../../types';
-import { MOCK_PROJECTS } from '../../mocks/data';
+import React, { useState } from "react";
+import BaseModal from "../molecules/BaseModal";
+import Button from "../atoms/Button";
+import Input from "../atoms/Input";
+import {
+	Target,
+	GitBranch,
+	Plus,
+	User,
+	Image as ImageIcon,
+	X,
+} from "lucide-react";
+import type {
+	Task,
+	TaskType,
+	Priority,
+	Project,
+	Attachment,
+} from "../../types";
+import teamService from "../../services/teamService";
+import type { TeamMember } from "../../services/teamService";
+import { githubService } from "../../services/githubService";
+import type { GitHubBranch } from "../../services/githubService";
 
 interface TaskFormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (task: Partial<Task>) => void;
-  task?: Task | null;
+	isOpen: boolean;
+	onClose: () => void;
+	onSave: (task: Partial<Task>) => void;
+	task?: Task | null;
+	gitHubRepo?: string;
+	defaultProjectId?: string;
+	projects?: Project[];
+	teamMembers?: TeamMember[];
 }
 
-const TaskFormModal: React.FC<TaskFormModalProps> = ({ isOpen, onClose, onSave, task }) => {
-  const [formData, setFormData] = useState<Partial<Task>>(
-    task || {
-      title: '',
-      description: '',
-      type: 'Feature',
-      priority: 'Medium',
-      projectId: '',
-      status: 'Todo'
-    }
-  );
+const TaskFormModal: React.FC<TaskFormModalProps> = ({
+	isOpen,
+	onClose,
+	onSave,
+	task,
+	gitHubRepo,
+	defaultProjectId,
+	projects = [],
+	teamMembers = [],
+}) => {
+	const [formData, setFormData] = useState<Partial<Task>>(
+		task || {
+			title: "",
+			description: "",
+			type: "Feature",
+			priority: "Medium",
+			projectId: defaultProjectId || "",
+			assigneeId: "",
+			status: "Todo",
+		},
+	);
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+	const [errors, setErrors] = useState<Record<string, string>>({});
+	const [branches, setBranches] = useState<GitHubBranch[]>([]);
+	const [localTeamMembers, setLocalTeamMembers] =
+		useState<TeamMember[]>(teamMembers);
+	const [isCreatingBranch, setIsCreatingBranch] = useState(false);
+	const [newBranchName, setNewBranchName] = useState("");
+	const [isSaving, setIsSaving] = useState(false);
+	const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.title) newErrors.title = 'Title is required';
-    if (!formData.projectId) newErrors.projectId = 'A project must be selected';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+	React.useEffect(() => {
+		if (formData.projectId && projects.length > 0) {
+			const project = projects.find((p) => p.id === formData.projectId);
+			if (project?.teamId) {
+				teamService
+					.getTeam(project.teamId)
+					.then((team) => setLocalTeamMembers(team.members || []))
+					.catch(console.error);
+			}
+		}
+	}, [formData.projectId, projects]);
 
-  const handleSave = () => {
-    if (validate()) {
-      onSave(formData);
-    }
-  };
+	React.useEffect(() => {
+		if (gitHubRepo) {
+			const parts = gitHubRepo.split("/");
+			if (parts.length === 2) {
+				githubService
+					.getBranches(parts[0], parts[1])
+					.then(setBranches)
+					.catch(console.error);
+			}
+		}
+	}, [gitHubRepo]);
 
-  return (
-    <BaseModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={task ? 'Modify Entry' : 'Create New Entry'}
-      size="md"
-      footer={
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave}>{task ? 'Update' : 'Dispatch'}</Button>
-        </div>
-      }
-    >
-      <div className="space-y-6">
-        <Input 
-          label="Title" 
-          placeholder="What needs to be done?"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          error={errors.title}
-        />
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setImagePreview(reader.result as string);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
 
-        {/* Project Selection - MANDATORY */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-text-main block ml-0.5">Workspace Destination</label>
-          <div className="relative">
-            <Target size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-            <select 
-              className={`w-full bg-background border ${errors.projectId ? 'border-danger' : 'border-border'} rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all`}
-              value={formData.projectId}
-              onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
-            >
-              <option value="" disabled>Select a project...</option>
-              {MOCK_PROJECTS.map(p => (
-                <option key={p.id} value={p.id}>{p.name} ({p.key})</option>
-              ))}
-            </select>
-          </div>
-          {errors.projectId && <p className="text-[10px] font-bold text-danger ml-1">{errors.projectId}</p>}
-        </div>
+	const validate = () => {
+		const newErrors: Record<string, string> = {};
+		if (!formData.title) newErrors.title = "Title is required";
+		if (!formData.projectId) newErrors.projectId = "A project must be selected";
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-text-main block ml-0.5">Classification</label>
-            <div className="flex gap-2">
-              {(['Feature', 'Bug', 'Issue'] as TaskType[]).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setFormData({ ...formData, type })}
-                  className={`flex-1 py-2 px-3 rounded-md border text-[10px] font-bold uppercase tracking-wider transition-all ${
-                    formData.type === type 
-                    ? 'bg-primary/10 border-primary text-primary shadow-sm' 
-                    : 'border-border text-text-muted hover:border-text-muted bg-surface'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
+	const handleSave = async () => {
+		if (validate()) {
+			setIsSaving(true);
+			try {
+				let updatedFormData = { ...formData };
+				if (imagePreview) {
+					const newAttachment: Attachment = {
+						id: Math.random().toString(36).substr(2, 9),
+						url: imagePreview,
+						name: "evidence.png",
+						type: "image",
+						size: "Unknown",
+					};
+					updatedFormData = {
+						...updatedFormData,
+						attachments: [
+							...(updatedFormData.attachments || []),
+							newAttachment,
+						],
+					};
+				}
+				if (isCreatingBranch && newBranchName && gitHubRepo) {
+					const parts = gitHubRepo.split("/");
+					if (parts.length === 2) {
+						const branch = await githubService.createBranch(
+							parts[0],
+							parts[1],
+							newBranchName,
+						);
+						updatedFormData = { ...updatedFormData, gitHubBranch: branch.name };
+					}
+				}
+				onSave(updatedFormData);
+			} catch (err) {
+				console.error("Failed to create branch", err);
+			} finally {
+				setIsSaving(false);
+			}
+		}
+	};
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-text-main block ml-0.5">Priority</label>
-            <div className="flex gap-2">
-              {(['Low', 'Medium', 'High', 'Urgent'] as Priority[]).map((priority) => (
-                <button
-                  key={priority}
-                  onClick={() => setFormData({ ...formData, priority })}
-                  className={`flex-1 py-2 px-2 rounded-md border text-[9px] font-bold uppercase tracking-tight transition-all ${
-                    formData.priority === priority 
-                    ? 'bg-merged/10 border-merged text-merged shadow-sm' 
-                    : 'border-border text-text-muted hover:border-text-muted bg-surface'
-                  }`}
-                >
-                  {priority}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+	return (
+		<BaseModal
+			isOpen={isOpen}
+			onClose={onClose}
+			title={task ? "Modify Entry" : "Create New Entry"}
+			size="md"
+			footer={
+				<div className="flex gap-2">
+					<Button variant="secondary" onClick={onClose}>
+						Cancel
+					</Button>
+					<Button onClick={handleSave} isLoading={isSaving}>
+						{task ? "Update" : "Dispatch"}
+					</Button>
+				</div>
+			}
+		>
+			<div className="space-y-6">
+				<Input
+					label="Title"
+					placeholder="What needs to be done?"
+					value={formData.title}
+					onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+					error={errors.title}
+				/>
 
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-text-main block ml-0.5">Description</label>
-          <textarea 
-            className="w-full bg-background border border-border rounded-md p-3 text-sm text-text-main placeholder:text-text-muted outline-none focus:border-primary focus:ring-1 focus:ring-primary min-h-[100px] transition-all"
-            placeholder="Describe the context or acceptance criteria..."
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          />
-        </div>
-      </div>
-    </BaseModal>
-  );
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					{/* Project Selection - MANDATORY */}
+					<div className="space-y-1.5">
+						<label className="text-xs font-semibold text-text-main block ml-0.5">
+							Workspace Destination
+						</label>
+						<div className="relative">
+							<Target
+								size={16}
+								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+							/>
+							<select
+								className={`w-full bg-background border ${errors.projectId ? "border-danger" : "border-border"} rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all`}
+								value={formData.projectId}
+								onChange={(e) =>
+									setFormData({ ...formData, projectId: e.target.value })
+								}
+							>
+								<option value="" disabled>
+									Select a project...
+								</option>
+								{projects.map((p) => (
+									<option key={p.id} value={p.id}>
+										{p.name} ({p.key})
+									</option>
+								))}
+							</select>
+						</div>
+						{errors.projectId && (
+							<p className="text-[10px] font-bold text-danger ml-1">
+								{errors.projectId}
+							</p>
+						)}
+					</div>
+
+					{/* Assignee Selection */}
+					<div className="space-y-1.5">
+						<label className="text-xs font-semibold text-text-main block ml-0.5">
+							Assignee
+						</label>
+						<div className="relative">
+							<User
+								size={16}
+								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+							/>
+							<select
+								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+								value={formData.assigneeId || ""}
+								onChange={(e) =>
+									setFormData({ ...formData, assigneeId: e.target.value })
+								}
+							>
+								<option value="">Unassigned (Volunteer basis)</option>
+								{localTeamMembers.map((m) => (
+									<option key={m.profileId} value={m.profileId}>
+										{m.name}
+									</option>
+								))}
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div className="space-y-1.5">
+					<label className="text-xs font-semibold text-text-main block ml-0.5">
+						Context Evidence (Image)
+					</label>
+					<div className="flex items-center gap-4">
+						{imagePreview ? (
+							<div className="relative w-20 h-20 rounded-xl overflow-hidden border border-border group">
+								<img
+									src={imagePreview}
+									alt="Preview"
+									className="w-full h-full object-cover"
+								/>
+								<button
+									onClick={() => setImagePreview(null)}
+									className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
+								>
+									<X size={16} />
+								</button>
+							</div>
+						) : (
+							<label className="w-20 h-20 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 cursor-pointer group">
+								<ImageIcon
+									size={20}
+									className="text-text-muted group-hover:text-primary transition-colors"
+								/>
+								<span className="text-[9px] font-bold text-text-muted uppercase group-hover:text-primary">
+									Add
+								</span>
+								<input
+									type="file"
+									accept="image/*"
+									className="hidden"
+									onChange={handleImageChange}
+								/>
+							</label>
+						)}
+						<div className="flex-1">
+							<p className="text-[10px] text-text-muted">
+								Upload a screenshot or visual reference for this task. Maximum
+								5MB.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div className="space-y-1.5">
+						<label className="text-xs font-semibold text-text-main block ml-0.5">
+							Classification
+						</label>
+						<div className="flex gap-2">
+							{(["Feature", "Bug", "Issue"] as TaskType[]).map((type) => (
+								<button
+									key={type}
+									onClick={() => setFormData({ ...formData, type })}
+									className={`flex-1 py-2 px-3 rounded-md border text-[10px] font-bold uppercase tracking-wider transition-all ${
+										formData.type === type
+											? "bg-primary/10 border-primary text-primary shadow-sm"
+											: "border-border text-text-muted hover:border-text-muted bg-surface"
+									}`}
+								>
+									{type}
+								</button>
+							))}
+						</div>
+					</div>
+
+					<div className="space-y-1.5">
+						<label className="text-xs font-semibold text-text-main block ml-0.5">
+							Priority
+						</label>
+						<div className="flex gap-2">
+							{(["Low", "Medium", "High", "Urgent"] as Priority[]).map(
+								(priority) => (
+									<button
+										key={priority}
+										onClick={() => setFormData({ ...formData, priority })}
+										className={`flex-1 py-2 px-2 rounded-md border text-[9px] font-bold uppercase tracking-tight transition-all ${
+											formData.priority === priority
+												? "bg-merged/10 border-merged text-merged shadow-sm"
+												: "border-border text-text-muted hover:border-text-muted bg-surface"
+										}`}
+									>
+										{priority}
+									</button>
+								),
+							)}
+						</div>
+					</div>
+				</div>
+
+				<div className="space-y-1.5">
+					<label className="text-xs font-semibold text-text-main block ml-0.5">
+						Description
+					</label>
+					<textarea
+						className="w-full bg-background border border-border rounded-md p-3 text-sm text-text-main placeholder:text-text-muted outline-none focus:border-primary focus:ring-1 focus:ring-primary min-h-[100px] transition-all"
+						placeholder="Describe the context or acceptance criteria..."
+						value={formData.description}
+						onChange={(e) =>
+							setFormData({ ...formData, description: e.target.value })
+						}
+					/>
+				</div>
+
+				{gitHubRepo && (
+					<div className="space-y-1.5">
+						<div className="flex justify-between items-end mb-1">
+							<label className="text-xs font-semibold text-text-main block ml-0.5">
+								GitHub Branch
+							</label>
+							<button
+								type="button"
+								onClick={() => setIsCreatingBranch(!isCreatingBranch)}
+								className="text-[10px] text-primary hover:text-primary-hover font-bold flex items-center gap-1"
+							>
+								{isCreatingBranch ? (
+									"Link Existing"
+								) : (
+									<>
+										<Plus size={10} /> Create New
+									</>
+								)}
+							</button>
+						</div>
+
+						{isCreatingBranch ? (
+							<div className="relative">
+								<GitBranch
+									size={16}
+									className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+								/>
+								<input
+									type="text"
+									className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+									placeholder="e.g. feature/new-login"
+									value={newBranchName}
+									onChange={(e) => setNewBranchName(e.target.value)}
+								/>
+							</div>
+						) : (
+							<div className="relative">
+								<GitBranch
+									size={16}
+									className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+								/>
+								<select
+									className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+									value={formData.gitHubBranch || ""}
+									onChange={(e) =>
+										setFormData({ ...formData, gitHubBranch: e.target.value })
+									}
+								>
+									<option value="">No Branch Linked</option>
+									{branches.map((b) => (
+										<option key={b.name} value={b.name}>
+											{b.name}
+										</option>
+									))}
+								</select>
+							</div>
+						)}
+						<p className="text-[10px] text-text-muted ml-1">
+							{isCreatingBranch
+								? "A new branch will be created from main."
+								: "Select an existing branch to link."}
+						</p>
+					</div>
+				)}
+			</div>
+		</BaseModal>
+	);
 };
 
 export default TaskFormModal;

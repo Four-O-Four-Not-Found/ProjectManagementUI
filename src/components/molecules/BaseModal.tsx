@@ -1,97 +1,99 @@
-import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 interface BaseModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: React.ReactNode;
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+	isOpen: boolean;
+	onClose: () => void;
+	title: React.ReactNode;
+	children: React.ReactNode;
+	footer?: React.ReactNode;
+	size?: "sm" | "md" | "lg" | "xl";
 }
 
 const SIZES = {
-  sm: 'max-w-md',
-  md: 'max-w-xl',
-  lg: 'max-w-3xl',
-  xl: 'max-w-5xl'
+	sm: "max-w-md",
+	md: "max-w-xl",
+	lg: "max-w-3xl",
+	xl: "max-w-5xl",
 };
 
-const BaseModal: React.FC<BaseModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
-  footer,
-  size = 'md' 
+const BaseModal: React.FC<BaseModalProps> = ({
+	isOpen,
+	onClose,
+	title,
+	children,
+	footer,
+	size = "md",
 }) => {
-  const [mounted, setMounted] = useState(false);
+	const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		setMounted(true);
+	}, []);
 
-  const modalContent = (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 overflow-hidden">
-          {/* Overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"
-          />
-          
-          {/* Modal Container */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 0 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className={`relative w-full ${SIZES[size]} bg-surface border border-border rounded-github shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
-          >
-            {/* Header */}
-            <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-surface-hover">
-              <div className="flex-1">
-                {typeof title === 'string' ? (
-                  <h3 className="text-sm font-semibold text-text-main">{title}</h3>
-                ) : (
-                  title
-                )}
-              </div>
-              <button 
-                onClick={onClose}
-                className="p-1.5 rounded-md hover:bg-background text-text-muted hover:text-text-main transition-colors ml-4"
-              >
-                <X size={18} />
-              </button>
-            </div>
+	const modalContent = (
+		<AnimatePresence>
+			{isOpen && (
+				<div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 overflow-hidden">
+					{/* Overlay */}
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						onClick={onClose}
+						className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"
+					/>
 
-            {/* Body */}
-            <div className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-custom bg-background">
-              {children}
-            </div>
+					{/* Modal Container */}
+					<motion.div
+						initial={{ opacity: 0, scale: 0.95, y: 20 }}
+						animate={{ opacity: 1, scale: 1, y: 0 }}
+						exit={{ opacity: 0, scale: 0.95, y: 20 }}
+						transition={{ type: "spring", damping: 25, stiffness: 300 }}
+						className={`relative w-full ${SIZES[size]} bg-surface md:border border-border md:rounded-github shadow-2xl overflow-hidden flex flex-col h-[100dvh] md:h-auto md:max-h-[90vh]`}
+					>
+						{/* Header */}
+						<div className="px-4 py-3 border-b border-border flex items-center justify-between bg-surface-hover">
+							<div className="flex-1">
+								{typeof title === "string" ? (
+									<h3 className="text-sm font-semibold text-text-main">
+										{title}
+									</h3>
+								) : (
+									title
+								)}
+							</div>
+							<button
+								onClick={onClose}
+								className="p-1.5 rounded-md hover:bg-background text-text-muted hover:text-text-main transition-colors ml-4"
+							>
+								<X size={18} />
+							</button>
+						</div>
 
-            {/* Footer */}
-            {footer && (
-              <div className="px-4 py-3 border-t border-border bg-surface-hover flex items-center justify-end gap-2">
-                {footer}
-              </div>
-            )}
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
+						{/* Body */}
+						<div className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-custom bg-background">
+							{children}
+						</div>
 
-  if (!mounted) return null;
+						{/* Footer */}
+						{footer && (
+							<div className="px-4 py-3 border-t border-border bg-surface-hover flex items-center justify-end gap-2">
+								{footer}
+							</div>
+						)}
+					</motion.div>
+				</div>
+			)}
+		</AnimatePresence>
+	);
 
-  return createPortal(modalContent, document.body);
+	if (!mounted) return null;
+
+	return createPortal(modalContent, document.body);
 };
 
 export default BaseModal;

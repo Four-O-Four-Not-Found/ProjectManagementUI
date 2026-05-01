@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { clsx } from "clsx";
 import type { LucideIcon } from "lucide-react";
 
@@ -16,13 +16,19 @@ const NavItem: React.FC<NavItemProps> = ({
 	label,
 	isCollapsed,
 }) => {
+	const location = useLocation();
+	
+	const isLinkActive = to === '/' 
+		? location.pathname === '/' 
+		: location.pathname.startsWith(to) || (to === '/board' && location.pathname.startsWith('/project/'));
+
 	return (
 		<NavLink
 			to={to}
-			className={({ isActive }) =>
+			className={
 				clsx(
 					"flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all relative group",
-					isActive
+					isLinkActive
 						? "bg-background text-text-main border-l-2 border-primary rounded-l-none"
 						: "text-text-muted hover:bg-surface-hover hover:text-text-main",
 				)

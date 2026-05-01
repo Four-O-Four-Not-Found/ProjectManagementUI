@@ -11,12 +11,15 @@ import {
 	ChevronDown,
 	Target,
 	Save,
+	GitBranch,
+	Clock,
 } from "lucide-react";
 import TaskCard from "../components/molecules/TaskCard";
 import TaskDetailModal from "../components/organisms/TaskDetailModal";
 import TaskFormModal from "../components/organisms/TaskFormModal";
 import ProjectFormModal from "../components/organisms/ProjectFormModal";
 import SprintFormModal from "../components/organisms/SprintFormModal";
+import RepositoryTab from "../components/organisms/RepositoryTab";
 import Button from "../components/atoms/Button";
 import Avatar from "../components/atoms/Avatar";
 import PageHeader from "../components/molecules/PageHeader";
@@ -38,12 +41,19 @@ const columns = [
 	{ id: "Done", title: "Done", color: "border-success" },
 ];
 
-type ViewTab = "Board" | "Backlog" | "Timeline" | "Team" | "Settings";
+type ViewTab =
+	| "Board"
+	| "Backlog"
+	| "Sprints"
+	| "Timeline"
+	| "Team"
+	| "Repository"
+	| "Settings";
 
 const Board: React.FC = () => {
 	const { projectId } = useParams<{ projectId: string }>();
 	const navigate = useNavigate();
-	const { tasks, loading, fetchTasks, moveTask } = useProject();
+	const { tasks, loading, fetchTasks, moveTask, assignTask } = useProject();
 	const { success, error } = useToast();
 
 	const [activeTab, setActiveTab] = useState<ViewTab>("Board");
@@ -91,6 +101,12 @@ const Board: React.FC = () => {
 		} catch {
 			error("Update Failed", "Could not change member role.");
 		}
+	};
+
+	const handleAssignTask = async (taskId: string, profileId: string) => {
+		await assignTask(taskId, profileId);
+		success("Task Assigned", "You are now responsible for this task.");
+		setSelectedTask(null);
 	};
 
 	useEffect(() => {
@@ -189,6 +205,7 @@ const Board: React.FC = () => {
 				isOpen={!!selectedTask}
 				onClose={() => setSelectedTask(null)}
 				task={selectedTask || ({} as Task)}
+				onAssign={handleAssignTask}
 			/>
 
 			<TaskFormModal
@@ -197,6 +214,10 @@ const Board: React.FC = () => {
 				onClose={() => setIsTaskModalOpen(false)}
 				task={editingTask}
 				onSave={handleSaveTask}
+				gitHubRepo={currentProject.gitHubRepo}
+				defaultProjectId={projectId}
+				projects={allProjects}
+				teamMembers={projectTeam?.members || []}
 			/>
 
 			<ProjectFormModal
@@ -335,23 +356,39 @@ const Board: React.FC = () => {
 			/>
 
 			{/* Navigation Tabs */}
-			<div className="flex items-center gap-1 border-b border-border bg-surface-hover/30 px-2 rounded-t-md">
+			<div className="flex items-center gap-1 border-b border-border bg-surface-hover/30 px-2 rounded-t-md overflow-x-auto scrollbar-hide shrink-0">
 				{(
-					["Board", "Backlog", "Timeline", "Team", "Settings"] as ViewTab[]
+					[
+						"Board",
+						"Backlog",
+						"Sprints",
+						"Timeline",
+						"Team",
+						"Repository",
+						"Settings",
+					] as ViewTab[]
 				).map((tab) => {
 					const Icon = {
 						Board: Layout,
 						Backlog: ListIcon,
-						Timeline: CalendarIcon,
+						Sprints: CalendarIcon,
+						Timeline: Clock,
 						Team: UsersIcon,
+						Repository: GitBranch,
 						Settings: Settings,
 					}[tab];
 
 					return (
 						<button
 							key={tab}
-							onClick={() => setActiveTab(tab)}
-							className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold transition-all relative border-b-2 ${
+							onClick={() => {
+								if (tab === "Sprints") {
+									navigate(`/project/${projectId}/sprints`);
+								} else {
+									setActiveTab(tab);
+								}
+							}}
+							className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold transition-all relative border-b-2 whitespace-nowrap ${
 								activeTab === tab
 									? "border-primary text-text-main"
 									: "border-transparent text-text-muted hover:text-text-main hover:bg-surface-hover/50"
@@ -377,10 +414,13 @@ const Board: React.FC = () => {
 							initial={{ opacity: 0, x: 20 }}
 							animate={{ opacity: 1, x: 0 }}
 							exit={{ opacity: 0, x: -20 }}
-							className="h-full flex gap-6 overflow-x-auto pb-4 scrollbar-custom min-h-0"
+							className="h-full flex gap-4 md:gap-6 overflow-x-auto pb-4 scrollbar-custom min-h-0 px-2 md:px-0"
 						>
 							{columns.map((col) => (
-								<div key={col.id} className="flex-shrink-0 w-80 flex flex-col">
+								<div
+									key={col.id}
+									className="flex-shrink-0 w-[85vw] sm:w-80 flex flex-col"
+								>
 									<ColumnHeader
 										title={col.title}
 										colorClass={col.color}
@@ -710,6 +750,53 @@ const Board: React.FC = () => {
 											<Target size={24} />
 										</div>
 									</div>
+								)}
+							</div>
+						</motion.div>
+					)}
+
+					{activeTab === "Repository" && (
+						<motion.div
+							key="repository"
+							initial={{ opacity: 0, x: 20 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -20 }}
+							className="h-full bg-surface/30 border border-border rounded-md p-8 overflow-y-auto"
+						>
+							<div className="max-w-6xl mx-auto space-y-6">
+								<div>
+									<h2 className="text-xl font-bold text-text-main flex items-center gap-2">
+										<GitBranch className="text-primary" size={24} />
+										Repository Integration
+									</h2>
+									<p className="text-sm text-text-muted mt-1">
+										View branches, commits, and pull requests for the attached
+										GitHub repository.
+									</p>
+								</div>
+
+								{!currentProject?.gitHubRepo ? (
+									<div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center text-center bg-surface/10">
+										<div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center text-text-muted mb-4">
+											<GitBranch size={24} />
+										</div>
+										<h3 className="text-text-main font-bold">
+											No Repository Attached
+										</h3>
+										<p className="text-sm text-text-muted max-w-sm mt-2">
+											There is no GitHub repository attached to this workspace.
+											Go to Settings to link one.
+										</p>
+										<Button
+											variant="primary"
+											className="mt-4"
+											onClick={() => setActiveTab("Settings")}
+										>
+											Go to Settings
+										</Button>
+									</div>
+								) : (
+									<RepositoryTab gitHubRepo={currentProject.gitHubRepo} />
 								)}
 							</div>
 						</motion.div>

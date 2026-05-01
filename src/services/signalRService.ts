@@ -7,19 +7,24 @@ class SignalRService {
 
 	public async startConnection(): Promise<void> {
 		if (this.startPromise) return this.startPromise;
-		if (this.connection?.state === signalR.HubConnectionState.Connected) return;
+		
+		if (this.connection?.state === signalR.HubConnectionState.Connected || 
+			this.connection?.state === signalR.HubConnectionState.Connecting) {
+			return;
+		}
 
 		this.startPromise = (async () => {
 			try {
-				// Clear previous connection if any
-				if (this.connection) {
-					await this.stopConnection();
-				}
+				const authData = localStorage.getItem('auth-storage');
+				const token = authData ? JSON.parse(authData).state.token : null;
 
 				this.connection = new signalR.HubConnectionBuilder()
-					.withUrl(this.hubUrl)
+					.withUrl(this.hubUrl, {
+						accessTokenFactory: () => token || "",
+						skipNegotiation: false,
+						transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling
+					})
 					.withAutomaticReconnect()
-					// Only log critical errors from the library itself to reduce noise during StrictMode cycles
 					.configureLogging(signalR.LogLevel.Warning)
 					.build();
 
@@ -28,17 +33,16 @@ class SignalRService {
 				console.log("SignalR: Connected");
 			} catch (err) {
 				const error = err as Error;
-				// Silently handle the intentional stop during negotiation
 				const isAbortError =
 					error.message?.includes("stopped during negotiation") ||
+					error.message?.includes("connection was stopped") ||
 					error.name === "AbortError";
 
-				if (!isAbortError && this.connection !== null) {
+				if (!isAbortError) {
 					console.error("SignalR: Connection failed:", error);
 				} else {
-					console.warn(
-						"SignalR: Connection attempt aborted (normal during rapid reloads).",
-					);
+					// Silent warning for expected dev-mode behavior
+					console.debug("SignalR: Connection attempt synchronized.");
 				}
 			} finally {
 				this.startPromise = null;
@@ -70,14 +74,25 @@ class SignalRService {
 	public async stopConnection(): Promise<void> {
 		if (this.connection) {
 			const conn = this.connection;
+			
+			// If we're already disconnecting, just return
+			if (conn.state === signalR.HubConnectionState.Disconnecting || 
+				conn.state === signalR.HubConnectionState.Disconnected) {
+				this.connection = null;
+				return;
+			}
+
 			this.connection = null;
 
 			try {
-				if (conn.state !== signalR.HubConnectionState.Disconnected) {
-					await conn.stop();
+				await conn.stop();
+			} catch (err) {
+				// Silently catch abort errors during stop
+				const error = err as Error;
+				if (!error.message?.includes("stopped during negotiation") && 
+					!error.message?.includes("connection was stopped")) {
+					console.debug("SignalR: Connection stopped gracefully.");
 				}
-			} catch {
-				// Ignore stop errors
 			}
 		}
 	}

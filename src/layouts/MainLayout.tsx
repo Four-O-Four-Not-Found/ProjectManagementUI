@@ -1,26 +1,33 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 import Sidebar from "../components/organisms/Sidebar";
 import CommandPalette from "../components/organisms/CommandPalette";
 import NotificationCenter from "../components/organisms/NotificationCenter";
 import ThemeToggle from "../components/atoms/ThemeToggle";
 import AccountModal from "../components/organisms/AccountModal";
+import Avatar from "../components/atoms/Avatar";
 import {
 	Search,
 	Bell,
 	Command,
 	Menu,
+	Layout,
 	User as UserIcon,
 	Settings,
 	LogOut,
 	ChevronDown,
+	Target,
 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNotificationStore } from "../store/useNotificationStore";
 
 const MainLayout: React.FC = () => {
+	const location = useLocation();
 	const { user, logout } = useAuthStore();
 	const { unreadCount } = useNotificationStore();
+
+	const isDashActive = location.pathname === "/";
+	const isBoardActive = location.pathname.startsWith("/board") || location.pathname.startsWith("/project/");
 	const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 	const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -123,16 +130,12 @@ const MainLayout: React.FC = () => {
 										{user?.role || "Visitor"}
 									</p>
 								</div>
-								<div className="w-8 h-8 rounded-full border border-border overflow-hidden group-hover:border-primary transition-colors flex-shrink-0">
-									<img
-										src={
-											user?.avatarUrl ||
-											`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.displayName || "Guest"}`
-										}
-										alt="Avatar"
-										className="w-full h-full object-cover"
+									<Avatar 
+										src={user?.avatarUrl} 
+										name={user?.displayName} 
+										size="sm" 
+										className="border-border group-hover:border-primary transition-colors"
 									/>
-								</div>
 								<ChevronDown
 									size={14}
 									className={`text-text-muted transition-transform duration-200 ${isProfileDropdownOpen ? "rotate-180" : ""}`}
@@ -195,11 +198,46 @@ const MainLayout: React.FC = () => {
 				</header>
 
 				{/* Content Outlet */}
-				<div className="flex-1 overflow-auto scrollbar-custom p-4 md:p-6 bg-background">
+				<div className="flex-1 overflow-auto scrollbar-custom p-4 md:p-6 bg-background pb-20 lg:pb-6">
 					<div className="max-w-[1400px] mx-auto">
 						<Outlet />
 					</div>
 				</div>
+
+				{/* Mobile Bottom Navigation */}
+				<nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/80 backdrop-blur-xl border-t border-border z-[80] flex items-center justify-around px-2">
+					<NavLink 
+						to="/"
+						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isDashActive ? 'text-primary' : 'text-text-muted hover:text-primary'}`}
+					>
+						<Layout size={20} />
+						<span className="text-[10px] font-bold uppercase tracking-widest">Dash</span>
+					</NavLink>
+					<NavLink 
+						to="/board"
+						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isBoardActive ? 'text-primary' : 'text-text-muted hover:text-primary'}`}
+					>
+						<Target size={20} />
+						<span className="text-[10px] font-bold uppercase tracking-widest">Board</span>
+					</NavLink>
+					<button 
+						onClick={() => setIsMobileSidebarOpen(true)}
+						className="flex flex-col items-center gap-1 p-2 text-text-muted hover:text-text-main transition-colors"
+					>
+						<Menu size={20} />
+						<span className="text-[10px] font-bold uppercase tracking-widest">Menu</span>
+					</button>
+					<button 
+						onClick={() => setIsNotificationsOpen(true)}
+						className={`flex flex-col items-center gap-1 p-2 transition-colors relative ${isNotificationsOpen ? 'text-primary' : 'text-text-muted hover:text-primary'}`}
+					>
+						<Bell size={20} />
+						{unreadCount > 0 && (
+							<span className="absolute top-2 right-3 w-2 h-2 bg-danger rounded-full border border-surface"></span>
+						)}
+						<span className="text-[10px] font-bold uppercase tracking-widest">Alerts</span>
+					</button>
+				</nav>
 			</main>
 		</div>
 	);

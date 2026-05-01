@@ -1,16 +1,26 @@
 import React from "react";
 import {
-	Line,
 	XAxis,
 	YAxis,
 	CartesianGrid,
 	Tooltip,
 	ResponsiveContainer,
-	AreaChart,
+	ComposedChart,
 	Area,
+	Line,
 } from "recharts";
 
-const data = [
+interface BurndownData {
+	day: string;
+	ideal: number;
+	actual: number;
+}
+
+interface BurndownChartProps {
+	data?: BurndownData[];
+}
+
+const DEFAULT_DATA: BurndownData[] = [
 	{ day: "Day 1", ideal: 100, actual: 100 },
 	{ day: "Day 2", ideal: 85, actual: 92 },
 	{ day: "Day 3", ideal: 70, actual: 78 },
@@ -20,11 +30,16 @@ const data = [
 	{ day: "Day 7", ideal: 10, actual: 5 },
 ];
 
-const BurndownChart: React.FC = () => {
+const BurndownChart: React.FC<BurndownChartProps> = ({ data = DEFAULT_DATA }) => {
 	return (
 		<div className="w-full h-[300px] mt-4">
-			<ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-				<AreaChart data={data}>
+			<ResponsiveContainer
+				width="100%"
+				height="100%"
+				minWidth={0}
+				minHeight={0}
+			>
+				<ComposedChart data={data}>
 					<defs>
 						<linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
 							<stop
@@ -84,7 +99,7 @@ const BurndownChart: React.FC = () => {
 						dot={false}
 						strokeWidth={1}
 					/>
-				</AreaChart>
+				</ComposedChart>
 			</ResponsiveContainer>
 		</div>
 	);

@@ -12,6 +12,7 @@ import Team from "./pages/Team";
 import GitHubAdmin from "./pages/GitHubAdmin";
 import Login from "./pages/Login";
 import JoinTeam from "./pages/JoinTeam";
+import Sprints from "./pages/Sprints";
 
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
@@ -38,6 +39,10 @@ function App() {
 										<Route path="/" element={<MainLayout />}>
 											<Route index element={<Dashboard />} />
 											<Route path="project/:projectId" element={<Board />} />
+											<Route
+												path="project/:projectId/sprints"
+												element={<Sprints />}
+											/>
 											<Route path="board" element={<Board />} />
 											<Route path="list" element={<ListView />} />
 											<Route path="github" element={<GitHubAdmin />} />

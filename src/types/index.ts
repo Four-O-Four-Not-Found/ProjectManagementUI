@@ -47,7 +47,7 @@ export interface Task {
 	assigneeId?: string;
 	projectId: string;
 	githubPrUrl?: string;
-	githubBranchName?: string;
+	gitHubBranch?: string;
 	hasGithub?: boolean;
 	assignee?: {
 		name: string;
@@ -69,6 +69,8 @@ export interface Sprint {
 	status: "Active" | "Completed" | "Future";
 	taskCount: number;
 	completedTasks: number;
+	tasks?: Task[];
+	goal?: string;
 }
 
 export interface Project {

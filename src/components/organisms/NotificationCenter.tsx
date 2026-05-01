@@ -73,7 +73,22 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
               )}
             </div>
 
-            <div className="p-4 border-t border-white/[0.05] bg-white/[0.01]">
+            <div className="p-4 border-t border-white/[0.05] bg-white/[0.01] space-y-3">
+               {Notification.permission !== 'granted' && (
+                 <button 
+                  onClick={async () => {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                      console.log('Notification permission granted.');
+                      // In a real app, you would now send the push subscription to the server
+                    }
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-xs font-bold text-primary hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
+                 >
+                   <Bell size={14} />
+                   Enable Background Alerts
+                 </button>
+               )}
                <button 
                 onClick={markAllAsRead}
                 className="w-full py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05] text-sm font-bold text-slate-300 hover:text-white hover:bg-white/[0.05] transition-all"

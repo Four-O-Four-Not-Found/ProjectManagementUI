@@ -51,6 +51,15 @@ export const useProject = () => {
 		}
 	}, [dispatch]);
 
+	const assignTask = useCallback(async (taskId: string, profileId: string) => {
+		try {
+			await projectService.assignTask(taskId, profileId);
+		} catch (err) {
+			console.error("Assign task failed:", err);
+			dispatch(setError("Failed to assign task"));
+		}
+	}, [dispatch]);
+
 	return {
 		projects,
 		activeProject,
@@ -60,5 +69,6 @@ export const useProject = () => {
 		fetchProjects,
 		fetchTasks,
 		moveTask,
+		assignTask,
 	};
 };
