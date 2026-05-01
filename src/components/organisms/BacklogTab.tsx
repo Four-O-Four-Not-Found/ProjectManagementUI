@@ -1,14 +1,21 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Plus, Search } from "lucide-react";
+import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
 import type { Task } from "../../types";
 
 interface BacklogTabProps {
 	tasks: Task[];
 	onSelectTask: (task: Task) => void;
+	onAddTask: () => void;
 }
 
-const BacklogTab: React.FC<BacklogTabProps> = ({ tasks, onSelectTask }) => {
+const BacklogTab: React.FC<BacklogTabProps> = ({
+	tasks,
+	onSelectTask,
+	onAddTask,
+}) => {
 	return (
 		<motion.div
 			key="backlog"
@@ -22,11 +29,25 @@ const BacklogTab: React.FC<BacklogTabProps> = ({ tasks, onSelectTask }) => {
 					Filtered Issues
 				</span>
 				<div className="flex gap-2">
-					<input
-						type="text"
-						placeholder="Filter tasks..."
-						className="bg-background border border-border rounded px-3 py-1.5 text-xs text-text-main outline-none focus:border-primary w-64"
-					/>
+					<div className="relative">
+						<Search
+							size={14}
+							className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+						/>
+						<input
+							type="text"
+							placeholder="Filter tasks..."
+							className="bg-background border border-border rounded pl-9 pr-3 py-1.5 text-xs text-text-main outline-none focus:border-primary w-64"
+						/>
+					</div>
+					<Button
+						variant="primary"
+						size="xs"
+						leftIcon={<Plus size={14} />}
+						onClick={onAddTask}
+					>
+						Add Task
+					</Button>
 				</div>
 			</div>
 			<div className="flex-1 overflow-y-auto p-4 space-y-2 bg-background/50">

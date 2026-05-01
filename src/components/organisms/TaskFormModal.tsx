@@ -62,41 +62,66 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 	const [localTeamMembers, setLocalTeamMembers] =
 		useState<TeamMember[]>(teamMembers);
 	const [isCreatingBranch, setIsCreatingBranch] = useState(false);
+	const [isFetchingBranches, setIsFetchingBranches] = useState(false);
 	const [newBranchName, setNewBranchName] = useState("");
 	const [baseBranch, setBaseBranch] = useState("main");
 	const [isSaving, setIsSaving] = useState(false);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-	React.useEffect(() => {
-		if (formData.projectId && projects.length > 0) {
-			const project = projects.find((p) => p.id === formData.projectId);
+	const [currentRepo, setCurrentRepo] = useState<string | undefined>(gitHubRepo);
+
+	const handleProjectChange = React.useCallback((projectId: string) => {
+		setFormData((prev) => ({ ...prev, projectId }));
+		
+		if (projectId && projects.length > 0) {
+			const project = projects.find((p) => p.id === projectId);
+			
+			// Update team members
 			if (project?.teamId) {
 				teamService
 					.getTeam(project.teamId)
 					.then((team) => setLocalTeamMembers(team.members || []))
 					.catch(console.error);
 			}
-		}
-	}, [formData.projectId, projects]);
 
-	React.useEffect(() => {
-		if (gitHubRepo) {
-			const parts = gitHubRepo.split("/");
-			if (parts.length === 2) {
-				githubService
-					.getBranches(parts[0], parts[1])
-					.then((data) => {
-						setBranches(data);
-						if (data.length > 0 && !data.find((b) => b.name === "main")) {
-							setBaseBranch(data[0].name);
-						} else if (data.find((b) => b.name === "main")) {
-							setBaseBranch("main");
-						}
-					})
-					.catch(console.error);
+			// Update GitHub repo and branches
+			if (project?.gitHubRepo) {
+				setCurrentRepo(project.gitHubRepo);
+				setIsFetchingBranches(true);
+				const parts = project.gitHubRepo.split("/");
+				if (parts.length === 2) {
+					githubService
+						.getBranches(parts[0], parts[1])
+						.then((data) => {
+							setBranches(data);
+							if (data.length > 0 && !data.find((b) => b.name === "main")) {
+								setBaseBranch(data[0].name);
+							} else if (data.find((b) => b.name === "main")) {
+								setBaseBranch("main");
+							}
+						})
+						.catch(console.error)
+						.finally(() => setIsFetchingBranches(false));
+				} else {
+					setIsFetchingBranches(false);
+				}
+			} else {
+				setCurrentRepo(undefined);
+				setBranches([]);
+				setIsFetchingBranches(false);
 			}
 		}
-	}, [gitHubRepo]);
+	}, [projects]);
+
+	// Initialize if defaultProjectId is provided
+	React.useEffect(() => {
+		if (defaultProjectId) {
+			const timer = setTimeout(() => {
+				handleProjectChange(defaultProjectId);
+			}, 0);
+			return () => clearTimeout(timer);
+		}
+	}, [defaultProjectId, handleProjectChange]);
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -138,8 +163,8 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						],
 					};
 				}
-				if (isCreatingBranch && newBranchName && gitHubRepo) {
-					const parts = gitHubRepo.split("/");
+				if (isCreatingBranch && newBranchName && currentRepo) {
+					const parts = currentRepo.split("/");
 					if (parts.length === 2) {
 						const branch = await githubService.createBranch(
 							parts[0],
@@ -198,9 +223,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							<select
 								className={`w-full bg-background border ${errors.projectId ? "border-danger" : "border-border"} rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all`}
 								value={formData.projectId}
-								onChange={(e) =>
-									setFormData({ ...formData, projectId: e.target.value })
-								}
+								onChange={(e) => handleProjectChange(e.target.value)}
 							>
 								<option value="" disabled>
 									Select a project...
@@ -371,11 +394,11 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					/>
 				</div>
 
-				{gitHubRepo && (
+				{currentRepo && (
 					<div className="space-y-1.5">
 						<div className="flex justify-between items-end mb-1">
 							<label className="text-xs font-semibold text-text-main block ml-0.5">
-								GitHub Branch
+								GitHub Branch {isFetchingBranches && <span className="text-[10px] text-primary animate-pulse ml-2 font-normal">(Syncing...)</span>}
 							</label>
 							<button
 								type="button"

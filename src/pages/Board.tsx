@@ -625,6 +625,7 @@ const Board: React.FC = () => {
 							<BacklogTab
 								tasks={tasks}
 								onSelectTask={(task) => setSelectedTask(task)}
+								onAddTask={handleAddTask}
 							/>
 						)}
 
