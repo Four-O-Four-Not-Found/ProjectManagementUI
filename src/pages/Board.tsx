@@ -136,20 +136,33 @@ const Board: React.FC = () => {
 					}
 				}),
 			])
-				.catch(console.error)
+				.catch((err) => {
+					console.error("Board Initialization Error:", err);
+					if (isMounted) {
+						error("Sync Failed", "Could not connect to the workspace API.");
+						setIsInitializing(false);
+					}
+				})
 				.finally(() => {
 					if (isMounted) setIsInitializing(false);
 				});
 			fetchTasks(projectId);
 		} else {
-			projectService.getProjects().then((projects) => {
-				if (!isMounted) return;
-				if (projects.length > 0) {
-					navigate(`/project/${projects[0].id}`, { replace: true });
-				} else {
-					navigate(`/`, { replace: true });
-				}
-			});
+			projectService
+				.getProjects()
+				.then((projects) => {
+					if (!isMounted) return;
+					if (projects.length > 0) {
+						navigate(`/project/${projects[0].id}`, { replace: true });
+					} else {
+						// If no projects, stop loading so user can see "Create Project" UI
+						setIsInitializing(false);
+						navigate(`/`, { replace: true });
+					}
+				})
+				.catch(() => {
+					if (isMounted) setIsInitializing(false);
+				});
 		}
 
 		return () => {
@@ -157,7 +170,7 @@ const Board: React.FC = () => {
 			setCurrentProject(null);
 			setIsInitializing(true);
 		};
-	}, [fetchTasks, projectId, navigate]);
+	}, [fetchTasks, projectId, navigate, error]);
 
 	const handleMoveTask = async (taskId: string, newStatus: Task["status"]) => {
 		await moveTask(taskId, newStatus);

@@ -39,6 +39,8 @@ interface DashboardStats {
 	recentActivities: Activity[];
 }
 
+import EmptyState from "../components/molecules/EmptyState";
+
 const Dashboard: React.FC = () => {
 	const navigate = useNavigate();
 	const { success, info } = useToast();
@@ -65,6 +67,17 @@ const Dashboard: React.FC = () => {
 				setStats(statsData);
 			} catch (error) {
 				console.error("Dashboard load failed", error);
+				// Provide empty stats so the UI can still render
+				setStats({
+					totalTasks: 0,
+					activeSprints: 0,
+					teamMembers: 0,
+					openPullRequests: 0,
+					burndownData: [],
+					workloadData: [],
+					assignedTasks: [],
+					recentActivities: []
+				});
 			} finally {
 				setLoading(false);
 			}
@@ -110,6 +123,26 @@ const Dashboard: React.FC = () => {
 						Syncing Workspace...
 					</span>
 				</div>
+			</div>
+		);
+	}
+
+	if (projects.length === 0) {
+		return (
+			<div className="space-y-8 animate-fade-in pb-10 h-[80vh] flex flex-col justify-center">
+				<ProjectFormModal
+					isOpen={isProjectModalOpen}
+					onClose={() => setIsProjectModalOpen(false)}
+					onSave={handleCreateProject}
+				/>
+				<EmptyState
+					icon={Target}
+					title="No Workspaces Found"
+					description="Your project board is currently empty. Initialize your first project to start tracking tasks and sprints."
+					actionLabel="Create First Project"
+					onAction={() => setIsProjectModalOpen(true)}
+					className="max-w-2xl mx-auto"
+				/>
 			</div>
 		);
 	}
