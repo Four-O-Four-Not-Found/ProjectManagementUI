@@ -45,20 +45,33 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 	const fetchData = useCallback(async () => {
 		setLoading(true);
 		try {
-			const [reposData, teamsData] = await Promise.all([
-				githubService.getRepositories().catch(() => []),
-				user 
-					? teamService.getMyTeams(user.id).catch(() => [])
-					: Promise.resolve([]),
-			]);
-			setRepos(reposData);
-			setTeams(teamsData);
+			// Fetch teams first as they are critical for the current issue
+			if (user) {
+				console.log("[ProjectFormModal] Initiating team fetch for user:", user.id);
+				teamService.getMyTeams(user.id)
+					.then((data) => {
+						console.log("[ProjectFormModal] Team API Success:", data);
+						setTeams(Array.isArray(data) ? data : []);
+					})
+					.catch((err) => {
+						console.error("[ProjectFormModal] Team API Error:", err);
+						setTeams([]);
+					});
+			}
+
+			// Fetch repos separately
+			console.log("[ProjectFormModal] Initiating repo fetch...");
+			githubService.getRepositories()
+				.then((data) => {
+					console.log("[ProjectFormModal] Repo API Success:", data.length, "repos");
+					setRepos(data);
+				})
+				.catch((err) => {
+					console.error("[ProjectFormModal] Repo API Error:", err);
+					setRepos([]);
+				});
 		} catch (err) {
-			console.error("Failed to fetch data:", err);
-			toastError(
-				"Fetch Error",
-				"Could not load repositories or teams. Please ensure you are logged in.",
-			);
+			console.error("[ProjectFormModal] Unexpected fetchData Error:", err);
 		} finally {
 			setLoading(false);
 		}

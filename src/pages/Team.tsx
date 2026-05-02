@@ -32,7 +32,8 @@ const Team: React.FC = () => {
 			if (!user) return;
 			try {
 				const data = await teamService.getMyTeams(user.id);
-				setTeams(data);
+				console.log("[TeamPage] Fetched teams data:", data);
+				setTeams(Array.isArray(data) ? data : []);
 
 				if (isInitial && data.length > 0) {
 					try {
