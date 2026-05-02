@@ -27,6 +27,7 @@ import apiClient from "../services/apiClient";
 import BurndownChart from "../components/molecules/BurndownChart";
 import WorkloadChart from "../components/molecules/WorkloadChart";
 import { twMerge } from "tailwind-merge";
+import { useAuthStore } from "../store/useAuthStore";
 
 interface DashboardStats {
 	totalTasks: number;
@@ -43,6 +44,7 @@ import EmptyState from "../components/molecules/EmptyState";
 
 const Dashboard: React.FC = () => {
 	const navigate = useNavigate();
+	const { user } = useAuthStore();
 	const { success, info } = useToast();
 	const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 	const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
@@ -76,7 +78,7 @@ const Dashboard: React.FC = () => {
 					burndownData: [],
 					workloadData: [],
 					assignedTasks: [],
-					recentActivities: []
+					recentActivities: [],
 				});
 			} finally {
 				setLoading(false);
@@ -177,7 +179,11 @@ const Dashboard: React.FC = () => {
 				title="Project Overview"
 				description={
 					<>
-						Welcome back! Here's what's happening with{" "}
+						Welcome back,{" "}
+						<span className="text-white font-bold">
+							{user?.displayName || "Agent"}
+						</span>
+						! Here's what's happening with{" "}
 						<span className="text-primary font-medium">FlowState</span> today.
 					</>
 				}

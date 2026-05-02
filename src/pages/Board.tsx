@@ -147,7 +147,9 @@ const Board: React.FC = () => {
 					console.error("Board Initialization Error:", err);
 					if (isMounted) {
 						error("Sync Failed", "Could not connect to the workspace API.");
+						// If we can't load the project, we should probably let the user go back to the workspace list
 						setIsInitializing(false);
+						setCurrentProject(null);
 					}
 				})
 				.finally(() => {
@@ -216,8 +218,8 @@ const Board: React.FC = () => {
 					icon={Target}
 					title="Project Not Found"
 					description="The workspace you are looking for does not exist or has been archived."
-					actionLabel="Return to Dashboard"
-					onAction={() => navigate("/")}
+					actionLabel="Select Workspace"
+					onAction={() => navigate("/board")}
 					className="max-w-2xl mx-auto"
 				/>
 			</div>
