@@ -61,6 +61,9 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 	const [branches, setBranches] = useState<GitHubBranch[]>([]);
 	const [localTeamMembers, setLocalTeamMembers] =
 		useState<TeamMember[]>(teamMembers);
+
+	const [hasProjectChanged, setHasProjectChanged] = useState(false);
+	const displayedMembers = hasProjectChanged ? localTeamMembers : teamMembers;
 	const [isCreatingBranch, setIsCreatingBranch] = useState(false);
 	const [isFetchingBranches, setIsFetchingBranches] = useState(false);
 	const [newBranchName, setNewBranchName] = useState("");
@@ -68,50 +71,56 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 	const [isSaving, setIsSaving] = useState(false);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-	const [currentRepo, setCurrentRepo] = useState<string | undefined>(gitHubRepo);
+	const [currentRepo, setCurrentRepo] = useState<string | undefined>(
+		gitHubRepo,
+	);
 
-	const handleProjectChange = React.useCallback((projectId: string) => {
-		setFormData((prev) => ({ ...prev, projectId }));
-		
-		if (projectId && projects.length > 0) {
-			const project = projects.find((p) => p.id === projectId);
-			
-			// Update team members
-			if (project?.teamId) {
-				teamService
-					.getTeam(project.teamId)
-					.then((team) => setLocalTeamMembers(team.members || []))
-					.catch(console.error);
-			}
+	const handleProjectChange = React.useCallback(
+		(projectId: string) => {
+			setFormData((prev) => ({ ...prev, projectId }));
+			setHasProjectChanged(true);
 
-			// Update GitHub repo and branches
-			if (project?.gitHubRepo) {
-				setCurrentRepo(project.gitHubRepo);
-				setIsFetchingBranches(true);
-				const parts = project.gitHubRepo.split("/");
-				if (parts.length === 2) {
-					githubService
-						.getBranches(parts[0], parts[1])
-						.then((data) => {
-							setBranches(data);
-							if (data.length > 0 && !data.find((b) => b.name === "main")) {
-								setBaseBranch(data[0].name);
-							} else if (data.find((b) => b.name === "main")) {
-								setBaseBranch("main");
-							}
-						})
-						.catch(console.error)
-						.finally(() => setIsFetchingBranches(false));
+			if (projectId && projects.length > 0) {
+				const project = projects.find((p) => p.id === projectId);
+
+				// Update team members
+				if (project?.teamId) {
+					teamService
+						.getTeam(project.teamId)
+						.then((team) => setLocalTeamMembers(team.members || []))
+						.catch(console.error);
+				}
+
+				// Update GitHub repo and branches
+				if (project?.gitHubRepo) {
+					setCurrentRepo(project.gitHubRepo);
+					setIsFetchingBranches(true);
+					const parts = project.gitHubRepo.split("/");
+					if (parts.length === 2) {
+						githubService
+							.getBranches(parts[0], parts[1])
+							.then((data) => {
+								setBranches(data);
+								if (data.length > 0 && !data.find((b) => b.name === "main")) {
+									setBaseBranch(data[0].name);
+								} else if (data.find((b) => b.name === "main")) {
+									setBaseBranch("main");
+								}
+							})
+							.catch(console.error)
+							.finally(() => setIsFetchingBranches(false));
+					} else {
+						setIsFetchingBranches(false);
+					}
 				} else {
+					setCurrentRepo(undefined);
+					setBranches([]);
 					setIsFetchingBranches(false);
 				}
-			} else {
-				setCurrentRepo(undefined);
-				setBranches([]);
-				setIsFetchingBranches(false);
 			}
-		}
-	}, [projects]);
+		},
+		[projects],
+	);
 
 	// Initialize if defaultProjectId is provided
 	React.useEffect(() => {
@@ -147,6 +156,12 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			setIsSaving(true);
 			try {
 				let updatedFormData = { ...formData };
+
+				// Ensure unassigned is sent as null for the backend Guid?
+				if (updatedFormData.assigneeId === "") {
+					updatedFormData.assigneeId = undefined;
+				}
+
 				if (imagePreview) {
 					const newAttachment: Attachment = {
 						id: Math.random().toString(36).substr(2, 9),
@@ -259,7 +274,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								}
 							>
 								<option value="">Unassigned (Volunteer basis)</option>
-								{localTeamMembers.map((m) => (
+								{displayedMembers.map((m) => (
 									<option key={m.profileId} value={m.profileId}>
 										{m.name}
 									</option>
@@ -398,7 +413,12 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					<div className="space-y-1.5">
 						<div className="flex justify-between items-end mb-1">
 							<label className="text-xs font-semibold text-text-main block ml-0.5">
-								GitHub Branch {isFetchingBranches && <span className="text-[10px] text-primary animate-pulse ml-2 font-normal">(Syncing...)</span>}
+								GitHub Branch{" "}
+								{isFetchingBranches && (
+									<span className="text-[10px] text-primary animate-pulse ml-2 font-normal">
+										(Syncing...)
+									</span>
+								)}
 							</label>
 							<button
 								type="button"

@@ -88,13 +88,13 @@ const Board: React.FC = () => {
 	const [isInitializing, setIsInitializing] = useState(true);
 
 	useEffect(() => {
-		if (activeTab === "Team" && currentProject?.teamId) {
+		if (currentProject?.teamId) {
 			teamService
 				.getTeam(currentProject.teamId)
 				.then(setProjectTeam)
 				.catch(console.error);
 		}
-	}, [activeTab, currentProject?.teamId]);
+	}, [currentProject?.teamId]);
 
 	const handleRoleChange = async (profileId: string, newRole: string) => {
 		if (!currentProject?.teamId) return;
