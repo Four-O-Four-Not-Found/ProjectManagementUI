@@ -16,7 +16,11 @@ export const projectService = {
 	},
 
 	createProject: async (
-		project: Partial<Project> & { gitHubRepo?: string },
+		project: Partial<Project> & { 
+			gitHubRepoName?: string; 
+			ownerId?: string; 
+			ownerType?: "User" | "Organization";
+		},
 	): Promise<Project> => {
 		const response = await apiClient.post<Project>("/projects", project);
 		return response.data;

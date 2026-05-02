@@ -6,13 +6,19 @@ import { Target, Hash, GitBranch, Search, Check, Users } from "lucide-react";
 import { githubService, type GitHubRepo } from "../../services/githubService";
 import teamService, { type Team } from "../../services/teamService";
 import { useToast } from "../../hooks/useToast";
+import { useAuthStore } from "../../store/useAuthStore";
 import type { Project } from "../../types";
 
 interface ProjectFormModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onSave: (
-		data: Partial<Project> & { gitHubRepo?: string; teamId?: string },
+		data: Partial<Project> & { 
+			gitHubRepoName?: string; 
+			teamId?: string;
+			ownerId?: string;
+			ownerType?: "User" | "Organization";
+		},
 	) => void;
 }
 
@@ -21,6 +27,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 	onClose,
 	onSave,
 }) => {
+	const { user } = useAuthStore();
 	const { error: toastError } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [repos, setRepos] = useState<GitHubRepo[]>([]);
@@ -40,9 +47,9 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		try {
 			const [reposData, teamsData] = await Promise.all([
 				githubService.getRepositories().catch(() => []),
-				teamService
-					.getWorkspaceTeams("00000000-0000-0000-0000-000000000001")
-					.catch(() => []),
+				user 
+					? teamService.getMyTeams(user.id).catch(() => [])
+					: Promise.resolve([]),
 			]);
 			setRepos(reposData);
 			setTeams(teamsData);
@@ -55,7 +62,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		} finally {
 			setLoading(false);
 		}
-	}, [toastError]);
+	}, [user, toastError]);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -77,7 +84,9 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		e.preventDefault();
 		onSave({
 			...formData,
-			gitHubRepo: selectedRepo?.fullName,
+			gitHubRepoName: selectedRepo?.fullName,
+			ownerId: user?.id,
+			ownerType: "User", // Matches supported string enums
 		});
 		onClose();
 	};
