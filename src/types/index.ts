@@ -60,6 +60,8 @@ export interface Task {
 	dependencies?: string[]; // IDs of tasks this task depends on
 	attachments?: Attachment[];
 	comments?: Comment[];
+	parentTaskId?: string;
+	subTasks?: Task[];
 }
 
 export interface Sprint {

@@ -11,12 +11,17 @@ import {
 	CheckCircle2,
 	User,
 	Calendar,
+	Sparkles,
+	Wand2,
+	Loader2,
 } from "lucide-react";
 import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
 import Badge from "../atoms/Badge";
 import BaseModal from "../molecules/BaseModal";
 import { useAuthStore } from "../../store/useAuthStore";
+import { projectService } from "../../services/projectService";
+import { useToast } from "../../hooks/useToast";
 import type { Task } from "../../types";
 
 interface TaskDetailModalProps {
@@ -24,6 +29,7 @@ interface TaskDetailModalProps {
 	onClose: () => void;
 	task: Task;
 	onAssign?: (taskId: string, profileId: string) => void;
+	onRefresh?: () => void;
 }
 
 const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
@@ -31,12 +37,31 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	onClose,
 	task,
 	onAssign,
+	onRefresh,
 }) => {
 	const { user } = useAuthStore();
+	const { success, error: toastError } = useToast();
 	const [comment, setComment] = useState("");
+	const [isDecomposing, setIsDecomposing] = useState(false);
 	const [activeTab, setActiveTab] = useState<
 		"details" | "activity" | "attachments"
 	>("details");
+
+	const handleDecompose = async () => {
+		setIsDecomposing(true);
+		try {
+			await projectService.decomposeTask(task.id);
+			success("Task Decomposed", "AI has generated a breakdown for this task.");
+			onRefresh?.();
+		} catch (err) {
+			toastError(
+				"Decomposition Failed",
+				"Could not generate sub-tasks.\n" + err,
+			);
+		} finally {
+			setIsDecomposing(false);
+		}
+	};
 
 	const modalHeader = (
 		<div className="space-y-1">
@@ -103,6 +128,38 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										"No description provided for this entry."}
 								</div>
 							</div>
+
+							{task.subTasks && task.subTasks.length > 0 && (
+								<div className="space-y-3">
+									<h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest flex items-center gap-2">
+										<Wand2 size={12} className="text-primary" />
+										AI Breakdown / Sub-tasks
+									</h3>
+									<div className="space-y-2">
+										{task.subTasks.map((sub) => (
+											<div
+												key={sub.id}
+												className="flex items-center justify-between p-3 bg-surface border border-border rounded-lg group hover:border-primary/50 transition-colors"
+											>
+												<div className="flex items-center gap-3">
+													<div className="w-1.5 h-1.5 rounded-full bg-primary" />
+													<span className="text-xs font-medium text-text-main">
+														{sub.title}
+													</span>
+												</div>
+												<div className="flex items-center gap-3">
+													<span className="text-[9px] font-mono text-text-muted">
+														{sub.taskId}
+													</span>
+													<Badge size="xs" variant="primary">
+														{sub.status}
+													</Badge>
+												</div>
+											</div>
+										))}
+									</div>
+								</div>
+							)}
 
 							<div>
 								<h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
@@ -189,6 +246,31 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 				{/* Sidebar Details */}
 				<div className="w-full md:w-64 bg-surface-hover/30 border-l border-border p-4 md:p-6 space-y-6">
+					<div>
+						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
+							AI Assistant
+						</h3>
+						<Button
+							variant="secondary"
+							size="xs"
+							className="w-full h-8 bg-primary/5 border-primary/20 hover:bg-primary/10 text-primary group"
+							onClick={handleDecompose}
+							disabled={isDecomposing}
+							leftIcon={
+								isDecomposing ? (
+									<Loader2 size={14} className="animate-spin" />
+								) : (
+									<Sparkles
+										size={14}
+										className="group-hover:scale-110 transition-transform"
+									/>
+								)
+							}
+						>
+							{isDecomposing ? "Planning..." : "AI Breakdown"}
+						</Button>
+					</div>
+
 					<div>
 						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
 							Properties

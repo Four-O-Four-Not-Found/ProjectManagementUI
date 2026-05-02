@@ -185,7 +185,11 @@ const Board: React.FC = () => {
 			editingTask ? "Task updated." : "New task created.",
 		);
 		setIsTaskModalOpen(false);
-		if (!editingTask && taskData.projectId && taskData.projectId !== projectId) {
+		if (
+			!editingTask &&
+			taskData.projectId &&
+			taskData.projectId !== projectId
+		) {
 			navigate(`/project/${taskData.projectId}`);
 		}
 	};
@@ -228,14 +232,15 @@ const Board: React.FC = () => {
 					onClose={() => setIsProjectModalOpen(false)}
 					onSave={handleCreateProject}
 				/>
-				
+
 				<div className="max-w-6xl mx-auto w-full space-y-10">
 					<div className="text-center space-y-4">
 						<h1 className="text-4xl font-black tracking-tight text-white">
 							Choose your <span className="text-primary">Workspace</span>
 						</h1>
 						<p className="text-text-muted max-w-xl mx-auto text-sm">
-							Select an active project below to open its task board, sprints, and automated repository metrics.
+							Select an active project below to open its task board, sprints,
+							and automated repository metrics.
 						</p>
 					</div>
 
@@ -260,7 +265,7 @@ const Board: React.FC = () => {
 									<div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
 										<Target size={80} />
 									</div>
-									
+
 									<div className="relative z-10 space-y-4">
 										<div className="flex items-center gap-3">
 											<div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
@@ -275,27 +280,32 @@ const Board: React.FC = () => {
 												</span>
 											</div>
 										</div>
-										
+
 										<p className="text-xs text-text-muted line-clamp-2 min-h-[32px]">
-											{project.description || "No description provided for this workspace."}
+											{project.description ||
+												"No description provided for this workspace."}
 										</p>
-										
+
 										<div className="pt-4 flex items-center justify-between border-t border-border/50">
 											<div className="flex -space-x-2">
-												{[1, 2, 3].map(i => (
-													<div key={i} className="w-6 h-6 rounded-full border-2 border-surface bg-surface-hover flex items-center justify-center">
+												{[1, 2, 3].map((i) => (
+													<div
+														key={i}
+														className="w-6 h-6 rounded-full border-2 border-surface bg-surface-hover flex items-center justify-center"
+													>
 														<div className="w-full h-full rounded-full bg-primary/20 scale-75" />
 													</div>
 												))}
 											</div>
 											<span className="text-[10px] font-bold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-												Open Board <ChevronDown size={14} className="-rotate-90" />
+												Open Board{" "}
+												<ChevronDown size={14} className="-rotate-90" />
 											</span>
 										</div>
 									</div>
 								</motion.div>
 							))}
-							
+
 							{/* Create New Project Card */}
 							<motion.button
 								whileHover={{ scale: 1.02 }}
@@ -306,8 +316,12 @@ const Board: React.FC = () => {
 									<Plus size={24} />
 								</div>
 								<div className="text-center">
-									<span className="block font-bold text-white text-sm">New Workspace</span>
-									<span className="text-[10px] text-text-muted">Expand your registry</span>
+									<span className="block font-bold text-white text-sm">
+										New Workspace
+									</span>
+									<span className="text-[10px] text-text-muted">
+										Expand your registry
+									</span>
 								</div>
 							</motion.button>
 						</div>
@@ -328,6 +342,7 @@ const Board: React.FC = () => {
 				onClose={() => setSelectedTask(null)}
 				task={selectedTask || ({} as Task)}
 				onAssign={handleAssignTask}
+				onRefresh={() => projectId && fetchTasks(projectId)}
 			/>
 
 			<TaskFormModal

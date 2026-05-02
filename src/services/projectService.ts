@@ -61,4 +61,9 @@ export const projectService = {
 	assignTask: async (taskId: string, profileId: string): Promise<void> => {
 		await signalRService.invoke("AssignTask", { taskId, profileId });
 	},
+
+	decomposeTask: async (taskId: string): Promise<Task[]> => {
+		const response = await apiClient.post<Task[]>(`/tasks/${taskId}/decompose`);
+		return response.data;
+	},
 };
