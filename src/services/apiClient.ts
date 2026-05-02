@@ -23,4 +23,17 @@ apiClient.interceptors.request.use((config) => {
 	return config;
 });
 
+// Interceptor for handling 401 errors
+apiClient.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (error.response?.status === 401) {
+			// Clear auth storage and redirect to login
+			localStorage.removeItem("auth-storage");
+			window.location.href = "/login";
+		}
+		return Promise.reject(error);
+	},
+);
+
 export default apiClient;
