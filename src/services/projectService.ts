@@ -9,7 +9,7 @@ export const projectService = {
 	},
 
 	createProject: async (
-		project: Partial<Project> & { githubRepo?: string },
+		project: Partial<Project> & { gitHubRepo?: string },
 	): Promise<Project> => {
 		const response = await apiClient.post<Project>("/projects", project);
 		return response.data;
