@@ -84,9 +84,10 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		e.preventDefault();
 		onSave({
 			...formData,
+			teamId: formData.teamId || undefined,
 			gitHubRepoName: selectedRepo?.fullName,
 			ownerId: user?.id,
-			ownerType: "User", // Matches supported string enums
+			ownerType: "User",
 		});
 		onClose();
 	};
