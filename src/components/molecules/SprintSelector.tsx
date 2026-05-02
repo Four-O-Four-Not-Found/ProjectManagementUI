@@ -10,7 +10,9 @@ interface SprintSelectorProps {
 const SprintSelector: React.FC<SprintSelectorProps> = ({ activeSprint }) => {
   if (!activeSprint) return null;
 
-  const progress = (activeSprint.completedTasks / activeSprint.taskCount) * 100;
+  const completed = activeSprint.completedTasks || 0;
+  const total = activeSprint.taskCount || 1; // Avoid division by zero
+  const progress = (completed / total) * 100;
 
   return (
     <div className="flex items-center gap-4 bg-surface border border-border rounded-md px-3 py-2 hover:bg-surface-hover transition-colors cursor-pointer group">
@@ -40,7 +42,7 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({ activeSprint }) => {
                 style={{ width: `${progress}%` }} 
               />
             </div>
-            <span className="font-mono text-[9px]">{activeSprint.completedTasks}/{activeSprint.taskCount}</span>
+            <span className="font-mono text-[9px]">{completed}/{activeSprint.taskCount || 0}</span>
           </div>
         </div>
       </div>

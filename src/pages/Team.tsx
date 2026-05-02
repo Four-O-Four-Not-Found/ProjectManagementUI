@@ -17,8 +17,6 @@ import TeamCreateModal from "../components/organisms/TeamCreateModal";
 import { useToast } from "../hooks/useToast";
 import { useAuthStore } from "../store/useAuthStore";
 
-const DEFAULT_WORKSPACE_ID = "00000000-0000-0000-0000-000000000001";
-
 const Team: React.FC = () => {
 	const [teams, setTeams] = useState<TeamType[]>([]);
 	const [selectedTeam, setSelectedTeam] = useState<TeamType | null>(null);
@@ -80,8 +78,7 @@ const Team: React.FC = () => {
 		try {
 			const newTeam = await teamService.createTeam({
 				...data,
-				workspaceId: DEFAULT_WORKSPACE_ID,
-				profileId: user.id,
+				userId: user.id,
 			});
 			setTeams([...teams, newTeam]);
 			setSelectedTeam(newTeam);
@@ -241,7 +238,6 @@ const Team: React.FC = () => {
 									</Button>
 								</div>
 							</div>
-							{/* Desktop Table View */}
 							<table className="hidden md:table w-full text-left border-collapse min-w-[800px] md:min-w-0">
 								<thead>
 									<tr className="border-b border-white/[0.05] bg-white/[0.02]">
@@ -260,7 +256,7 @@ const Team: React.FC = () => {
 								<tbody className="divide-y divide-white/[0.05]">
 									{selectedTeam.members?.map((member) => (
 										<tr
-											key={member.profileId}
+											key={member.userId}
 											className="hover:bg-white/[0.01] transition-colors group"
 										>
 											<td className="px-6 py-4">
@@ -288,12 +284,14 @@ const Team: React.FC = () => {
 																		"Senior Developer",
 																		"DevOps Engineer",
 																		"Architect",
+																		"Lead",
 																  ].includes(member.role)
 																? "text-emerald-400"
 																: [
 																			"UI/UX Designer",
 																			"QA Engineer",
 																			"Designer",
+																			"Member",
 																	  ].includes(member.role)
 																	? "text-amber-400"
 																	: member.role === "Stakeholder"
@@ -320,11 +318,10 @@ const Team: React.FC = () => {
 								</tbody>
 							</table>
 
-							{/* Mobile Card View */}
 							<div className="md:hidden divide-y divide-white/[0.05]">
 								{selectedTeam.members?.map((member) => (
 									<div
-										key={member.profileId}
+										key={member.userId}
 										className="p-4 space-y-3 active:bg-white/[0.02]"
 									>
 										<div className="flex justify-between items-start">
@@ -355,12 +352,14 @@ const Team: React.FC = () => {
 																	"Senior Developer",
 																	"DevOps Engineer",
 																	"Architect",
+																	"Lead",
 															  ].includes(member.role)
 															? "text-emerald-400"
 															: [
 																		"UI/UX Designer",
 																		"QA Engineer",
 																		"Designer",
+																		"Member",
 																  ].includes(member.role)
 																? "text-amber-400"
 																: member.role === "Stakeholder"

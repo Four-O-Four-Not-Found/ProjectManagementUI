@@ -1,6 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { AlertTriangle, Info, CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { AlertTriangle, Info, CheckCircle2, AlertCircle } from 'lucide-react';
 import BaseModal from './BaseModal';
 import Button from '../atoms/Button';
 
@@ -43,14 +42,14 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     }
   };
 
-  const getConfirmButtonVariant = () => {
+  const getConfirmButtonVariant = (): 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' => {
     switch (type) {
       case 'danger':
-        return 'primary'; // We can add a 'danger' variant to Button later if needed, but primary is fine for now if it's red-ish or we style it
+        return 'danger';
       case 'warning':
         return 'primary';
       case 'success':
-        return 'primary';
+        return 'success';
       case 'info':
       default:
         return 'primary';

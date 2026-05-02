@@ -8,7 +8,7 @@ import type { Team } from "../../services/teamService";
 interface TeamTabProps {
 	projectTeam: Team | null;
 	hasTeamAssigned: boolean;
-	onRoleChange: (profileId: string, newRole: string) => void;
+	onRoleChange: (userId: string, newRole: string) => void;
 	onGoToSettings: () => void;
 }
 
@@ -71,7 +71,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 							{projectTeam.members?.map((member) => (
 								<div
-									key={member.profileId}
+									key={member.userId}
 									className="p-4 border border-border rounded-lg bg-surface flex items-center gap-4 hover:border-text-muted transition-colors"
 								>
 									<Avatar name={member.name} size="md" />
@@ -82,7 +82,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 										<select
 											value={member.role}
 											onChange={(e) =>
-												onRoleChange(member.profileId, e.target.value)
+												onRoleChange(member.userId, e.target.value)
 											}
 											className={`bg-surface-hover border border-border rounded px-2 py-1 text-xs font-medium focus:outline-none focus:border-primary transition-colors cursor-pointer mt-1 ${
 												["Project Manager", "Product Owner"].includes(

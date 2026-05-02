@@ -23,10 +23,10 @@ const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({ isOpen, onClo
     >
       <div className="space-y-6">
         <div className="flex items-center gap-4 p-4 bg-surface-hover/30 rounded-md border border-border">
-          <Avatar name={activity.userName} size="md" />
+          <Avatar name={activity.userId || "User"} size="md" />
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-text-main">{activity.userName}</span>
+              <span className="font-bold text-text-main">System User</span>
               <Badge size="xs" variant="primary">Contributor</Badge>
             </div>
             <p className="text-xs text-text-muted">ID: {activity.userId}</p>
@@ -44,7 +44,7 @@ const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({ isOpen, onClo
                 </p>
                 <div className="flex items-center gap-2 mt-1 text-[10px] text-text-muted">
                    <Clock size={10} />
-                   <span>{activity.timestamp}</span>
+                   <span>{new Date(activity.createdAt).toLocaleString()}</span>
                 </div>
              </div>
           </div>
@@ -52,7 +52,7 @@ const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({ isOpen, onClo
           <div className="p-4 bg-background border border-border rounded-md">
             <h4 className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-2">Audit Trace</h4>
             <p className="text-xs text-text-main leading-relaxed">
-              This action was synchronized via SignalR Hub. The status transition for <strong>{activity.target}</strong> was validated and persisted in the {activity.type} ledger.
+              This action was synchronized via SignalR Hub. The status transition for <strong>{activity.target}</strong> was validated and persisted in the audit ledger.
             </p>
           </div>
         </div>

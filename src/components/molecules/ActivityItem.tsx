@@ -17,7 +17,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity, className, compac
       onClick={() => onClick?.(activity)}
     >
       <div className="relative">
-        <Avatar name={activity.userName} size={compact ? "xs" : "md"} />
+        <Avatar name={activity.userId || "System User"} size={compact ? "xs" : "md"} />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start mb-1">
@@ -25,15 +25,13 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity, className, compac
             "text-text-main leading-snug",
             compact ? "text-[11px]" : "text-sm"
           )}>
-            <span className="font-bold text-text-main group-hover:text-primary transition-colors">{activity.userName}</span> {activity.action} <span className="text-primary font-bold">{activity.target}</span>
+            <span className="font-bold text-text-main group-hover:text-primary transition-colors">System User</span> {activity.action} <span className="text-primary font-bold">{activity.target}</span>
           </p>
-          <span className="text-[10px] text-text-muted uppercase tracking-wider">{activity.timestamp}</span>
+          <span className="text-[10px] text-text-muted uppercase tracking-wider">{new Date(activity.createdAt).toLocaleDateString()}</span>
         </div>
-        {activity.type === 'comment' && (
-          <div className="bg-background p-3 rounded-md border border-border text-xs text-text-muted mt-2 group-hover:border-text-muted transition-colors">
-            Activity trace captured via global workspace ledger.
-          </div>
-        )}
+        <div className="bg-background p-3 rounded-md border border-border text-xs text-text-muted mt-2 group-hover:border-text-muted transition-colors">
+          Activity trace captured via global workspace ledger.
+        </div>
       </div>
     </div>
   );

@@ -52,7 +52,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			priority: "Medium",
 			projectId: defaultProjectId || "",
 			assigneeId: "",
-			status: "Todo",
+			status: "ToDo",
 			dueDate: "",
 		},
 	);
@@ -82,7 +82,6 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			setHasProjectChanged(true);
 
 			if (projectId) {
-				// Update team members
 				const project = projects.find((p) => p.id === projectId);
 				if (project?.teamId) {
 					teamService
@@ -91,13 +90,11 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						.catch(console.error);
 				}
 
-				// Update GitHub repos and branches
 				projectService
 					.getRepositories(projectId)
 					.then((repos) => {
 						setRepositories(repos);
 						if (repos.length > 0) {
-							// Default to first repo if none selected
 							const defaultRepo = repos[0];
 							setCurrentRepo(defaultRepo);
 							setFormData((prev) => ({
@@ -106,7 +103,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							}));
 
 							setIsFetchingBranches(true);
-							const parts = defaultRepo.name.split("/");
+							const parts = defaultRepo.repoName.split("/");
 							if (parts.length === 2) {
 								githubService
 									.getBranches(parts[0], parts[1])
@@ -145,7 +142,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 		setFormData((prev) => ({ ...prev, repositoryId: repoId }));
 
 		setIsFetchingBranches(true);
-		const parts = repo.name.split("/");
+		const parts = repo.repoName.split("/");
 		if (parts.length === 2) {
 			githubService
 				.getBranches(parts[0], parts[1])
@@ -164,7 +161,6 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 		}
 	};
 
-	// Initialize if defaultProjectId is provided
 	React.useEffect(() => {
 		if (defaultProjectId) {
 			const timer = setTimeout(() => {
@@ -199,7 +195,6 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			try {
 				let updatedFormData = { ...formData };
 
-				// Ensure unassigned is sent as null for the backend Guid?
 				if (updatedFormData.assigneeId === "") {
 					updatedFormData.assigneeId = undefined;
 				}
@@ -221,7 +216,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					};
 				}
 				if (isCreatingBranch && newBranchName && currentRepo) {
-					const parts = currentRepo.name.split("/");
+					const parts = currentRepo.repoName.split("/");
 					if (parts.length === 2) {
 						const branch = await githubService.createBranch(
 							parts[0],
@@ -229,7 +224,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							newBranchName,
 							baseBranch,
 						);
-						updatedFormData = { ...updatedFormData, gitHubBranch: branch.name };
+						updatedFormData = { ...updatedFormData, branchName: branch.name };
 					}
 				}
 				onSave(updatedFormData);
@@ -317,7 +312,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							>
 								<option value="">Unassigned (Volunteer basis)</option>
 								{displayedMembers.map((m) => (
-									<option key={m.profileId} value={m.profileId}>
+									<option key={m.userId} value={m.userId}>
 										{m.name}
 									</option>
 								))}
@@ -468,7 +463,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							>
 								{repositories.map((r) => (
 									<option key={r.id} value={r.id}>
-										{r.name}
+										{r.repoName}
 									</option>
 								))}
 							</select>
@@ -543,9 +538,9 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								/>
 								<select
 									className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
-									value={formData.gitHubBranch || ""}
+									value={formData.branchName || ""}
 									onChange={(e) =>
-										setFormData({ ...formData, gitHubBranch: e.target.value })
+										setFormData({ ...formData, branchName: e.target.value })
 									}
 								>
 									<option value="">No Branch Linked</option>

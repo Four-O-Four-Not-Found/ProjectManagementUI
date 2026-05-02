@@ -39,7 +39,7 @@ const JoinTeam: React.FC = () => {
 		try {
 			await teamService.joinTeam({
 				inviteCode,
-				profileId: user.id,
+				userId: user.id,
 			});
 			success("Joined Team", `You are now a member of ${team.name}`);
 			navigate("/team");

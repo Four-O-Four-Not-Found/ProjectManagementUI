@@ -28,6 +28,7 @@ import BurndownChart from "../components/molecules/BurndownChart";
 import WorkloadChart from "../components/molecules/WorkloadChart";
 import { twMerge } from "tailwind-merge";
 import { useAuthStore } from "../store/useAuthStore";
+import EmptyState from "../components/molecules/EmptyState";
 
 interface DashboardStats {
 	totalTasks: number;
@@ -39,8 +40,6 @@ interface DashboardStats {
 	assignedTasks: Task[];
 	recentActivities: Activity[];
 }
-
-import EmptyState from "../components/molecules/EmptyState";
 
 const Dashboard: React.FC = () => {
 	const navigate = useNavigate();
@@ -69,7 +68,6 @@ const Dashboard: React.FC = () => {
 				setStats(statsData);
 			} catch (error) {
 				console.error("Dashboard load failed", error);
-				// Provide empty stats so the UI can still render
 				setStats({
 					totalTasks: 0,
 					activeSprints: 0,
@@ -95,7 +93,6 @@ const Dashboard: React.FC = () => {
 				`Entry "${data.title}" has been added to the backlog.`,
 			);
 			setIsTaskModalOpen(false);
-			// Refresh stats to show the new task in the count
 			const statsData = await apiClient
 				.get<DashboardStats>("/dashboard/stats")
 				.then((res) => res.data);
@@ -250,7 +247,6 @@ const Dashboard: React.FC = () => {
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				{/* Left Column: Assigned Tasks & Stats */}
 				<div className="lg:col-span-2 space-y-8">
-					{/* Callouts Section */}
 					<AnimatePresence>
 						{urgentTasks.length > 0 && (
 							<motion.div
@@ -281,7 +277,6 @@ const Dashboard: React.FC = () => {
 						)}
 					</AnimatePresence>
 
-					{/* Assigned Tasks Card */}
 					<GlassCard className="p-0 flex flex-col overflow-hidden">
 						<div className="p-4 border-b border-border bg-surface-hover/50 flex justify-between items-center">
 							<div className="flex items-center gap-2">
@@ -309,7 +304,7 @@ const Dashboard: React.FC = () => {
 										>
 											<div className="flex justify-between items-start mb-1 md:mb-2">
 												<span className="text-[8px] md:text-[9px] font-mono text-text-muted">
-													{task.taskId}
+													{task.taskKey}
 												</span>
 												<div
 													className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${
@@ -336,9 +331,7 @@ const Dashboard: React.FC = () => {
 						</div>
 					</GlassCard>
 
-					{/* Performance & Workload Section */}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						{/* Velocity Chart */}
 						<GlassCard className="p-6 flex flex-col min-h-[350px]">
 							<div className="flex justify-between items-center mb-6">
 								<div>
@@ -353,7 +346,6 @@ const Dashboard: React.FC = () => {
 							<BurndownChart data={stats.burndownData} />
 						</GlassCard>
 
-						{/* Workload Distribution */}
 						<GlassCard className="p-6 flex flex-col min-h-[350px]">
 							<div className="flex justify-between items-center mb-6">
 								<div>
@@ -372,7 +364,6 @@ const Dashboard: React.FC = () => {
 
 				{/* Right Column: Activity Feed & Projects */}
 				<div className="space-y-8">
-					{/* Recent Activity */}
 					<GlassCard className="p-0 flex flex-col h-[500px]">
 						<div className="p-4 border-b border-border bg-surface-hover/50">
 							<h3 className="font-bold text-text-main text-sm">
@@ -405,7 +396,7 @@ const Dashboard: React.FC = () => {
 												</p>
 											</div>
 											<span className="text-[9px] text-text-muted mt-1 block">
-												{new Date(activity.timestamp).toLocaleTimeString([], {
+												{new Date(activity.createdAt).toLocaleTimeString([], {
 													hour: "2-digit",
 													minute: "2-digit",
 												})}
@@ -420,7 +411,6 @@ const Dashboard: React.FC = () => {
 						</button>
 					</GlassCard>
 
-					{/* Projects High-Density Grid */}
 					<div className="space-y-4">
 						<div className="flex items-center justify-between">
 							<h3 className="text-xs font-extrabold text-primary uppercase tracking-widest">
@@ -432,7 +422,6 @@ const Dashboard: React.FC = () => {
 						</div>
 						<div className="space-y-3">
 							{projects.slice(0, 4).map((project, idx) => {
-								// Simulated progress for demonstration
 								const progress = [75, 40, 92, 15][idx % 4];
 								const status =
 									progress > 70

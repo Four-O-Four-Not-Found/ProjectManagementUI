@@ -2,7 +2,7 @@ import apiClient from "./apiClient";
 
 export interface NotificationPreference {
 	id: string;
-	profileId: string;
+	userId: string;
 	emailOnTaskAssigned: boolean;
 	pushOnTaskAssigned: boolean;
 	emailOnMention: boolean;
@@ -12,13 +12,13 @@ export interface NotificationPreference {
 }
 
 const preferenceService = {
-	getPreferences: async (profileId: string): Promise<NotificationPreference> => {
-		const response = await apiClient.get(`/preferences/${profileId}`);
+	getPreferences: async (userId: string): Promise<NotificationPreference> => {
+		const response = await apiClient.get(`/preferences/${userId}`);
 		return response.data;
 	},
 
-	updatePreferences: async (profileId: string, prefs: NotificationPreference): Promise<void> => {
-		await apiClient.put(`/preferences/${profileId}`, prefs);
+	updatePreferences: async (userId: string, prefs: NotificationPreference): Promise<void> => {
+		await apiClient.put(`/preferences/${userId}`, prefs);
 	},
 };
 

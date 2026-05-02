@@ -1,7 +1,7 @@
 import apiClient from "./apiClient";
 
 export interface TeamMember {
-	profileId: string;
+	userId: string;
 	name: string;
 	email: string;
 	role: string;
@@ -12,29 +12,23 @@ export interface Team {
 	name: string;
 	description: string;
 	inviteCode?: string;
-	workspaceId: string;
 	members?: TeamMember[];
 }
 
 export interface TeamCreateRequest {
 	name: string;
 	description: string;
-	workspaceId: string;
-	profileId: string;
+	userId: string;
 }
 
 export interface JoinTeamRequest {
 	inviteCode: string;
-	profileId: string;
+	userId: string;
 }
 
 const teamService = {
-	getWorkspaceTeams: async (workspaceId: string): Promise<Team[]> => {
-		const response = await apiClient.get(`/teams/workspace/${workspaceId}`);
-		return response.data;
-	},
-	getMyTeams: async (profileId: string): Promise<Team[]> => {
-		const response = await apiClient.get(`/teams/my-teams/${profileId}`);
+	getMyTeams: async (userId: string): Promise<Team[]> => {
+		const response = await apiClient.get(`/teams/my-teams/${userId}`);
 		return response.data;
 	},
 
@@ -59,13 +53,17 @@ const teamService = {
 
 	updateMemberRole: async (
 		teamId: string,
-		profileId: string,
+		userId: string,
 		role: string,
 	): Promise<void> => {
-		await apiClient.put(`/teams/${teamId}/members/${profileId}/role`, { role });
+		await apiClient.put(`/teams/${teamId}/members/${userId}/role`, { role });
 	},
 	syncGithubMembers: async (teamId: string): Promise<void> => {
 		await apiClient.post(`/github/teams/${teamId}/sync`);
+	},
+	getWorkspaceTeams: async (workspaceId: string): Promise<Team[]> => {
+		const response = await apiClient.get(`/teams/workspace/${workspaceId}`);
+		return response.data;
 	},
 };
 

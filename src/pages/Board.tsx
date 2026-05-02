@@ -41,7 +41,7 @@ import { twMerge } from "tailwind-merge";
 import EmptyState from "../components/molecules/EmptyState";
 
 const columns = [
-	{ id: "Todo", title: "To Do", color: "border-slate-500" },
+	{ id: "ToDo", title: "To Do", color: "border-slate-500" },
 	{ id: "InProgress", title: "In Progress", color: "border-primary" },
 	{ id: "InReview", title: "In Review", color: "border-accent-purple" },
 	{ id: "Done", title: "Done", color: "border-success" },
@@ -96,12 +96,12 @@ const Board: React.FC = () => {
 		}
 	}, [currentProject?.teamId]);
 
-	const handleRoleChange = async (profileId: string, newRole: string) => {
+	const handleRoleChange = async (userId: string, newRole: string) => {
 		if (!currentProject?.teamId) return;
 		try {
 			await teamService.updateMemberRole(
 				currentProject.teamId,
-				profileId,
+				userId,
 				newRole,
 			);
 			success("Role Updated", "Member role has been changed for this project.");
@@ -110,7 +110,7 @@ const Board: React.FC = () => {
 				return {
 					...prev,
 					members: prev.members?.map((m) =>
-						m.profileId === profileId ? { ...m, role: newRole } : m,
+						m.userId === userId ? { ...m, role: newRole } : m,
 					),
 				};
 			});
@@ -119,8 +119,8 @@ const Board: React.FC = () => {
 		}
 	};
 
-	const handleAssignTask = async (taskId: string, profileId: string) => {
-		await assignTask(taskId, profileId);
+	const handleAssignTask = async (taskId: string, userId: string) => {
+		await assignTask(taskId, userId);
 		success("Task Assigned", "You are now responsible for this task.");
 		setSelectedTask(null);
 	};
@@ -147,7 +147,6 @@ const Board: React.FC = () => {
 					console.error("Board Initialization Error:", err);
 					if (isMounted) {
 						error("Sync Failed", "Could not connect to the workspace API.");
-						// If we can't load the project, we should probably let the user go back to the workspace list
 						setIsInitializing(false);
 						setCurrentProject(null);
 					}
@@ -467,7 +466,7 @@ const Board: React.FC = () => {
 						<div className="flex -space-x-2">
 							{projectTeam?.members?.slice(0, 5).map((member) => (
 								<Avatar
-									key={member.profileId}
+									key={member.userId}
 									name={member.name}
 									size="sm"
 									className="border-2 border-background hover:z-10 transition-all shadow-md"
@@ -680,12 +679,12 @@ const Board: React.FC = () => {
 									className="h-full bg-surface/30 border border-border rounded-md p-4 md:p-8 overflow-y-auto"
 								>
 									<RepositoryTab
-										gitHubRepo={currentProject.repositories[0].name}
+										gitHubRepo={currentProject.repositories[0].repoName}
 									/>
 								</motion.div>
 							)}
 
-						{activeTab === "Settings" && (
+						{activeTab === "Settings" && currentProject && (
 							<SettingsTab project={currentProject} />
 						)}
 					</AnimatePresence>

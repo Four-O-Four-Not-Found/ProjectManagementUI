@@ -28,7 +28,7 @@ interface TaskDetailModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	task: Task;
-	onAssign?: (taskId: string, profileId: string) => void;
+	onAssign?: (taskId: string, userId: string) => void;
 	onRefresh?: () => void;
 }
 
@@ -67,7 +67,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		<div className="space-y-1">
 			<div className="flex items-center gap-3">
 				<span className="text-[10px] font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
-					{task.taskId}
+					{task.taskKey}
 				</span>
 				<div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface border border-border">
 					{task.type === "Issue" && (
@@ -149,7 +149,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 												</div>
 												<div className="flex items-center gap-3">
 													<span className="text-[9px] font-mono text-text-muted">
-														{sub.taskId}
+														{sub.taskKey}
 													</span>
 													<Badge size="xs" variant="primary">
 														{sub.status}
@@ -298,8 +298,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									value={task.type}
 								>
 									<option value="Feature">Feature</option>
-									<option value="Issue">Issue</option>
+									<option value="Bug">Bug</option>
 									<option value="Suggestion">Suggestion</option>
+									<option value="Issue">Issue</option>
 								</select>
 							</div>
 						</div>
@@ -384,11 +385,15 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						<div className="space-y-2.5">
 							<div className="flex items-center gap-2 text-[10px] text-text-muted">
 								<Clock size={12} className="text-text-muted/50" />
-								<span>Created Apr 10</span>
+								<span>
+									Created {new Date(task.createdAt).toLocaleDateString()}
+								</span>
 							</div>
 							<div className="flex items-center gap-2 text-[10px] text-text-muted">
 								<Clock size={12} className="text-text-muted/50" />
-								<span>Updated 2h ago</span>
+								<span>
+									Updated {new Date(task.updatedAt).toLocaleDateString()}
+								</span>
 							</div>
 						</div>
 					</div>

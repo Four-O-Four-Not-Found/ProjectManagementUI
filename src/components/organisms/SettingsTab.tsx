@@ -129,7 +129,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 									</div>
 									<div>
 										<p className="text-sm font-bold text-text-main">
-											{repo.name}
+											{repo.repoName}
 										</p>
 										<p className="text-[10px] text-text-muted">
 											Connected GitHub Repository
@@ -141,7 +141,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 										variant="secondary"
 										size="xs"
 										leftIcon={<ExternalLink size={14} />}
-										onClick={() => window.open(repo.url, "_blank")}
+										onClick={() => window.open(repo.repoURL, "_blank")}
 									>
 										View
 									</Button>

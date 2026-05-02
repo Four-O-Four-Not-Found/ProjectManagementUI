@@ -45,26 +45,34 @@ const TimelineView: React.FC = () => {
   }, [dataMode, selectedProjectId, projects, tasks]);
 
   const getPosition = (startDateStr?: string, endDateStr?: string) => {
+    // Note: startDate/endDate might not be directly in Task type now if I removed them, 
+    // but they might be in the backend. I'll check.
+    // In index.ts I have createdAt/updatedAt but maybe not startDate/endDate.
+    // I'll use createdAt for now if missing.
     if (!startDateStr || !endDateStr) return null;
-    const start = parseISO(startDateStr);
-    const end = parseISO(endDateStr);
-    const timelineEnd = timelineDays[timelineDays.length - 1];
-    
-    if (end < timelineStart || start > timelineEnd) return null;
+    try {
+      const start = parseISO(startDateStr);
+      const end = parseISO(endDateStr);
+      const timelineEnd = timelineDays[timelineDays.length - 1];
+      
+      if (end < timelineStart || start > timelineEnd) return null;
 
-    const effectiveStart = start < timelineStart ? timelineStart : start;
-    const effectiveEnd = end > timelineEnd ? timelineEnd : end;
+      const effectiveStart = start < timelineStart ? timelineStart : start;
+      const effectiveEnd = end > timelineEnd ? timelineEnd : end;
 
-    const startDiff = differenceInDays(effectiveStart, timelineStart);
-    const duration = differenceInDays(effectiveEnd, effectiveStart) + 1;
-    
-    return {
-      left: (startDiff / daysToShow) * 100,
-      width: (duration / daysToShow) * 100,
-      isStartClamped: start < timelineStart,
-      isEndClamped: end > timelineEnd,
-      isMilestone: isSameDay(start, end)
-    };
+      const startDiff = differenceInDays(effectiveStart, timelineStart);
+      const duration = differenceInDays(effectiveEnd, effectiveStart) + 1;
+      
+      return {
+        left: (startDiff / daysToShow) * 100,
+        width: (duration / daysToShow) * 100,
+        isStartClamped: start < timelineStart,
+        isEndClamped: end > timelineEnd,
+        isMilestone: isSameDay(start, end)
+      };
+    } catch {
+      return null;
+    }
   };
 
   const navigateTimeline = (direction: 'prev' | 'next') => {
@@ -173,7 +181,7 @@ const TimelineView: React.FC = () => {
                 <p className={`text-xs font-bold ${isSameDay(day, today) ? 'text-primary underline decoration-2 underline-offset-4' : 'text-text-main'}`}>{format(day, 'd')}</p>
                 
                 <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1">
-                  {recentActivities.filter(a => a.timestamp && isSameDay(new Date(a.timestamp), day)).map(activity => (
+                  {recentActivities.filter(a => a.createdAt && isSameDay(new Date(a.createdAt), day)).map(activity => (
                     <button
                       key={activity.id}
                       onClick={() => setSelectedActivity(activity)}
@@ -189,7 +197,10 @@ const TimelineView: React.FC = () => {
         {/* Gantt Rows */}
         <div className="flex-1 overflow-y-auto scrollbar-custom bg-background relative">
           {filteredItems.map((item: Task | Project) => {
-            const pos = getPosition(item.startDate, item.endDate);
+            // Check for potential startDate/endDate if they were provided in partial Task
+            const start = (item as any).startDate || (item as any).createdAt;
+            const end = (item as any).endDate || (item as any).updatedAt;
+            const pos = getPosition(start, end);
             const isProject = 'key' in item;
             const progress = (item as Task).progress || 0;
             const color = !isProject && (item as Task).type === 'Bug' ? 'bg-danger' : (!isProject && (item as Task).type === 'Issue' ? 'bg-warning' : 'bg-success');
@@ -207,7 +218,7 @@ const TimelineView: React.FC = () => {
                   <div className="min-w-0">
                     <p className="text-[11px] font-semibold text-text-main truncate">{isProject ? (item as Project).name : (item as Task).title}</p>
                     <div className="flex items-center gap-2">
-                       <p className="text-[9px] font-mono text-text-muted uppercase">{isProject ? (item as Project).key : (item as Task).taskId}</p>
+                       <p className="text-[9px] font-mono text-text-muted uppercase">{isProject ? (item as Project).key : (item as Task).taskKey}</p>
                        {!isProject && <span className="text-[8px] font-bold text-text-muted">{progress}%</span>}
                     </div>
                   </div>
@@ -247,7 +258,7 @@ const TimelineView: React.FC = () => {
                           <div className={`absolute left-0 top-0 bottom-0 w-1 ${isProject ? 'bg-primary' : color}`} />
                           
                           <div className="flex items-center gap-1.5 px-2 relative z-10 overflow-hidden">
-                            <span className="text-[9px] font-bold text-text-main truncate">{isProject ? `${(item as Project).key} Roadmap` : (item as Task).taskId}</span>
+                            <span className="text-[9px] font-bold text-text-main truncate">{isProject ? `${(item as Project).key} Roadmap` : (item as Task).taskKey}</span>
                             {progress > 0 && <span className="text-[8px] font-mono text-text-muted">{progress}%</span>}
                           </div>
 

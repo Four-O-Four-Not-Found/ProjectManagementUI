@@ -67,7 +67,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({
 						</div>
 						<div className="flex items-center gap-4">
 							<span className="text-[10px] font-mono text-text-muted">
-								{task.taskId}
+								{task.taskKey}
 							</span>
 							<Avatar name={task.assignee?.name} size="xs" />
 						</div>

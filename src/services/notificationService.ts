@@ -2,10 +2,10 @@ import apiClient from "./apiClient";
 
 export interface Notification {
 	id: string;
-	profileId: string;
+	userId: string;
 	title: string;
 	message: string;
-	type: "General" | "TaskAssignment" | "Mention" | "System";
+	type: "General" | "TaskAssigned" | "Mention" | "System";
 	createdAt: string;
 	isRead: boolean;
 	link?: string;

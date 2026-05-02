@@ -62,7 +62,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 		e.stopPropagation();
 		if (onMove) {
 			const statuses: Task["status"][] = [
-				"Todo",
+				"ToDo",
 				"InProgress",
 				"InReview",
 				"Done",
@@ -103,7 +103,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 				<div className="flex items-center gap-1.5 md:gap-2">
 					<TypeIcon type={task.type} />
 					<span className="text-[9px] md:text-[10px] font-mono text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border">
-						{task.taskId}
+						{task.taskKey}
 					</span>
 				</div>
 				<PriorityBadge priority={task.priority} />
@@ -141,7 +141,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 						size="xs"
 						className="border-2 border-background w-5 h-5 md:w-6 md:h-6"
 					/>
-					{task.hasGithub && (
+					{!!task.branchName && (
 						<div className="w-5 h-5 md:w-6 md:h-6 rounded-lg border-2 border-background bg-primary/20 flex items-center justify-center text-primary shadow-[0_0_10px_rgba(56,189,248,0.3)] z-10">
 							<GitBranch size={10} className="md:w-[12px]" />
 						</div>

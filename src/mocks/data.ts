@@ -15,24 +15,30 @@ export const MOCK_PROJECTS: Project[] = [
     name: 'NovaFlow Platform', 
     key: 'WEB', 
     description: 'Core project management platform',
-    startDate: '2026-04-01',
-    endDate: '2026-06-30'
+    ownerId: 'u1',
+    ownerType: 'User',
+    createdAt: '2026-04-01T00:00:00Z',
+    updatedAt: '2026-04-01T00:00:00Z'
   },
   { 
     id: '2', 
     name: 'WareSense AI', 
     key: 'WS', 
     description: 'Inventory management with AI',
-    startDate: '2026-04-15',
-    endDate: '2026-05-15'
+    ownerId: 'u1',
+    ownerType: 'User',
+    createdAt: '2026-04-15T00:00:00Z',
+    updatedAt: '2026-04-15T00:00:00Z'
   },
   { 
     id: '3', 
     name: 'Horizon Mobile', 
     key: 'HM', 
     description: 'Cross-platform mobile app',
-    startDate: '2026-05-01',
-    endDate: '2026-07-15'
+    ownerId: 'u1',
+    ownerType: 'User',
+    createdAt: '2026-05-01T00:00:00Z',
+    updatedAt: '2026-05-01T00:00:00Z'
   }
 ];
 
@@ -44,104 +50,89 @@ export const MOCK_SPRINTS: Sprint[] = [
     endDate: '2026-04-14',
     status: 'Active',
     taskCount: 12,
-    completedTasks: 8
+    completedTasks: 8,
+    projectId: '1'
   }
 ];
 
 export const MOCK_TASKS: Task[] = [
   {
     id: '1',
-    taskId: 'WEB-101',
+    taskKey: 'WEB-101',
     title: 'Implement Dark Mode Water-morphism',
     description: 'Create a high-fidelity glassmorphism effect.',
-    status: 'Todo',
+    status: 'ToDo',
     priority: 'High',
     type: 'Feature',
     projectId: '1',
-    assignee: { name: 'Sarah Drasner', avatar: 'Sarah' },
-    startDate: '2026-04-18',
-    endDate: '2026-04-22',
-    progress: 100,
-    dependencies: []
+    columnId: 'col1',
+    createdAt: '2026-04-18T00:00:00Z',
+    updatedAt: '2026-04-18T00:00:00Z'
   },
   {
     id: '2',
-    taskId: 'WEB-102',
+    taskKey: 'WEB-102',
     title: 'SignalR Connection Latency',
     description: 'Latency optimization.',
     status: 'InProgress',
     priority: 'Urgent',
     type: 'Issue',
     projectId: '1',
-    assignee: { name: 'Dan Abramov', avatar: 'Dan' },
-    startDate: '2026-04-23',
-    endDate: '2026-04-28',
-    progress: 45,
-    dependencies: ['1']
+    columnId: 'col1',
+    createdAt: '2026-04-23T00:00:00Z',
+    updatedAt: '2026-04-23T00:00:00Z'
   },
   {
     id: '3',
-    taskId: 'WEB-103',
+    taskKey: 'WEB-103',
     title: 'Add Drag and Drop to Board',
     description: 'Smooth transitions.',
     status: 'InReview',
     priority: 'Medium',
     type: 'Suggestion',
     projectId: '1',
-    assignee: { name: 'Sarah Drasner', avatar: 'Sarah' },
-    startDate: '2026-04-29',
-    endDate: '2026-05-04',
-    progress: 15,
-    dependencies: ['2']
+    columnId: 'col1',
+    createdAt: '2026-04-29T00:00:00Z',
+    updatedAt: '2026-04-29T00:00:00Z'
   },
   {
     id: '4',
-    taskId: 'WEB-104',
+    taskKey: 'WEB-104',
     title: 'Auth Flow Refactor',
     description: 'Refresh Tokens.',
     status: 'Done',
     priority: 'High',
     type: 'Feature',
     projectId: '1',
-    assignee: { name: 'Alex Rivers', avatar: 'Alex' },
-    startDate: '2026-04-16',
-    endDate: '2026-04-21',
-    progress: 100
+    columnId: 'col1',
+    createdAt: '2026-04-16T00:00:00Z',
+    updatedAt: '2026-04-16T00:00:00Z'
   }
 ];
 
 export const MOCK_ACTIVITIES: Activity[] = [
   {
     id: "1",
-    userId: "1",
-    userName: "Sarah",
-    userAvatar: "Sarah",
+    userId: "u1",
     action: "moved",
     target: "WEB-101",
-    timestamp: "2m ago",
-    date: '2026-04-24',
-    type: "status_change",
+    createdAt: "2026-04-24T10:00:00Z",
+    projectId: "1",
   },
   {
     id: "2",
-    userId: "2",
-    userName: "John",
-    userAvatar: "John",
+    userId: "u1",
     action: "commented on",
     target: "WEB-102",
-    timestamp: "15m ago",
-    date: '2026-04-25',
-    type: "comment",
+    createdAt: "2026-04-25T11:00:00Z",
+    projectId: "1",
   },
   {
     id: "3",
-    userId: "1",
-    userName: "Sarah",
-    userAvatar: "Sarah",
+    userId: "u1",
     action: "completed",
     target: "WEB-104",
-    timestamp: "2h ago",
-    date: '2026-04-22',
-    type: "status_change",
+    createdAt: "2026-04-22T09:00:00Z",
+    projectId: "1",
   },
 ];

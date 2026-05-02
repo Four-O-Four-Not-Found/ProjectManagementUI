@@ -134,7 +134,7 @@ const SprintsTab: React.FC<SprintsTabProps> = ({ sprints }) => {
 												{sprint.tasks?.length || 0} Issues
 											</span>
 											<span className="text-[9px] text-text-muted uppercase">
-												{sprint.goal || "No goal set"}
+												Iteration Focus
 											</span>
 										</div>
 										<div

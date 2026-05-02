@@ -194,7 +194,7 @@ const Sprints: React.FC = () => {
 												{sprint.tasks?.length || 0} Issues
 											</span>
 											<span className="text-[9px] text-text-muted uppercase">
-												{sprint.goal || "No goal set"}
+												Focus Cycle
 											</span>
 										</div>
 										<div

@@ -10,12 +10,12 @@ interface NotificationItemProps {
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onClick }) => {
-  const Icon = {
-    TaskAssignment: Bell,
+  const Icon = ({
+    TaskAssigned: Bell,
     Mention: MessageSquare,
     System: AlertCircle,
     General: Info,
-  }[notification.type] || Info;
+  })[notification.type] || Info;
 
   return (
     <div 
@@ -35,7 +35,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onCli
           "w-10 h-10 rounded-xl flex items-center justify-center border border-white/[0.05]",
           notification.type === 'System' ? 'bg-rose-500/10 text-rose-400' : 
           notification.type === 'Mention' ? 'bg-primary/10 text-primary' : 
-          notification.type === 'TaskAssignment' ? 'bg-accent-purple/10 text-accent-purple' :
+          notification.type === 'TaskAssigned' ? 'bg-accent-purple/10 text-accent-purple' :
           'bg-slate-800 text-slate-400'
         )}>
           <Icon size={18} />

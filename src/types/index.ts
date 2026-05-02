@@ -11,7 +11,7 @@ export interface User {
 
 export type TaskStatus =
 	| "Backlog"
-	| "Todo"
+	| "ToDo"
 	| "InProgress"
 	| "InReview"
 	| "Done";
@@ -38,37 +38,37 @@ export interface Comment {
 
 export interface Repository {
 	id: string;
-	name: string;
-	url: string;
-	gitHubRepoId?: number;
-	projectId: string;
+	repoName: string;
+	repoURL: string;
+	ownerId: string;
+	ownerType: "User" | "Organization";
+	projectId?: string;
 }
 
 export interface Task {
 	id: string;
-	taskId: string; // This is the TaskKey (e.g. ORN-1)
+	taskKey: string; // ORN-1
 	title: string;
 	description: string;
 	status: TaskStatus;
 	priority: Priority;
 	type: TaskType;
-	assigneeId?: string;
 	projectId: string;
 	columnId: string;
 	sprintId?: string;
 	repositoryId?: string;
-	gitHubBranch?: string;
-	startDate?: string;
-	dueDate?: string;
-	createdAt: string;
-	updatedAt: string;
+	branchName?: string;
+	assigneeId?: string;
 	assignee?: {
 		name: string;
 		avatar: string;
 	};
+	dueDate?: string;
+	createdAt: string;
+	updatedAt: string;
 	parentTaskId?: string;
 	subTasks?: Task[];
-	// UI-only or future expansion fields (not yet in schema)
+	// UI-only or future expansion fields
 	progress?: number;
 	attachments?: Attachment[];
 	comments?: Comment[];
@@ -80,7 +80,7 @@ export interface Sprint {
 	name: string;
 	startDate: string;
 	endDate: string;
-	status: "Active" | "Completed" | "Future";
+	status: string; // "Planned" | "Active" | "Completed"
 	projectId: string;
 	taskCount?: number;
 	completedTasks?: number;
@@ -92,25 +92,19 @@ export interface Project {
 	name: string;
 	key: string;
 	description: string;
-	workspaceId: string;
+	ownerId: string;
+	ownerType: "User" | "Organization";
 	teamId?: string;
 	createdAt: string;
 	updatedAt: string;
 	repositories?: Repository[];
-}
-export interface Repository {
-	id: string;
-	name: string;
-	url: string;
-	projectId: string;
-	createdAt: string;
 }
 
 export interface Activity {
 	id: string;
 	action: string;
 	target: string;
-	timestamp: string;
+	createdAt: string;
 	taskId?: string;
 	userId?: string;
 	projectId: string;
@@ -118,7 +112,7 @@ export interface Activity {
 
 export interface Notification {
 	id: string;
-	profileId: string;
+	userId: string;
 	title: string;
 	message: string;
 	type: string;
@@ -127,4 +121,17 @@ export interface Notification {
 	link?: string;
 	projectId?: string;
 	taskId?: string;
+}
+
+export interface Organization {
+	id: string;
+	githubOrgId: string;
+	name: string;
+	avatarUrl: string;
+}
+
+export interface Team {
+	id: string;
+	name: string;
+	description: string;
 }

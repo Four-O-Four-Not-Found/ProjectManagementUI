@@ -72,8 +72,8 @@ export const projectService = {
 		await signalRService.invoke("UpdateTaskType", { taskId, type });
 	},
 
-	assignTask: async (taskId: string, profileId: string): Promise<void> => {
-		await signalRService.invoke("AssignTask", { taskId, profileId });
+	assignTask: async (taskId: string, userId: string): Promise<void> => {
+		await signalRService.invoke("AssignTask", { taskId, userId });
 	},
 
 	decomposeTask: async (taskId: string): Promise<Task[]> => {

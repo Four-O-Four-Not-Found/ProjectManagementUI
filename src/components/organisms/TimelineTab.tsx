@@ -160,7 +160,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 											{task.title}
 										</p>
 										<p className="text-[9px] text-text-muted font-mono">
-											{task.taskId}
+											{task.taskKey}
 										</p>
 									</div>
 								</div>
