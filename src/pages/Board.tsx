@@ -353,7 +353,6 @@ const Board: React.FC = () => {
 				onClose={() => setIsTaskModalOpen(false)}
 				task={editingTask}
 				onSave={handleSaveTask}
-				gitHubRepo={currentProject?.gitHubRepo}
 				defaultProjectId={projectId}
 				projects={allProjects}
 				teamMembers={projectTeam?.members || []}
@@ -670,17 +669,21 @@ const Board: React.FC = () => {
 							/>
 						)}
 
-						{activeTab === "Repository" && currentProject?.gitHubRepo && (
-							<motion.div
-								key="repository"
-								initial={{ opacity: 0, x: 20 }}
-								animate={{ opacity: 1, x: 0 }}
-								exit={{ opacity: 0, x: -20 }}
-								className="h-full bg-surface/30 border border-border rounded-md p-4 md:p-8 overflow-y-auto"
-							>
-								<RepositoryTab gitHubRepo={currentProject?.gitHubRepo || ""} />
-							</motion.div>
-						)}
+						{activeTab === "Repository" &&
+							currentProject?.repositories &&
+							currentProject.repositories.length > 0 && (
+								<motion.div
+									key="repository"
+									initial={{ opacity: 0, x: 20 }}
+									animate={{ opacity: 1, x: 0 }}
+									exit={{ opacity: 0, x: -20 }}
+									className="h-full bg-surface/30 border border-border rounded-md p-4 md:p-8 overflow-y-auto"
+								>
+									<RepositoryTab
+										gitHubRepo={currentProject.repositories[0].name}
+									/>
+								</motion.div>
+							)}
 
 						{activeTab === "Settings" && (
 							<SettingsTab project={currentProject} />

@@ -36,9 +36,17 @@ export interface Comment {
 	attachments?: Attachment[];
 }
 
+export interface Repository {
+	id: string;
+	name: string;
+	url: string;
+	gitHubRepoId?: number;
+	projectId: string;
+}
+
 export interface Task {
 	id: string;
-	taskId: string;
+	taskId: string; // This is the TaskKey (e.g. ORN-1)
 	title: string;
 	description: string;
 	status: TaskStatus;
@@ -46,22 +54,25 @@ export interface Task {
 	type: TaskType;
 	assigneeId?: string;
 	projectId: string;
-	githubPrUrl?: string;
+	columnId: string;
+	sprintId?: string;
+	repositoryId?: string;
 	gitHubBranch?: string;
-	hasGithub?: boolean;
+	startDate?: string;
+	dueDate?: string;
+	createdAt: string;
+	updatedAt: string;
 	assignee?: {
 		name: string;
 		avatar: string;
 	};
-	startDate?: string;
-	endDate?: string;
-	dueDate?: string;
-	progress?: number; // 0-100
-	dependencies?: string[]; // IDs of tasks this task depends on
-	attachments?: Attachment[];
-	comments?: Comment[];
 	parentTaskId?: string;
 	subTasks?: Task[];
+	// UI-only or future expansion fields (not yet in schema)
+	progress?: number;
+	attachments?: Attachment[];
+	comments?: Comment[];
+	dependencies?: string[];
 }
 
 export interface Sprint {
@@ -70,10 +81,10 @@ export interface Sprint {
 	startDate: string;
 	endDate: string;
 	status: "Active" | "Completed" | "Future";
-	taskCount: number;
-	completedTasks: number;
+	projectId: string;
+	taskCount?: number;
+	completedTasks?: number;
 	tasks?: Task[];
-	goal?: string;
 }
 
 export interface Project {
@@ -81,22 +92,39 @@ export interface Project {
 	name: string;
 	key: string;
 	description: string;
-	startDate?: string;
-	endDate?: string;
-	activeSprint?: Sprint;
-	gitHubRepo?: string;
+	workspaceId: string;
 	teamId?: string;
-	workspaceId?: string;
+	createdAt: string;
+	updatedAt: string;
+	repositories?: Repository[];
+}
+export interface Repository {
+	id: string;
+	name: string;
+	url: string;
+	projectId: string;
+	createdAt: string;
 }
 
 export interface Activity {
 	id: string;
-	userId: string;
-	userName: string;
-	userAvatar?: string;
 	action: string;
 	target: string;
 	timestamp: string;
-	date?: string;
-	type: "comment" | "status_change" | "system";
+	taskId?: string;
+	userId?: string;
+	projectId: string;
+}
+
+export interface Notification {
+	id: string;
+	profileId: string;
+	title: string;
+	message: string;
+	type: string;
+	createdAt: string;
+	isRead: boolean;
+	link?: string;
+	projectId?: string;
+	taskId?: string;
 }

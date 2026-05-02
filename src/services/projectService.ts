@@ -1,4 +1,11 @@
-import type { Task, TaskStatus, TaskType, Project, Sprint } from "../types";
+import type {
+	Task,
+	TaskStatus,
+	TaskType,
+	Project,
+	Sprint,
+	Repository,
+} from "../types";
 import { signalRService } from "./signalRService";
 import apiClient from "./apiClient";
 
@@ -43,6 +50,13 @@ export const projectService = {
 	getSprints: async (projectId: string): Promise<Sprint[]> => {
 		const response = await apiClient.get<Sprint[]>(
 			`/projects/${projectId}/sprints`,
+		);
+		return response.data;
+	},
+
+	getRepositories: async (projectId: string): Promise<Repository[]> => {
+		const response = await apiClient.get<Repository[]>(
+			`/projects/${projectId}/repositories`,
 		);
 		return response.data;
 	},

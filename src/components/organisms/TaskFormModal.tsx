@@ -18,17 +18,18 @@ import type {
 	Project,
 	Attachment,
 } from "../../types";
+import { projectService } from "../../services/projectService";
 import teamService from "../../services/teamService";
 import type { TeamMember } from "../../services/teamService";
 import { githubService } from "../../services/githubService";
 import type { GitHubBranch } from "../../services/githubService";
+import type { Repository } from "../../types";
 
 interface TaskFormModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onSave: (task: Partial<Task>) => void;
 	task?: Task | null;
-	gitHubRepo?: string;
 	defaultProjectId?: string;
 	projects?: Project[];
 	teamMembers?: TeamMember[];
@@ -39,7 +40,6 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 	onClose,
 	onSave,
 	task,
-	gitHubRepo,
 	defaultProjectId,
 	projects = [],
 	teamMembers = [],
@@ -70,9 +70,10 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 	const [baseBranch, setBaseBranch] = useState("main");
 	const [isSaving, setIsSaving] = useState(false);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
+	const [repositories, setRepositories] = useState<Repository[]>([]);
 
-	const [currentRepo, setCurrentRepo] = useState<string | undefined>(
-		gitHubRepo,
+	const [currentRepo, setCurrentRepo] = useState<Repository | undefined>(
+		undefined,
 	);
 
 	const handleProjectChange = React.useCallback(
@@ -80,10 +81,9 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			setFormData((prev) => ({ ...prev, projectId }));
 			setHasProjectChanged(true);
 
-			if (projectId && projects.length > 0) {
-				const project = projects.find((p) => p.id === projectId);
-
+			if (projectId) {
 				// Update team members
+				const project = projects.find((p) => p.id === projectId);
 				if (project?.teamId) {
 					teamService
 						.getTeam(project.teamId)
@@ -91,36 +91,78 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						.catch(console.error);
 				}
 
-				// Update GitHub repo and branches
-				if (project?.gitHubRepo) {
-					setCurrentRepo(project.gitHubRepo);
-					setIsFetchingBranches(true);
-					const parts = project.gitHubRepo.split("/");
-					if (parts.length === 2) {
-						githubService
-							.getBranches(parts[0], parts[1])
-							.then((data) => {
-								setBranches(data);
-								if (data.length > 0 && !data.find((b) => b.name === "main")) {
-									setBaseBranch(data[0].name);
-								} else if (data.find((b) => b.name === "main")) {
-									setBaseBranch("main");
-								}
-							})
-							.catch(console.error)
-							.finally(() => setIsFetchingBranches(false));
-					} else {
-						setIsFetchingBranches(false);
-					}
-				} else {
-					setCurrentRepo(undefined);
-					setBranches([]);
-					setIsFetchingBranches(false);
-				}
+				// Update GitHub repos and branches
+				projectService
+					.getRepositories(projectId)
+					.then((repos) => {
+						setRepositories(repos);
+						if (repos.length > 0) {
+							// Default to first repo if none selected
+							const defaultRepo = repos[0];
+							setCurrentRepo(defaultRepo);
+							setFormData((prev) => ({
+								...prev,
+								repositoryId: defaultRepo.id,
+							}));
+
+							setIsFetchingBranches(true);
+							const parts = defaultRepo.name.split("/");
+							if (parts.length === 2) {
+								githubService
+									.getBranches(parts[0], parts[1])
+									.then((data) => {
+										setBranches(data);
+										if (
+											data.length > 0 &&
+											!data.find((b) => b.name === "main")
+										) {
+											setBaseBranch(data[0].name);
+										} else if (data.find((b) => b.name === "main")) {
+											setBaseBranch("main");
+										}
+									})
+									.catch(console.error)
+									.finally(() => setIsFetchingBranches(false));
+							} else {
+								setIsFetchingBranches(false);
+							}
+						} else {
+							setCurrentRepo(undefined);
+							setBranches([]);
+						}
+					})
+					.catch(console.error);
 			}
 		},
 		[projects],
 	);
+
+	const handleRepositoryChange = (repoId: string) => {
+		const repo = repositories.find((r) => r.id === repoId);
+		if (!repo) return;
+
+		setCurrentRepo(repo);
+		setFormData((prev) => ({ ...prev, repositoryId: repoId }));
+
+		setIsFetchingBranches(true);
+		const parts = repo.name.split("/");
+		if (parts.length === 2) {
+			githubService
+				.getBranches(parts[0], parts[1])
+				.then((data) => {
+					setBranches(data);
+					if (data.length > 0 && !data.find((b) => b.name === "main")) {
+						setBaseBranch(data[0].name);
+					} else if (data.find((b) => b.name === "main")) {
+						setBaseBranch("main");
+					}
+				})
+				.catch(console.error)
+				.finally(() => setIsFetchingBranches(false));
+		} else {
+			setIsFetchingBranches(false);
+		}
+	};
 
 	// Initialize if defaultProjectId is provided
 	React.useEffect(() => {
@@ -179,7 +221,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					};
 				}
 				if (isCreatingBranch && newBranchName && currentRepo) {
-					const parts = currentRepo.split("/");
+					const parts = currentRepo.name.split("/");
 					if (parts.length === 2) {
 						const branch = await githubService.createBranch(
 							parts[0],
@@ -408,6 +450,31 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						}
 					/>
 				</div>
+
+				{repositories.length > 0 && (
+					<div className="space-y-1.5">
+						<label className="text-xs font-semibold text-text-main block ml-0.5">
+							Target Repository
+						</label>
+						<div className="relative">
+							<Target
+								size={16}
+								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+							/>
+							<select
+								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+								value={formData.repositoryId || ""}
+								onChange={(e) => handleRepositoryChange(e.target.value)}
+							>
+								{repositories.map((r) => (
+									<option key={r.id} value={r.id}>
+										{r.name}
+									</option>
+								))}
+							</select>
+						</div>
+					</div>
+				)}
 
 				{currentRepo && (
 					<div className="space-y-1.5">

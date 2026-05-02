@@ -116,34 +116,46 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 						Source Control
 					</h3>
 				</div>
-				<GlassCard className="p-6">
-					<div className="flex items-center justify-between p-4 bg-background border border-border rounded-xl">
-						<div className="flex items-center gap-4">
-							<div className="w-12 h-12 rounded-xl bg-surface-hover flex items-center justify-center border border-border shadow-inner">
-								<GitBranch size={24} className="text-text-main" />
-							</div>
-							<div>
-								<p className="text-sm font-bold text-text-main">
-									{project.gitHubRepo || "Not Linked"}
-								</p>
-								<p className="text-[10px] text-text-muted">
-									Connected GitHub Repository
-								</p>
-							</div>
-						</div>
-						<div className="flex gap-2">
-							<Button
-								variant="secondary"
-								size="xs"
-								leftIcon={<ExternalLink size={14} />}
+				<GlassCard className="p-6 space-y-4">
+					{project.repositories && project.repositories.length > 0 ? (
+						project.repositories.map((repo) => (
+							<div
+								key={repo.id}
+								className="flex items-center justify-between p-4 bg-background border border-border rounded-xl"
 							>
-								View on GitHub
-							</Button>
-							<Button variant="danger" size="xs">
-								Unlink
-							</Button>
+								<div className="flex items-center gap-4">
+									<div className="w-12 h-12 rounded-xl bg-surface-hover flex items-center justify-center border border-border shadow-inner">
+										<GitBranch size={24} className="text-text-main" />
+									</div>
+									<div>
+										<p className="text-sm font-bold text-text-main">
+											{repo.name}
+										</p>
+										<p className="text-[10px] text-text-muted">
+											Connected GitHub Repository
+										</p>
+									</div>
+								</div>
+								<div className="flex gap-2">
+									<Button
+										variant="secondary"
+										size="xs"
+										leftIcon={<ExternalLink size={14} />}
+										onClick={() => window.open(repo.url, "_blank")}
+									>
+										View
+									</Button>
+									<Button variant="danger" size="xs">
+										Unlink
+									</Button>
+								</div>
+							</div>
+						))
+					) : (
+						<div className="p-8 text-center text-text-muted text-xs italic border border-dashed border-border rounded-xl bg-background/20">
+							No repositories linked to this workspace.
 						</div>
-					</div>
+					)}
 					<div className="mt-4 p-4 border border-border/50 rounded-xl bg-surface/30">
 						<div className="flex items-center justify-between mb-2">
 							<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
