@@ -1,183 +1,157 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  /* Monochrome Scale */
-  --gray-50: #FAFAFA;
-  --gray-100: #F5F5F5;
-  --gray-200: #EEEEEE;
-  --gray-300: #E0E0E0;
-  --gray-400: #BDBDBD;
-  --gray-500: #9E9E9E;
-  --gray-600: #757575;
-  --gray-700: #616161;
-  --gray-800: #424242;
-  --gray-900: #212121;
+	/* Monochrome Scale */
+	--gray-50: #fafafa;
+	--gray-100: #f5f5f5;
+	--gray-200: #eeeeee;
+	--gray-300: #e0e0e0;
+	--gray-400: #bdbdbd;
+	--gray-500: #9e9e9e;
+	--gray-600: #757575;
+	--gray-700: #616161;
+	--gray-800: #424242;
+	--gray-900: #212121;
 
-  /* Functional Colors mapping to the scale */
-  --color-primary: var(--github-blue);
-  --color-success: var(--github-green);
-  --color-danger: var(--github-red);
-  --color-warning: var(--github-yellow);
-  --color-merged: var(--github-purple);
-  --color-accent-purple: var(--accent-purple);
+	/* Functional Colors mapping */
+	--color-primary: var(--github-blue);
+	--color-success: var(--github-green);
+	--color-danger: var(--github-red);
+	--color-warning: var(--github-yellow);
+	--color-merged: var(--github-purple);
+	--color-accent-purple: var(--accent-purple);
 
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-hover: var(--surface-hover);
-  --color-border: var(--border);
-  --color-text-main: var(--text-main);
-  --color-text-muted: var(--text-muted);
+	--color-background: var(--background);
+	--color-surface: var(--surface);
+	--color-surface-hover: var(--surface-hover);
+	--color-border: var(--border);
+	--color-text-main: var(--text-main);
+	--color-text-muted: var(--text-muted);
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* Shadows */
-  --shadow-sm: 0px 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0px 12px 24px rgba(0, 0, 0, 0.12);
+	/* Shadows */
+	--shadow-sm: 0px 2px 4px rgba(0, 0, 0, 0.05);
+	--shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.08);
+	--shadow-lg: 0px 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 @layer base {
-  :root {
-    /* Monochrome Dark Mode */
-    --background: #000000;
-    --surface: #212121; /* Gray 900 */
-    --surface-hover: #424242; /* Gray 800 */
-    --border: #424242; /* Gray 800 */
-    --text-main: #F5F5F5; /* Gray 100 */
-    --text-muted: #9E9E9E; /* Gray 500 */
+	:root {
+		/* Monochrome Dark Mode */
+		--background: #000000;
+		--surface: #121212;
+		--surface-hover: #1e1e1e;
+		--border: #2c2c2c;
+		--text-main: #f5f5f5;
+		--text-muted: #9e9e9e;
 
-    /* Monochrome Accents (White in dark mode) */
-    --github-blue: #FFFFFF;
-    --github-green: #EEEEEE;
-    --github-red: #BDBDBD;
-    --github-purple: #EEEEEE;
-    --github-yellow: #BDBDBD;
-    --accent-purple: #FFFFFF;
+		/* Semantic Accents (Restore Colors for Actions) */
+		--github-blue: #2f81f7;
+		--github-green: #238636;
+		--github-red: #da3633;
+		--github-purple: #8957e5;
+		--github-yellow: #d29922;
+		--accent-purple: #a371f7;
 
-    --overlay: rgba(0, 0, 0, 0.85);
-    color-scheme: dark;
-  }
+		--overlay: rgba(0, 0, 0, 0.85);
+		color-scheme: dark;
+	}
 
-  .light {
-    /* Monochrome Light Mode */
-    --background: #FAFAFA; /* Gray 50 */
-    --surface: #FFFFFF;
-    --surface-hover: #F5F5F5; /* Gray 100 */
-    --border: #EEEEEE; /* Gray 200 */
-    --text-main: #212121; /* Gray 900 */
-    --text-muted: #757575; /* Gray 600 */
+	.light {
+		/* Monochrome Light Mode */
+		--background: #fafafa;
+		--surface: #ffffff;
+		--surface-hover: #f5f5f5;
+		--border: #eeeeee;
+		--text-main: #212121;
+		--text-muted: #757575;
 
-    /* Monochrome Accents (Black in light mode) */
-    --github-blue: #000000;
-    --github-green: #212121;
-    --github-red: #424242;
-    --github-purple: #212121;
-    --github-yellow: #424242;
-    --accent-purple: #000000;
+		/* Semantic Accents (Restore Colors for Actions) */
+		--github-blue: #0969da;
+		--github-green: #2da44e;
+		--github-red: #cf222e;
+		--github-purple: #8250df;
+		--github-yellow: #bf8700;
+		--accent-purple: #6e40c9;
 
-    --overlay: rgba(0, 0, 0, 0.50);
-    color-scheme: light;
-  }
-  
-  body {
-    background-color: var(--background);
-    color: var(--text-main);
-    font-family: var(--font-sans);
-    transition: background-color 0.2s ease, color 0.2s ease;
-    margin: 0;
-    -webkit-font-smoothing: antialiased;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+		--overlay: rgba(0, 0, 0, 0.5);
+		color-scheme: light;
+	}
 
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
-  }
+	body {
+		background-color: var(--background);
+		color: var(--text-main);
+		font-family: var(--font-sans);
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease;
+		margin: 0;
+		-webkit-font-smoothing: antialiased;
+		padding-top: env(safe-area-inset-top);
+		padding-bottom: env(safe-area-inset-bottom);
+	}
 
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .safe-pb {
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-  }
-
-  select option {
-    background-color: var(--surface);
-    color: var(--text-main);
-  }
-
-  /* Focus rings for accessibility */
-  :focus-visible {
-    outline: 2px solid var(--github-blue);
-    outline-offset: 2px;
-  }
+	/* Focus rings */
+	:focus-visible {
+		outline: 2px solid var(--github-blue);
+		outline-offset: 2px;
+	}
 }
 
 @layer components {
-  .glass-panel {
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .glass-card {
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
-  }
-  
-  .glass-card:hover {
-    border-color: var(--text-main);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-  }
+	.glass-panel {
+		background-color: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		box-shadow: var(--shadow-sm);
+	}
 
-  .scrollbar-custom::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+	.glass-card {
+		background-color: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		box-shadow: var(--shadow-sm);
+		transition: all 0.2s ease;
+	}
 
-  .scrollbar-custom::-webkit-scrollbar-track {
-    background: var(--background);
-  }
+	.glass-card:hover {
+		border-color: var(--text-main);
+		box-shadow: var(--shadow-md);
+		transform: translateY(-1px);
+	}
 
-  .scrollbar-custom::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 10px;
-  }
-  
-  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-  }
+	.scrollbar-custom::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+
+	.scrollbar-custom::-webkit-scrollbar-track {
+		background: var(--background);
+	}
+
+	.scrollbar-custom::-webkit-scrollbar-thumb {
+		background: var(--border);
+		border-radius: 10px;
+	}
+
+	.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+		background: var(--text-muted);
+	}
 }
 
 @utility animate-fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
+	animation: fadeIn 0.3s ease-out forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Glassmorphism Intensity */
-[data-glass="low"] .glass-card {
-  background-color: var(--surface);
-  backdrop-filter: none;
-}
-
-[data-glass="medium"] .glass-card {
-  background-color: color-mix(in srgb, var(--surface) 80%, transparent);
-  backdrop-filter: blur(8px);
-}
-
-[data-glass="high"] .glass-card {
-  background-color: color-mix(in srgb, var(--surface) 40%, transparent);
-  backdrop-filter: blur(16px);
-  border-color: color-mix(in srgb, var(--border) 50%, white 10%);
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }

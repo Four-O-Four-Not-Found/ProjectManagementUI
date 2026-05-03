@@ -122,7 +122,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 					<Button variant="secondary" onClick={onClose}>
 						Cancel
 					</Button>
-					<Button onClick={handleSubmit} disabled={!formData.name}>
+					<Button variant="success" onClick={handleSubmit} disabled={!formData.name}>
 						Create Project
 					</Button>
 				</>

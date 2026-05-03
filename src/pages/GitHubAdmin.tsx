@@ -153,7 +153,8 @@ const GitHubAdmin: React.FC = () => {
 							Refresh
 						</Button>
 						<Button
-							className="w-full md:w-auto bg-[#2ea44f] hover:shadow-[0_0_20px_rgba(46,164,79,0.4)]"
+							variant="success"
+							className="w-full md:w-auto shadow-lg shadow-success/20"
 							leftIcon={<GitBranch size={18} />}
 						>
 							Connect Repository
@@ -262,9 +263,8 @@ const GitHubAdmin: React.FC = () => {
 													</p>
 												</div>
 												<Button
-													variant="ghost"
+													variant="danger"
 													size="sm"
-													className="text-slate-500 hover:text-rose-500"
 													onClick={() => handleDeleteRepository(repo.name)}
 												>
 													<Trash2 size={18} />
@@ -303,9 +303,9 @@ const GitHubAdmin: React.FC = () => {
 												<Building2 size={12} className="mr-1" /> Verified
 											</Badge>
 											<Button
-												variant="ghost"
+												variant="success"
 												size="sm"
-												className="text-primary hover:bg-primary/10 flex items-center gap-2 group/btn"
+												className="flex items-center gap-2 group/btn"
 												onClick={() => handleImportTeam(org.login)}
 											>
 												<Users size={16} className="group-hover/btn:scale-110 transition-transform" />

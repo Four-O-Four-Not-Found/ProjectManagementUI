@@ -107,7 +107,7 @@ const TeamInviteModal: React.FC<TeamInviteModalProps> = ({
 						</Button>
 						<Button
 							fullWidth
-							variant="primary"
+							variant="success"
 							onClick={() => {
 								if (navigator.share) {
 									navigator.share({

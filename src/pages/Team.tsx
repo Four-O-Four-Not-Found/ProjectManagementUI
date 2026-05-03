@@ -129,7 +129,7 @@ const Team: React.FC = () => {
 				actions={
 					<div className="flex gap-3">
 						<Button
-							variant="secondary"
+							variant="success"
 							leftIcon={<Plus size={18} />}
 							onClick={() => setIsCreateModalOpen(true)}
 						>
@@ -143,6 +143,7 @@ const Team: React.FC = () => {
 							Import GitHub Org
 						</Button>
 						<Button
+							variant="success"
 							leftIcon={<UserPlus size={18} />}
 							onClick={() => setIsInviteModalOpen(true)}
 							disabled={!selectedTeam}

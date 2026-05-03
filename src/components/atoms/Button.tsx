@@ -2,7 +2,7 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'warning';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   loading?: boolean;
@@ -24,14 +24,15 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const isButtonLoading = isLoading || loading;
-  const baseStyles = "inline-flex items-center justify-center rounded-md font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseStyles = "inline-flex items-center justify-center rounded-md font-bold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider shadow-sm";
   
   const variants = {
-    primary: "bg-primary text-white hover:bg-primary/90 shadow-sm",
+    primary: "bg-primary text-white hover:bg-primary/90",
     secondary: "bg-surface border border-border text-text-main hover:bg-surface-hover hover:border-text-muted",
-    ghost: "bg-transparent text-text-muted hover:text-text-main hover:bg-surface-hover",
-    danger: "bg-danger/10 text-danger border border-danger/20 hover:bg-danger/20",
-    success: "bg-success/10 text-success border border-success/20 hover:bg-success/20",
+    ghost: "bg-transparent text-text-muted hover:text-text-main hover:bg-surface-hover shadow-none",
+    danger: "bg-danger text-white hover:bg-danger/90",
+    success: "bg-success text-white hover:bg-success/90",
+    warning: "bg-warning text-white hover:bg-warning/90",
   };
 
   const sizes = {

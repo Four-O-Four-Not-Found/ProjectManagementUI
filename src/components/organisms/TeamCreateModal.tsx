@@ -68,7 +68,7 @@ const TeamCreateModal: React.FC<TeamCreateModalProps> = ({
 					>
 						Cancel
 					</Button>
-					<Button type="submit" fullWidth loading={loading}>
+					<Button type="submit" variant="success" fullWidth loading={loading}>
 						Create Team
 					</Button>
 				</div>

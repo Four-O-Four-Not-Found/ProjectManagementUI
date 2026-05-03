@@ -450,7 +450,7 @@ const Settings: React.FC = () => {
 						</h3>
 						{activeTab !== "Appearance" && (
 							<Button
-								variant="primary"
+								variant="warning"
 								size="xs"
 								leftIcon={<Save size={14} />}
 								onClick={handleSave}

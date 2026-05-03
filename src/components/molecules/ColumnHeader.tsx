@@ -37,7 +37,7 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = ({
 			</button>
 			<button
 				onClick={onAdd}
-				className="p-1.5 rounded-lg hover:bg-primary/20 text-text-muted hover:text-primary transition-all active:scale-95"
+				className="p-1.5 rounded-lg hover:bg-success/20 text-text-muted hover:text-success transition-all active:scale-95"
 			>
 				<Plus size={16} />
 			</button>

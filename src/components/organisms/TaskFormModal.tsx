@@ -249,7 +249,11 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					<Button variant="secondary" onClick={onClose}>
 						Cancel
 					</Button>
-					<Button onClick={handleSave} isLoading={isSaving}>
+					<Button
+						variant={task ? "warning" : "success"}
+						onClick={handleSave}
+						isLoading={isSaving}
+					>
 						{task ? "Update" : "Dispatch"}
 					</Button>
 				</div>

@@ -41,7 +41,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({
 						/>
 					</div>
 					<Button
-						variant="primary"
+						variant="success"
 						size="xs"
 						leftIcon={<Plus size={14} />}
 						onClick={onAddTask}

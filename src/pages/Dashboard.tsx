@@ -197,7 +197,7 @@ const Dashboard: React.FC = () => {
 							Report
 						</Button>
 						<Button
-							variant="secondary"
+							variant="success"
 							className="flex-1 md:flex-none"
 							leftIcon={<Target size={16} />}
 							onClick={() => setIsProjectModalOpen(true)}
@@ -205,6 +205,7 @@ const Dashboard: React.FC = () => {
 							Create Project
 						</Button>
 						<Button
+							variant="success"
 							className="flex-1 md:flex-none"
 							leftIcon={<Plus size={16} />}
 							onClick={() => setIsTaskModalOpen(true)}
@@ -268,8 +269,8 @@ const Dashboard: React.FC = () => {
 								</div>
 								<Button
 									size="xs"
-									variant="primary"
-									className="bg-danger hover:bg-danger/80 border-none shadow-lg shadow-danger/20"
+									variant="danger"
+									className="shadow-lg shadow-danger/20"
 								>
 									Review All
 								</Button>

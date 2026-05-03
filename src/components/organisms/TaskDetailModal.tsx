@@ -178,7 +178,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						</Button>
 						<Button
 							size="xs"
-							variant="primary"
+							variant="warning"
 							className="h-8 px-3"
 							loading={isSaving}
 							onClick={handleUpdateTask}
