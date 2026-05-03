@@ -29,14 +29,14 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[150]"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[15000]"
           />
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md glass-panel z-[151] border-l border-white/[0.1] flex flex-col shadow-2xl shadow-black/50"
+            className="fixed top-0 right-0 h-full w-full max-w-md glass-panel z-[15001] border-l border-white/[0.1] flex flex-col shadow-2xl shadow-black/50"
           >
             <div className="p-6 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.02]">
               <div className="flex items-center gap-3">

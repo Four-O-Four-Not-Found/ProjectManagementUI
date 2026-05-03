@@ -69,6 +69,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       onClose={onClose}
       title={title}
       size="sm"
+      zIndex="z-[11000]"
       footer={
         <div className="flex gap-3 w-full sm:w-auto">
           <Button

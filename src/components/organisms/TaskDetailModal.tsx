@@ -1,13 +1,8 @@
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import {
-	Clock,
 	Send,
 	Plus,
-	Image as ImageIcon,
-	AlertCircle,
-	Lightbulb,
-	CheckCircle2,
 	User,
 	Calendar,
 	Sparkles,
@@ -17,6 +12,11 @@ import {
 	Check,
 	X,
 	Trash2,
+	MessageSquare,
+	AlertCircle,
+	Lightbulb,
+	CheckCircle2,
+	Bookmark,
 } from "lucide-react";
 import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
@@ -34,6 +34,21 @@ interface TaskDetailModalProps {
 	onAssign?: (taskId: string, userId: string) => void;
 	onRefresh?: () => void;
 }
+
+const TypeIcon = ({ type }: { type: Task["type"] }) => {
+	switch (type) {
+		case "Issue":
+			return <AlertCircle size={12} className="text-gray-500" />;
+		case "Suggestion":
+			return <Lightbulb size={12} className="text-gray-400" />;
+		case "Bug":
+			return <AlertCircle size={12} className="text-gray-600 font-bold" />;
+		case "Feature":
+			return <CheckCircle2 size={12} className="text-gray-900" />;
+		default:
+			return <Bookmark size={12} className="text-gray-900" />;
+	}
+};
 
 const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	isOpen,
@@ -145,22 +160,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
 	const modalHeader = (
 		<div className="flex items-center justify-between w-full pr-8">
-			<div className="space-y-1">
+			<div className="space-y-1.5">
 				<div className="flex items-center gap-3">
-					<span className="text-[10px] font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
+					<span className="text-[11px] font-mono font-bold text-gray-500 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded border border-gray-200 dark:border-white/10">
 						{task.taskKey}
 					</span>
-					<div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface border border-border">
-						{task.type === "Issue" && (
-							<AlertCircle size={10} className="text-gray-500" />
-						)}
-						{task.type === "Suggestion" && (
-							<Lightbulb size={10} className="text-gray-400" />
-						)}
-						{task.type === "Feature" && (
-							<CheckCircle2 size={10} className="text-primary" />
-						)}
-						<span className="text-[9px] font-bold text-text-muted uppercase tracking-widest">
+					<div className="flex items-center gap-1.5">
+						<TypeIcon type={task.type} />
+						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
 							{task.type}
 						</span>
 					</div>
@@ -169,57 +176,54 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					<input
 						value={editedTitle}
 						onChange={(e) => setEditedTitle(e.target.value)}
-						className="text-lg font-bold text-text-main tracking-tight bg-background border border-primary/30 rounded px-2 py-0.5 outline-none focus:border-primary w-full max-w-lg"
+						className="text-xl font-bold text-gray-900 dark:text-white bg-transparent border-b border-gray-200 dark:border-white/10 py-1 outline-none focus:border-gray-900 dark:focus:border-white w-full max-w-lg transition-colors"
 						autoFocus
 					/>
 				) : (
-					<h2 className="text-lg font-bold text-text-main tracking-tight">
+					<h2 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
 						{task.title}
 					</h2>
 				)}
 			</div>
-
-			<div className="flex items-center gap-2">
+ 
+			<div className="flex items-center gap-3">
 				{isEditing ? (
-					<>
+					<div className="flex items-center gap-2">
 						<Button
-							size="xs"
+							size="sm"
 							variant="secondary"
-							className="h-8 px-2"
 							onClick={() => {
 								setIsEditing(false);
 								setEditedTitle(task.title);
 								setEditedDescription(task.description);
 							}}
 						>
-							<X size={14} />
+							<X size={16} />
 						</Button>
 						<Button
-							size="xs"
-							variant="warning"
-							className="h-8 px-3"
+							size="sm"
+							variant="primary"
 							loading={isSaving}
 							onClick={handleUpdateTask}
-							leftIcon={<Check size={14} />}
+							leftIcon={<Check size={16} />}
 						>
-							Save
+							Save Changes
 						</Button>
-					</>
+					</div>
 				) : (
 					<div className="flex items-center gap-2">
 						<Button
-							size="xs"
+							size="sm"
 							variant="secondary"
-							className="h-8 px-3"
 							onClick={() => setIsEditing(true)}
 							leftIcon={<Edit2 size={14} />}
 						>
 							Edit
 						</Button>
 						<Button
-							size="xs"
-							variant="danger"
-							className="h-8 px-2"
+							size="sm"
+							variant="secondary"
+							className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10"
 							onClick={handleDeleteTask}
 							loading={isSaving}
 						>
@@ -230,108 +234,164 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			</div>
 		</div>
 	);
-
+ 
 	return (
 		<BaseModal isOpen={isOpen} onClose={onClose} title={modalHeader} size="xl">
-			<div className="flex flex-col md:flex-row min-h-[500px]">
+			<div className="flex flex-col md:flex-row min-h-[600px] bg-white dark:bg-gray-950">
 				{/* Left Content */}
-				<div className="flex-1 p-2 md:p-4">
-					<div className="flex gap-6 border-b border-border mb-6">
+				<div className="flex-1 p-6 md:p-10">
+					<div className="flex gap-8 border-b border-gray-100 dark:border-white/5 mb-8">
 						{(["details", "activity", "attachments"] as const).map((tab) => (
 							<button
 								key={tab}
 								onClick={() => setActiveTab(tab)}
-								className={`pb-3 text-[10px] font-bold uppercase tracking-widest transition-all relative ${
+								className={`pb-4 text-xs font-semibold uppercase tracking-widest transition-all relative ${
 									activeTab === tab
-										? "text-primary"
-										: "text-text-muted hover:text-text-main"
+										? "text-gray-900 dark:text-white"
+										: "text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
 								}`}
 							>
-								{tab === "details"
-									? "Task Info"
-									: tab === "activity"
-										? "Discussion"
-										: "Files"}
+								{tab === "details" ? "Details" : tab === "activity" ? "Discussion" : "Files"}
 								{activeTab === tab && (
 									<motion.div
 										layoutId="activeTabDetail"
-										className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-[0_0_8px_rgba(0,0,0,0.2)]"
+										className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 dark:bg-white"
 									/>
 								)}
 							</button>
 						))}
 					</div>
-
-					{activeTab === "details" && (
-						<div className="space-y-8 animate-fade-in">
-							<div>
-								<h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
-									Description
-								</h3>
-								{isEditing ? (
-									<textarea
-										value={editedDescription}
-										onChange={(e) => setEditedDescription(e.target.value)}
-										className="w-full bg-background border border-border rounded-xl p-4 text-sm text-text-main placeholder:text-text-muted/50 outline-none focus:border-primary/50 transition-all min-h-[150px] resize-none"
-										placeholder="Describe the task and any technical requirements..."
-									/>
-								) : (
-									<div className="text-sm text-text-main leading-relaxed bg-surface-hover/30 p-4 rounded-xl border border-border whitespace-pre-wrap">
-										{task.description ||
-											"No description provided for this entry."}
-									</div>
-								)}
-							</div>
-
-							{task.subTasks && task.subTasks.length > 0 && (
-								<div className="space-y-3">
-									<h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest flex items-center gap-2">
-										<Wand2 size={12} className="text-primary" />
-										AI Breakdown / Sub-tasks
+ 
+					<div className="animate-fade-in">
+						{activeTab === "details" && (
+							<div className="space-y-10">
+								<div>
+									<h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">
+										Description
 									</h3>
-									<div className="space-y-2">
-										{task.subTasks.map((sub) => (
-											<div
-												key={sub.id}
-												className="flex items-center justify-between p-3 bg-surface border border-border rounded-lg group hover:border-primary/50 transition-colors"
-											>
-												<div className="flex items-center gap-3">
-													<div className="w-1.5 h-1.5 rounded-full bg-primary" />
-													<span className="text-xs font-medium text-text-main">
-														{sub.title}
-													</span>
-												</div>
-												<div className="flex items-center gap-3">
-													<span className="text-[9px] font-mono text-text-muted">
-														{sub.taskKey}
-													</span>
-													<Badge size="xs" variant="primary">
+									{isEditing ? (
+										<textarea
+											value={editedDescription}
+											onChange={(e) => setEditedDescription(e.target.value)}
+											className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-6 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[250px] resize-none"
+											placeholder="Write a detailed task description..."
+										/>
+									) : (
+										<div className="text-[15px] text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap font-medium">
+											{task.description || "No description provided for this task."}
+										</div>
+									)}
+								</div>
+ 
+								{task.subTasks && task.subTasks.length > 0 && (
+									<div className="space-y-4">
+										<h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+											<Wand2 size={12} />
+											Sub-tasks
+										</h3>
+										<div className="grid gap-2">
+											{task.subTasks.map((sub) => (
+												<div
+													key={sub.id}
+													className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl hover:border-gray-200 dark:hover:border-white/10 transition-colors"
+												>
+													<div className="flex items-center gap-3">
+														<div className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
+														<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+															{sub.title}
+														</span>
+													</div>
+													<Badge size="xs" variant="secondary">
 														{sub.status}
 													</Badge>
 												</div>
+											))}
+										</div>
+									</div>
+								)}
+							</div>
+						)}
+ 
+						{activeTab === "activity" && (
+							<div className="space-y-8">
+								<div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
+									{task.comments && task.comments.length > 0 ? (
+										task.comments.map((comment) => (
+											<div key={comment.id} className="flex gap-4">
+												<Avatar
+													name={comment.user?.displayName || "User"}
+													src={comment.user?.avatarUrl}
+													size="sm"
+												/>
+												<div className="flex-1 space-y-1.5">
+													<div className="flex items-center justify-between">
+														<span className="text-xs font-bold text-gray-900 dark:text-white">
+															{comment.user?.displayName}
+														</span>
+														<span className="text-[10px] text-gray-400 font-medium">
+															{new Date(comment.createdAt).toLocaleDateString()}
+														</span>
+													</div>
+													<div className="bg-gray-50 dark:bg-white/5 rounded-2xl rounded-tl-none p-4 border border-gray-100 dark:border-white/5 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+														{comment.content}
+													</div>
+												</div>
 											</div>
-										))}
+										))
+									) : (
+										<div className="flex flex-col items-center justify-center py-20 text-gray-400 opacity-50">
+											<MessageSquare size={40} strokeWidth={1} />
+											<p className="mt-4 text-sm font-medium italic">No discussions yet.</p>
+										</div>
+									)}
+								</div>
+ 
+								<div className="flex gap-4 pt-6 border-t border-gray-100 dark:border-white/5">
+									<Avatar
+										name={user?.displayName || "You"}
+										src={user?.avatarUrl}
+										size="sm"
+									/>
+									<div className="flex-1 relative group">
+										<textarea
+											value={comment}
+											onChange={(e) => setComment(e.target.value)}
+											placeholder="Write a comment..."
+											className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-white/10 rounded-2xl p-4 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[100px] resize-none shadow-sm"
+										/>
+										<div className="absolute bottom-3 right-3">
+											<Button
+												size="sm"
+												className="h-9 px-5 rounded-xl shadow-lg"
+												rightIcon={<Send size={14} />}
+												onClick={handlePostComment}
+												loading={isPostingComment}
+												disabled={!comment.trim()}
+											>
+												Send
+											</Button>
+										</div>
 									</div>
 								</div>
-							)}
-
-							<div>
-								<h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-3">
-									Visual Evidence / Attachments
-								</h3>
-								<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+							</div>
+						)}
+ 
+						{activeTab === "attachments" && (
+							<div className="space-y-6">
+								<div className="grid grid-cols-2 md:grid-cols-3 gap-6">
 									{task.attachments?.map((img) => (
 										<div
 											key={img.id}
-											className="aspect-video rounded-xl overflow-hidden border border-border group relative cursor-pointer"
+											className="aspect-[4/3] rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 group relative cursor-pointer shadow-sm hover:shadow-md transition-all"
 										>
 											<img
 												src={img.fileUrl}
 												alt={img.fileName}
-												className="w-full h-full object-cover transition-transform group-hover:scale-110"
+												className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
 											/>
-											<div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-												<Plus className="text-white" />
+											<div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-4 text-center">
+												<span className="text-white text-[10px] font-bold truncate w-full">{img.fileName}</span>
+												<Button size="xs" variant="secondary" className="bg-white/10 border-white/20 text-white backdrop-blur-md">View Full</Button>
 											</div>
 										</div>
 									))}
@@ -344,250 +404,163 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									/>
 									<button
 										onClick={() => fileInputRef.current?.click()}
-										className="aspect-video rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 group"
+										className="aspect-[4/3] rounded-2xl border-2 border-dashed border-gray-200 dark:border-white/10 hover:border-gray-400 dark:hover:border-white/30 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group"
 									>
-										<ImageIcon
-											size={18}
-											className="text-text-muted group-hover:text-primary transition-colors"
-										/>
-										<span className="text-[9px] font-bold text-text-muted uppercase group-hover:text-primary transition-colors">
-											Add Image
+										<div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white transition-colors">
+											<Plus size={20} />
+										</div>
+										<span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+											Add Attachment
 										</span>
 									</button>
 								</div>
 							</div>
-						</div>
-					)}
-
-					{activeTab === "activity" && (
-						<div className="space-y-5 animate-fade-in">
-							{task.comments && task.comments.length > 0 ? (
-								task.comments.map((comment) => (
-									<div key={comment.id} className="flex gap-3">
-										<Avatar
-											name={comment.user?.displayName || "User"}
-											src={comment.user?.avatarUrl}
-											size="sm"
-										/>
-										<div className="flex-1 bg-surface-hover/20 rounded-xl p-3 border border-border">
-											<div className="flex items-center justify-between mb-1.5">
-												<span className="text-xs font-bold text-text-main">
-													{comment.user?.displayName}
-												</span>
-												<span className="text-[9px] text-text-muted">
-													{new Date(comment.createdAt).toLocaleString()}
-												</span>
-											</div>
-											<p className="text-xs text-text-muted leading-relaxed">
-												{comment.content}
-											</p>
-										</div>
-									</div>
-								))
-							) : (
-								<div className="flex flex-col items-center justify-center py-10 opacity-50">
-									<p className="text-xs text-text-muted">
-										No activity yet. Be the first to comment!
-									</p>
-								</div>
-							)}
-							<div className="flex gap-3 mt-6">
-								<Avatar
-									name={user?.displayName || "You"}
-									src={user?.avatarUrl}
-									size="sm"
-								/>
-								<div className="flex-1 relative">
-									<textarea
-										value={comment}
-										onChange={(e) => setComment(e.target.value)}
-										placeholder="Add a suggestion or comment..."
-										className="w-full bg-background border border-border rounded-xl p-3 text-sm text-text-main placeholder:text-text-muted/50 outline-none focus:border-primary/50 transition-all min-h-[80px] resize-none"
-									/>
-									<div className="absolute bottom-2 right-2 flex items-center gap-2">
-										<Button
-											size="xs"
-											className="h-8 px-3"
-											rightIcon={<Send size={14} />}
-											onClick={handlePostComment}
-											loading={isPostingComment}
-											disabled={!comment.trim()}
-										>
-											Post
-										</Button>
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
+						)}
+					</div>
 				</div>
-
+ 
 				{/* Sidebar Details */}
-				<div className="w-full md:w-64 bg-surface-hover/30 border-l border-border p-4 md:p-6 space-y-6">
+				<div className="w-full md:w-80 bg-gray-50/50 dark:bg-white/2 border-l border-gray-100 dark:border-white/5 p-6 md:p-10 space-y-10">
 					<div>
-						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
-							AI Co-Pilot
+						<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-5">
+							AI Assistance
 						</h3>
 						<Button
 							variant="secondary"
-							size="xs"
-							className="w-full h-8 bg-primary/5 border-primary/20 hover:bg-primary/10 text-primary group"
+							size="sm"
+							className="w-full justify-start py-2.5 px-4 bg-white dark:bg-gray-900 border-gray-200 dark:border-white/10 shadow-sm"
 							onClick={handleDecompose}
 							disabled={isDecomposing}
 							leftIcon={
 								isDecomposing ? (
-									<Loader2 size={14} className="animate-spin" />
+									<Loader2 size={16} className="animate-spin" />
 								) : (
-									<Sparkles
-										size={14}
-										className="group-hover:scale-110 transition-transform"
-									/>
+									<Sparkles size={16} className="text-amber-500" />
 								)
 							}
 						>
-							{isDecomposing ? "Planning..." : "AI Breakdown"}
+							<span className="text-xs font-semibold">{isDecomposing ? "Decomposing..." : "AI Breakdown"}</span>
 						</Button>
 					</div>
-
-					<div>
-						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
-							Properties
-						</h3>
-						<div className="space-y-3">
-							<div className="flex items-center justify-between">
-								<span className="text-[10px] text-text-muted">Status</span>
-								<Badge variant="primary" size="xs">
-									{task.status}
-								</Badge>
-							</div>
-							<div className="flex items-center justify-between">
-								<span className="text-[10px] text-text-muted">Priority</span>
-								<Badge
-									variant={task.priority === "Urgent" ? "danger" : "warning"}
-									size="xs"
-								>
-									{task.priority}
-								</Badge>
-							</div>
-							<div className="flex items-center justify-between">
-								<span className="text-[10px] text-text-muted">Category</span>
-								<select
-									className="bg-transparent text-[10px] font-bold text-primary outline-none cursor-pointer"
-									value={task.type}
-								>
-									<option value="Feature">Feature</option>
-									<option value="Bug">Bug</option>
-									<option value="Suggestion">Suggestion</option>
-									<option value="Issue">Issue</option>
-								</select>
+ 
+					<div className="space-y-8">
+						<div className="space-y-4">
+							<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+								Properties
+							</h3>
+							<div className="space-y-3">
+								<div className="flex items-center justify-between text-xs">
+									<span className="text-gray-500">Status</span>
+									<Badge variant="primary" size="xs">
+										{task.status}
+									</Badge>
+								</div>
+								<div className="flex items-center justify-between text-xs">
+									<span className="text-gray-500">Priority</span>
+									<Badge
+										variant={task.priority === "Urgent" ? "danger" : task.priority === "High" ? "warning" : "secondary"}
+										size="xs"
+									>
+										{task.priority}
+									</Badge>
+								</div>
+								<div className="flex items-center justify-between text-xs">
+									<span className="text-gray-500">Type</span>
+									<div className="flex items-center gap-1.5 font-bold text-gray-900 dark:text-white">
+										<TypeIcon type={task.type} />
+										{task.type}
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-
-					<div>
-						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
-							Assignees
-						</h3>
-						<div className="space-y-3">
-							{task.taskAssignees && task.taskAssignees.length > 0 ? (
-								<div className="space-y-2">
-									{task.taskAssignees.map((ta) => (
-										<div
-											key={ta.user.id}
-											className="flex items-center gap-3 bg-background p-2.5 rounded-xl border border-border"
-										>
-											<Avatar
-												name={ta.user.displayName}
-												src={ta.user.avatarUrl}
-												size="xs"
-											/>
-											<div className="min-w-0">
-												<p className="text-[11px] font-bold text-text-main truncate">
-													{ta.user.displayName}
-												</p>
-												<p className="text-[9px] text-text-muted truncate">
-													Collaborator
-												</p>
-											</div>
+ 
+						<div className="space-y-4">
+							<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+								Assignees
+							</h3>
+							<div className="space-y-3">
+								{task.taskAssignees && task.taskAssignees.length > 0 ? (
+									<div className="space-y-2">
+										{task.taskAssignees
+											.filter((ta) => ta.user)
+											.map((ta) => (
+												<div
+													key={ta.user.id}
+													className="flex items-center gap-3 bg-white dark:bg-gray-900 p-3 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm"
+												>
+													<Avatar
+														name={ta.user.displayName}
+														src={ta.user.avatarUrl}
+														size="xs"
+													/>
+													<div className="min-w-0">
+														<p className="text-[12px] font-bold text-gray-900 dark:text-white truncate">
+															{ta.user.displayName}
+														</p>
+														<p className="text-[10px] text-gray-400 font-medium">
+															Collaborator
+														</p>
+													</div>
+												</div>
+											))}
+									</div>
+								) : (
+									<div className="flex items-center gap-3 bg-gray-100/50 dark:bg-white/2 p-3 rounded-xl border border-dashed border-gray-300 dark:border-white/10">
+										<div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-white/10 flex items-center justify-center text-gray-400">
+											<User size={16} />
 										</div>
-									))}
+										<p className="text-[11px] font-bold text-gray-400 italic">
+											Pick up this task
+										</p>
+									</div>
+								)}
+ 
+								{user &&
+									!task.taskAssignees?.some((ta) => ta.user.id === user.id) && (
+										<Button
+											size="sm"
+											className="w-full py-2.5 rounded-xl shadow-md"
+											variant="primary"
+											onClick={() => onAssign?.(task.id, user.id)}
+										>
+											{task.taskAssignees?.length
+												? "Join Collaboration"
+												: "Volunteer Now"}
+										</Button>
+									)}
+							</div>
+						</div>
+ 
+						<div className="space-y-4">
+							<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+								Timeline
+							</h3>
+							{task.dueDate ? (
+								<div
+									className={`flex items-center gap-4 p-4 rounded-2xl border ${new Date(task.dueDate) < new Date() && task.status !== "Closed" ? "bg-red-50 border-red-200 text-red-700 dark:bg-red-500/5 dark:border-red-500/20 dark:text-red-400" : "bg-white dark:bg-gray-900 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 shadow-sm"}`}
+								>
+									<Calendar size={18} className="shrink-0" />
+									<div className="min-w-0">
+										<p className="text-[12px] font-bold">
+											{new Date(task.dueDate).toLocaleDateString(undefined, {
+												month: "short",
+												day: "numeric",
+												year: "numeric",
+											})}
+										</p>
+										<p className="text-[10px] font-medium opacity-60">
+											{new Date(task.dueDate) < new Date() &&
+											task.status !== "Closed"
+												? "Overdue"
+												: "Target Date"}
+										</p>
+									</div>
 								</div>
 							) : (
-								<div className="flex items-center gap-3 bg-background/50 p-2.5 rounded-xl border border-border border-dashed">
-									<div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-text-muted">
-										<User size={16} />
-									</div>
-									<p className="text-[11px] font-bold text-text-muted italic">
-										Waiting for volunteer
-									</p>
-								</div>
+								<p className="text-[11px] text-gray-400 italic font-medium">
+									No deadline set.
+								</p>
 							)}
-
-							{user &&
-								!task.taskAssignees?.some((ta) => ta.user.id === user.id) && (
-									<Button
-										size="xs"
-										className="w-full h-8"
-										variant="primary"
-										onClick={() => onAssign?.(task.id, user.id)}
-									>
-										{task.taskAssignees?.length
-											? "Join Task"
-											: "Volunteer for Task"}
-									</Button>
-								)}
-						</div>
-					</div>
-
-					<div>
-						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
-							Deadline
-						</h3>
-						{task.dueDate ? (
-							<div
-								className={`flex items-center gap-3 p-2.5 rounded-xl border ${new Date(task.dueDate) < new Date() && task.status !== "Closed" ? "bg-danger/10 border-danger/20 text-danger" : "bg-background border-border text-text-main"}`}
-							>
-								<Calendar size={16} />
-								<div className="min-w-0">
-									<p className="text-[11px] font-bold">
-										{new Date(task.dueDate).toLocaleDateString(undefined, {
-											month: "long",
-											day: "numeric",
-											year: "numeric",
-										})}
-									</p>
-									<p className="text-[9px] opacity-70">
-										{new Date(task.dueDate) < new Date() &&
-										task.status !== "Closed"
-											? "Overdue"
-											: "Scheduled Completion"}
-									</p>
-								</div>
-							</div>
-						) : (
-							<p className="text-[10px] text-text-muted italic px-1">
-								No deadline set.
-							</p>
-						)}
-					</div>
-
-					<div>
-						<h3 className="text-[9px] font-bold text-text-muted uppercase tracking-widest mb-3">
-							History
-						</h3>
-						<div className="space-y-2.5">
-							<div className="flex items-center gap-2 text-[10px] text-text-muted">
-								<Clock size={12} className="text-text-muted/50" />
-								<span>
-									Created {new Date(task.createdAt).toLocaleDateString()}
-								</span>
-							</div>
-							<div className="flex items-center gap-2 text-[10px] text-text-muted">
-								<Clock size={12} className="text-text-muted/50" />
-								<span>
-									Updated {new Date(task.updatedAt).toLocaleDateString()}
-								</span>
-							</div>
 						</div>
 					</div>
 				</div>

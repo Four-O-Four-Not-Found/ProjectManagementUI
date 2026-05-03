@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 interface BaseModalProps {
 	isOpen: boolean;
@@ -10,6 +11,7 @@ interface BaseModalProps {
 	children: React.ReactNode;
 	footer?: React.ReactNode;
 	size?: "sm" | "md" | "lg" | "xl";
+	zIndex?: string;
 }
 
 const SIZES = {
@@ -26,6 +28,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 	children,
 	footer,
 	size = "md",
+	zIndex = "z-[10000]",
 }) => {
 	const [mounted, setMounted] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
@@ -42,7 +45,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 	const modalContent = (
 		<AnimatePresence>
 			{isOpen && (
-				<div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 overflow-hidden">
+				<div className={twMerge("fixed inset-0 flex items-center justify-center p-4 overflow-hidden", zIndex)}>
 					{/* Overlay */}
 					<motion.div
 						initial={{ opacity: 0 }}

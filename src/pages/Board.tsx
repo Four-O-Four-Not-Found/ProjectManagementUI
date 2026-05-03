@@ -29,7 +29,6 @@ import AIPredictor from "../components/molecules/AIPredictor";
 import Button from "../components/atoms/Button";
 import Avatar from "../components/atoms/Avatar";
 import PageHeader from "../components/molecules/PageHeader";
-import ColumnHeader from "../components/molecules/ColumnHeader";
 import SprintSelector from "../components/molecules/SprintSelector";
 import type { Task, Sprint, Project } from "../types";
 import { useProject } from "../hooks/useProject";
@@ -66,7 +65,6 @@ const Board: React.FC = () => {
 		tasks,
 		fetchTasks,
 		fetchProjects,
-		moveTask,
 		assignTask,
 		createTask,
 		createProject,
@@ -81,7 +79,6 @@ const Board: React.FC = () => {
 	const [isSprintModalOpen, setIsSprintModalOpen] = useState(false);
 	const [isProjectSelectorOpen, setIsProjectSelectorOpen] = useState(false);
 	const [editingTask, setEditingTask] = useState<Task | null>(null);
-	const [expandedColumn, setExpandedColumn] = useState<string | null>(null);
 	const [showAI, setShowAI] = useState(false);
 
 	const [currentProject, setCurrentProject] = useState<Project | null>(null);
@@ -178,10 +175,6 @@ const Board: React.FC = () => {
 		};
 	}, [fetchTasks, fetchProjects, projectId, navigate, error]);
 
-	const handleMoveTask = async (taskId: string, newStatus: Task["status"]) => {
-		await moveTask(taskId, newStatus);
-		success("Task Moved", `Task status updated to ${newStatus}.`);
-	};
 
 	const handleAddTask = useCallback(() => {
 		setEditingTask(null);
@@ -504,8 +497,8 @@ const Board: React.FC = () => {
 			/>
 
 			{/* Navigation Tabs - Sticky */}
-			<div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-md px-2 rounded-t-md shrink-0">
-				<div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+			<div className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 dark:border-white/5 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md px-4 shrink-0 overflow-x-auto scrollbar-hide">
+				<div className="flex items-center gap-1">
 					{(
 						[
 							"Board",
@@ -531,20 +524,22 @@ const Board: React.FC = () => {
 							<button
 								key={tab}
 								onClick={() => setActiveTab(tab)}
-								className={`flex items-center gap-2 px-3 md:px-4 py-3 text-xs font-semibold transition-all relative border-b-2 whitespace-nowrap ${
+								className={`flex items-center gap-2 px-4 py-3 text-[13px] font-medium transition-all relative border-b-2 whitespace-nowrap ${
 									activeTab === tab
-										? "border-primary text-text-main"
-										: "border-transparent text-text-muted hover:text-text-main hover:bg-surface-hover/50"
+										? "border-gray-900 dark:border-white text-gray-950 dark:text-white"
+										: "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
 								}`}
 							>
 								<Icon size={14} />
-								<span
-									className={twMerge(activeTab !== tab && "hidden md:inline")}
-								>
-									{tab === "Timeline" ? "Schedule" : tab === "Repository" ? "Git" : tab}
+								<span className="hidden md:inline">
+									{tab === "Timeline"
+										? "Schedule"
+										: tab === "Repository"
+											? "Git"
+											: tab}
 								</span>
 								{tab === "Backlog" && (
-									<span className="ml-1 px-1 py-0.5 rounded-full bg-surface border border-border text-[8px] font-bold">
+									<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-white/5 text-[10px] font-semibold">
 										{tasks.length}
 									</span>
 								)}
@@ -554,77 +549,64 @@ const Board: React.FC = () => {
 				</div>
 
 				{activeTab === "Board" && (
-					<button
-						onClick={() => setShowAI(!showAI)}
-						className={twMerge(
-							"flex items-center justify-center w-8 h-8 md:w-auto md:h-auto md:px-3 md:py-1.5 rounded-lg transition-all mr-2",
-							showAI
-								? "bg-primary text-white shadow-[0_0_15px_rgba(56,189,248,0.4)]"
-								: "bg-surface border border-border text-text-muted hover:text-primary hover:border-primary/50",
-						)}
-					>
-						<Sparkles size={14} className={showAI ? "animate-pulse" : ""} />
-						<span className="hidden md:inline ml-2 text-[10px] font-black uppercase tracking-widest">
-							AI Insights
-						</span>
-					</button>
+					<div className="flex items-center gap-2 py-2">
+						<button
+							onClick={() => setShowAI(!showAI)}
+							className={twMerge(
+								"flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border",
+								showAI
+									? "bg-gray-900 text-white border-gray-900 shadow-md"
+									: "bg-white dark:bg-gray-950 border-gray-200 dark:border-white/5 text-gray-500 hover:text-gray-900 dark:hover:text-white",
+							)}
+						>
+							<Sparkles size={14} className={showAI ? "animate-pulse" : ""} />
+							<span className="hidden md:inline">AI Insights</span>
+						</button>
+					</div>
 				)}
 			</div>
 
-			<div className="flex-1 overflow-hidden px-2 md:px-0 flex gap-6">
+			<div className="flex-1 overflow-hidden flex gap-6 p-4 md:p-6 bg-gray-50/50 dark:bg-transparent">
 				<div className="flex-1 overflow-hidden">
 					<AnimatePresence mode="wait">
 						{activeTab === "Board" && (
-								<motion.div
+							<motion.div
 								key="board"
-								initial={{ opacity: 0, x: 20 }}
-								animate={{ opacity: 1, x: 0 }}
-								exit={{ opacity: 0, x: -20 }}
-								className="h-full flex overflow-x-auto snap-x snap-mandatory md:snap-none gap-4 md:gap-6 pb-4 scrollbar-custom min-h-0"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								className="h-full flex overflow-x-auto snap-x snap-mandatory md:snap-none gap-6 pb-6 scrollbar-custom min-h-0"
 							>
 								{columns.map((col) => (
 									<div
 										key={col.id}
-										className={twMerge(
-											"flex flex-col w-[85vw] md:w-80 flex-shrink-0 snap-center transition-all duration-300",
-											expandedColumn && expandedColumn !== col.id && "hidden md:flex"
-										)}
+										className="flex flex-col w-[85vw] md:w-80 flex-shrink-0 snap-center transition-all duration-300"
 									>
-										<ColumnHeader
-											title={col.title}
-											colorClass={col.color}
-											count={tasks.filter((t) => t.status === col.id).length}
-											onAdd={handleAddTask}
-											onClickTitle={() =>
-												setExpandedColumn(
-													expandedColumn === col.id ? null : col.id,
-												)
-											}
-										/>
+										<div className="flex items-center justify-between mb-4 px-1">
+											<div className="flex items-center gap-3">
+												<h3 className="text-xs font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest">
+													{col.title}
+												</h3>
+												<span className="text-[11px] font-bold text-gray-400 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
+													{tasks.filter((t) => t.status === col.id).length}
+												</span>
+											</div>
+											<button
+												onClick={handleAddTask}
+												className="p-1 hover:bg-gray-200 dark:hover:bg-white/5 rounded-md transition-colors text-gray-400 hover:text-gray-900 dark:hover:text-white"
+											>
+												<Plus size={16} />
+											</button>
+										</div>
 
-										<div className="flex-1 bg-surface/30 rounded-md p-2 min-h-0 overflow-y-auto scrollbar-custom space-y-1 border border-border">
-											{expandedColumn === col.id && (
-												<div className="md:hidden flex justify-between items-center px-2 py-1 mb-2 bg-primary/10 rounded-md border border-primary/20">
-													<span className="text-[10px] font-bold text-primary">
-														Focused View
-													</span>
-													<button
-														onClick={() => setExpandedColumn(null)}
-														className="text-[10px] font-bold text-text-muted hover:text-text-main"
-													>
-														Collapse
-													</button>
-												</div>
-											)}
+										<div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide space-y-3 pb-4">
 											{tasks.filter((task) => task.status === col.id).length ===
 											0 ? (
-												<button
-													onClick={handleAddTask}
-													className="w-full p-4 border border-dashed border-border rounded-lg text-sm text-text-muted hover:border-primary hover:text-primary transition-colors flex flex-col items-center gap-2 h-24 md:h-32 justify-center"
-												>
-													<Plus size={20} />
-													<span className="text-xs">Add task</span>
-												</button>
+												<div className="h-32 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-xl flex items-center justify-center">
+													<span className="text-[11px] font-medium text-gray-400">
+														Empty
+													</span>
+												</div>
 											) : (
 												tasks
 													.filter((task) => task.status === col.id)
@@ -633,9 +615,6 @@ const Board: React.FC = () => {
 															key={task.id}
 															task={task}
 															onClick={() => setSelectedTask(task)}
-															onMove={(newStatus) =>
-																handleMoveTask(task.id, newStatus)
-															}
 														/>
 													))
 											)}
