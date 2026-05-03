@@ -125,7 +125,14 @@ const Board: React.FC = () => {
 	const handleAssignTask = async (taskId: string, userId: string) => {
 		await assignTask(taskId, userId);
 		success("Task Assigned", "You are now responsible for this task.");
-		setSelectedTask(null);
+		// Refresh the task data from the API to get the updated assignee list
+		try {
+			const updatedTask = await projectService.getTask(taskId);
+			setSelectedTask(updatedTask);
+			fetchTasks(projectId!); // Refresh the board in the background
+		} catch (err) {
+			console.error("Failed to refresh task after assignment:", err);
+		}
 	};
 
 	useEffect(() => {
@@ -342,6 +349,7 @@ const Board: React.FC = () => {
 	return (
 		<div className="h-full flex flex-col space-y-4 md:space-y-6 pb-10 overflow-hidden relative">
 			<TaskDetailModal
+				key={selectedTask?.id || "no-task"}
 				isOpen={!!selectedTask}
 				onClose={() => setSelectedTask(null)}
 				task={selectedTask || ({} as Task)}

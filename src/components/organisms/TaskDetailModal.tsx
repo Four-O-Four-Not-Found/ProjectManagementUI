@@ -16,6 +16,7 @@ import {
 	Edit2,
 	Check,
 	X,
+	Trash2,
 } from "lucide-react";
 import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
@@ -61,10 +62,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			await projectService.decomposeTask(task.id);
 			success("Task Decomposed", "AI has generated a breakdown for this task.");
 			onRefresh?.();
-			toastError(
-				"Decomposition Failed",
-				"Could not generate sub-tasks."
-			);
+		} catch {
+			toastError("Decomposition Failed", "Could not generate sub-tasks.");
 		} finally {
 			setIsDecomposing(false);
 		}
@@ -85,6 +84,25 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 			onRefresh?.();
 		} catch (err) {
 			toastError("Update Failed", "Could not save changes.\nDetails: " + err);
+		} finally {
+			setIsSaving(false);
+		}
+	};
+
+	const handleDeleteTask = async () => {
+		if (!user || !window.confirm("Are you sure you want to delete this task?"))
+			return;
+		setIsSaving(true);
+		try {
+			await projectService.deleteTask(task.id, user.id);
+			success("Task Deleted", "The task has been removed.");
+			onClose();
+			onRefresh?.();
+		} catch (err) {
+			toastError(
+				"Delete Failed",
+				"You may not have permission to delete this task.\nDetails: " + err,
+			);
 		} finally {
 			setIsSaving(false);
 		}
@@ -188,15 +206,26 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						</Button>
 					</>
 				) : (
-					<Button
-						size="xs"
-						variant="secondary"
-						className="h-8 px-3"
-						onClick={() => setIsEditing(true)}
-						leftIcon={<Edit2 size={14} />}
-					>
-						Edit
-					</Button>
+					<div className="flex items-center gap-2">
+						<Button
+							size="xs"
+							variant="secondary"
+							className="h-8 px-3"
+							onClick={() => setIsEditing(true)}
+							leftIcon={<Edit2 size={14} />}
+						>
+							Edit
+						</Button>
+						<Button
+							size="xs"
+							variant="danger"
+							className="h-8 px-2"
+							onClick={handleDeleteTask}
+							loading={isSaving}
+						>
+							<Trash2 size={14} />
+						</Button>
+					</div>
 				)}
 			</div>
 		</div>
@@ -218,7 +247,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										: "text-text-muted hover:text-text-main"
 								}`}
 							>
-								{tab === "details" ? "Task Info" : tab === "activity" ? "Discussion" : "Files"}
+								{tab === "details"
+									? "Task Info"
+									: tab === "activity"
+										? "Discussion"
+										: "Files"}
 								{activeTab === tab && (
 									<motion.div
 										layoutId="activeTabDetail"
@@ -244,7 +277,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									/>
 								) : (
 									<div className="text-sm text-text-main leading-relaxed bg-surface-hover/30 p-4 rounded-xl border border-border whitespace-pre-wrap">
-										{task.description || "No description provided for this entry."}
+										{task.description ||
+											"No description provided for this entry."}
 									</div>
 								)}
 							</div>
@@ -286,30 +320,29 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									Visual Evidence / Attachments
 								</h3>
 								<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-									{task.attachments
-										?.map((img) => (
-											<div
-												key={img.id}
-												className="aspect-video rounded-xl overflow-hidden border border-border group relative cursor-pointer"
-											>
-												<img
-													src={img.fileUrl}
-													alt={img.fileName}
-													className="w-full h-full object-cover transition-transform group-hover:scale-110"
-												/>
-												<div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-													<Plus className="text-white" />
-												</div>
+									{task.attachments?.map((img) => (
+										<div
+											key={img.id}
+											className="aspect-video rounded-xl overflow-hidden border border-border group relative cursor-pointer"
+										>
+											<img
+												src={img.fileUrl}
+												alt={img.fileName}
+												className="w-full h-full object-cover transition-transform group-hover:scale-110"
+											/>
+											<div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+												<Plus className="text-white" />
 											</div>
-										))}
-									<input 
-										type="file" 
-										ref={fileInputRef} 
-										className="hidden" 
+										</div>
+									))}
+									<input
+										type="file"
+										ref={fileInputRef}
+										className="hidden"
 										onChange={handleFileUpload}
 										accept="image/*"
 									/>
-									<button 
+									<button
 										onClick={() => fileInputRef.current?.click()}
 										className="aspect-video rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 group"
 									>
@@ -331,7 +364,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							{task.comments && task.comments.length > 0 ? (
 								task.comments.map((comment) => (
 									<div key={comment.id} className="flex gap-3">
-										<Avatar name={comment.user?.displayName || "User"} src={comment.user?.avatarUrl} size="sm" />
+										<Avatar
+											name={comment.user?.displayName || "User"}
+											src={comment.user?.avatarUrl}
+											size="sm"
+										/>
 										<div className="flex-1 bg-surface-hover/20 rounded-xl p-3 border border-border">
 											<div className="flex items-center justify-between mb-1.5">
 												<span className="text-xs font-bold text-text-main">
@@ -349,11 +386,17 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								))
 							) : (
 								<div className="flex flex-col items-center justify-center py-10 opacity-50">
-									<p className="text-xs text-text-muted">No activity yet. Be the first to comment!</p>
+									<p className="text-xs text-text-muted">
+										No activity yet. Be the first to comment!
+									</p>
 								</div>
 							)}
 							<div className="flex gap-3 mt-6">
-								<Avatar name={user?.displayName || "You"} src={user?.avatarUrl} size="sm" />
+								<Avatar
+									name={user?.displayName || "You"}
+									src={user?.avatarUrl}
+									size="sm"
+								/>
 								<div className="flex-1 relative">
 									<textarea
 										value={comment}

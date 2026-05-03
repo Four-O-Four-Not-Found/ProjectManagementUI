@@ -33,6 +33,15 @@ export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({
 						info("Live Sync", `Task ${payload.taskId} was updated.`);
 					}
 				});
+ 
+				const handleTaskAssigned = () => {
+					success("Task Assigned", "Team member joined a task.");
+					// You might want to trigger a local state refresh here 
+					// or rely on the notification which is handled above
+				};
+ 
+				signalRService.on("TaskAssigned", handleTaskAssigned);
+				signalRService.on("taskassigned", handleTaskAssigned);
 			} catch {
 				console.debug("SignalR initialization bypassed during reload.");
 			}

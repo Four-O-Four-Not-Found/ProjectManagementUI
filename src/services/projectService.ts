@@ -128,4 +128,8 @@ export const projectService = {
 		const response = await apiClient.get<Task>(`/tasks/${taskId}`);
 		return response.data;
 	},
+ 
+	deleteTask: async (taskId: string, userId: string): Promise<void> => {
+		await apiClient.delete(`/tasks/${taskId}`, { params: { userId } });
+	},
 };
