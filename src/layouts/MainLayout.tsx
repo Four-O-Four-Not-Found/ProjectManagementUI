@@ -211,7 +211,7 @@ const MainLayout: React.FC = () => {
 						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isDashActive ? 'text-primary' : 'text-text-muted hover:text-primary'}`}
 					>
 						<Layout size={20} />
-						<span className="text-[10px] font-bold uppercase tracking-widest">Dash</span>
+						<span className="text-[10px] font-bold uppercase tracking-widest">Home</span>
 					</NavLink>
 					<NavLink 
 						to="/board"

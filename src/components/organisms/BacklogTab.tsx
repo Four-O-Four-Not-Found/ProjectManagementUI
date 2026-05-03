@@ -69,7 +69,16 @@ const BacklogTab: React.FC<BacklogTabProps> = ({
 							<span className="text-[10px] font-mono text-text-muted">
 								{task.taskKey}
 							</span>
-							<Avatar name={task.assignee?.name} size="xs" />
+							<div className="flex -space-x-2">
+								{task.taskAssignees?.map((assignee) => (
+									<Avatar
+										key={assignee.user?.id}
+										name={assignee.user?.displayName}
+										src={assignee.user?.avatarUrl}
+										size="xs"
+									/>
+								))}
+							</div>
 						</div>
 					</div>
 				))}

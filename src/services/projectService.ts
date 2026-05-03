@@ -5,6 +5,8 @@ import type {
 	Project,
 	Sprint,
 	Repository,
+	Comment,
+	Attachment,
 } from "../types";
 import { signalRService } from "./signalRService";
 import apiClient from "./apiClient";
@@ -82,6 +84,48 @@ export const projectService = {
 
 	decomposeTask: async (taskId: string): Promise<Task[]> => {
 		const response = await apiClient.post<Task[]>(`/tasks/${taskId}/decompose`);
+		return response.data;
+	},
+
+	addComment: async (
+		taskId: string,
+		userId: string,
+		content: string,
+	): Promise<Comment> => {
+		const response = await apiClient.post<Comment>(`/tasks/${taskId}/comments`, {
+			userId,
+			content,
+		});
+		return response.data;
+	},
+
+	addAttachment: async (
+		taskId: string,
+		attachment: {
+			fileName: string;
+			fileUrl: string;
+			fileType: string;
+			fileSize: number;
+		},
+	): Promise<Attachment> => {
+		const response = await apiClient.post<Attachment>(
+			`/tasks/${taskId}/attachments`,
+			attachment,
+		);
+		return response.data;
+	},
+
+	updateTaskDetails: async (
+		taskId: string,
+		userId: string,
+		title: string,
+		description: string,
+	): Promise<void> => {
+		await apiClient.put(`/tasks/${taskId}`, { userId, title, description });
+	},
+
+	getTask: async (taskId: string): Promise<Task> => {
+		const response = await apiClient.get<Task>(`/tasks/${taskId}`);
 		return response.data;
 	},
 };

@@ -198,8 +198,8 @@ const TimelineView: React.FC = () => {
         <div className="flex-1 overflow-y-auto scrollbar-custom bg-background relative">
           {filteredItems.map((item: Task | Project) => {
             // Check for potential startDate/endDate if they were provided in partial Task
-            const start = (item as any).startDate || (item as any).createdAt;
-            const end = (item as any).endDate || (item as any).updatedAt;
+            const start = item.createdAt;
+            const end = item.updatedAt;
             const pos = getPosition(start, end);
             const isProject = 'key' in item;
             const progress = (item as Task).progress || 0;
@@ -213,7 +213,7 @@ const TimelineView: React.FC = () => {
                       <Target size={16} />
                     </div>
                   ) : (
-                    <Avatar name={(item as Task).assignee?.name} size="xs" />
+                    <Avatar name={(item as Task).taskAssignees?.[0]?.user?.displayName} src={(item as Task).taskAssignees?.[0]?.user?.avatarUrl} size="xs" />
                   )}
                   <div className="min-w-0">
                     <p className="text-[11px] font-semibold text-text-main truncate">{isProject ? (item as Project).name : (item as Task).title}</p>

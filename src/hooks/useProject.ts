@@ -82,6 +82,44 @@ export const useProject = () => {
 		}
 	}, [dispatch, fetchProjects]);
 
+	const addComment = useCallback(async (taskId: string, userId: string, content: string) => {
+		try {
+			await projectService.addComment(taskId, userId, content);
+			// Ideally we refresh the specific task or use a reducer to add the comment
+		} catch (err) {
+			console.error("Add comment failed:", err);
+			dispatch(setError("Failed to add comment"));
+		}
+	}, [dispatch]);
+
+	const addAttachment = useCallback(async (taskId: string, attachment: { fileName: string; fileUrl: string; fileType: string; fileSize: number }) => {
+		try {
+			await projectService.addAttachment(taskId, attachment);
+		} catch (err) {
+			console.error("Add attachment failed:", err);
+			dispatch(setError("Failed to add attachment"));
+		}
+	}, [dispatch]);
+
+	const updateTaskDetails = useCallback(async (taskId: string, userId: string, title: string, description: string) => {
+		try {
+			await projectService.updateTaskDetails(taskId, userId, title, description);
+		} catch (err) {
+			console.error("Update task failed:", err);
+			dispatch(setError("Failed to update task details"));
+		}
+	}, [dispatch]);
+
+	const refreshTask = useCallback(async (taskId: string) => {
+		try {
+			const updatedTask = await projectService.getTask(taskId);
+			// We need a reducer for this
+			dispatch(setTasks(tasks.map(t => t.id === taskId ? updatedTask : t)));
+		} catch (err) {
+			console.error("Refresh task failed:", err);
+		}
+	}, [dispatch, tasks]);
+
 	return {
 		projects,
 		activeProject,
@@ -94,5 +132,9 @@ export const useProject = () => {
 		assignTask,
 		createTask,
 		createProject,
+		addComment,
+		addAttachment,
+		updateTaskDetails,
+		refreshTask,
 	};
 };

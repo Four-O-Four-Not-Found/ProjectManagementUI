@@ -22,20 +22,25 @@ export type TaskType = "Feature" | "Bug" | "Suggestion" | "Issue";
 
 export interface Attachment {
 	id: string;
-	url: string;
-	name: string;
-	type: "image" | "file";
-	size: string;
+	fileName: string;
+	fileUrl: string;
+	fileType: string;
+	fileSize: number;
+	taskId: string;
+	createdAt: string;
 }
 
 export interface Comment {
 	id: string;
-	userId: string;
-	userName: string;
-	userAvatar?: string;
 	content: string;
-	timestamp: string;
-	attachments?: Attachment[];
+	userId: string;
+	taskId: string;
+	createdAt: string;
+	user?: {
+		id: string;
+		displayName: string;
+		avatarUrl?: string;
+	};
 }
 
 export interface Repository {
@@ -60,10 +65,13 @@ export interface Task {
 	repositoryId?: string;
 	branchName?: string;
 	assigneeId?: string;
-	assignee?: {
-		name: string;
-		avatar: string;
-	};
+	taskAssignees?: {
+		user: {
+			id: string;
+			displayName: string;
+			avatarUrl?: string;
+		};
+	}[];
 	dueDate?: string;
 	createdAt: string;
 	updatedAt: string;

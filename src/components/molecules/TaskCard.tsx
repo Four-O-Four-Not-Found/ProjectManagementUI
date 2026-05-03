@@ -139,11 +139,23 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
 			<div className="flex justify-between items-center mt-auto pt-2 md:pt-3 border-t border-border/30">
 				<div className="flex items-center -space-x-1.5 md:-space-x-2">
-					<Avatar
-						name={task.assignee?.name || "Unassigned"}
-						size="xs"
-						className="border-2 border-background w-5 h-5 md:w-6 md:h-6"
-					/>
+					{task.taskAssignees && task.taskAssignees.length > 0 ? (
+						task.taskAssignees.map((ta) => (
+							<Avatar
+								key={ta.user.id}
+								name={ta.user.displayName}
+								src={ta.user.avatarUrl}
+								size="xs"
+								className="border-2 border-background w-5 h-5 md:w-6 md:h-6"
+							/>
+						))
+					) : (
+						<Avatar
+							name="Unassigned"
+							size="xs"
+							className="border-2 border-background w-5 h-5 md:w-6 md:h-6"
+						/>
+					)}
 					{!!task.branchName && (
 						<div className="w-5 h-5 md:w-6 md:h-6 rounded-lg border-2 border-background bg-primary/20 flex items-center justify-center text-primary shadow-[0_0_10px_rgba(56,189,248,0.3)] z-10">
 							<GitBranch size={10} className="md:w-[12px]" />

@@ -202,10 +202,12 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 				if (imagePreview) {
 					const newAttachment: Attachment = {
 						id: Math.random().toString(36).substr(2, 9),
-						url: imagePreview,
-						name: "evidence.png",
-						type: "image",
-						size: "Unknown",
+						fileUrl: imagePreview,
+						fileName: "evidence.png",
+						fileType: "image/png",
+						fileSize: 0,
+						taskId: formData.id || "",
+						createdAt: new Date().toISOString(),
 					};
 					updatedFormData = {
 						...updatedFormData,
@@ -344,7 +346,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
 					<div className="space-y-1.5">
 						<label className="text-xs font-semibold text-text-main block ml-0.5">
-							Classification
+							Category
 						</label>
 						<div className="flex gap-2">
 							{(["Feature", "Bug", "Issue"] as TaskType[]).map((type) => (

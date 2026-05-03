@@ -533,7 +533,7 @@ const Board: React.FC = () => {
 								<span
 									className={twMerge(activeTab !== tab && "hidden md:inline")}
 								>
-									{tab}
+									{tab === "Timeline" ? "Schedule" : tab === "Repository" ? "Git" : tab}
 								</span>
 								{tab === "Backlog" && (
 									<span className="ml-1 px-1 py-0.5 rounded-full bg-surface border border-border text-[8px] font-bold">
@@ -567,21 +567,19 @@ const Board: React.FC = () => {
 				<div className="flex-1 overflow-hidden">
 					<AnimatePresence mode="wait">
 						{activeTab === "Board" && (
-							<motion.div
+								<motion.div
 								key="board"
 								initial={{ opacity: 0, x: 20 }}
 								animate={{ opacity: 1, x: 0 }}
 								exit={{ opacity: 0, x: -20 }}
-								className="h-full grid grid-cols-2 md:flex gap-3 md:gap-6 overflow-y-auto md:overflow-x-auto pb-4 scrollbar-custom min-h-0"
+								className="h-full flex overflow-x-auto snap-x snap-mandatory md:snap-none gap-4 md:gap-6 pb-4 scrollbar-custom min-h-0"
 							>
 								{columns.map((col) => (
 									<div
 										key={col.id}
 										className={twMerge(
-											"flex flex-col min-w-0 md:w-80 md:flex-shrink-0 transition-all duration-300",
-											expandedColumn && expandedColumn !== col.id
-												? "hidden md:flex"
-												: "col-span-2 md:col-span-1",
+											"flex flex-col w-[85vw] md:w-80 flex-shrink-0 snap-center transition-all duration-300",
+											expandedColumn && expandedColumn !== col.id && "hidden md:flex"
 										)}
 									>
 										<ColumnHeader

@@ -28,10 +28,15 @@ const BaseModal: React.FC<BaseModalProps> = ({
 	size = "md",
 }) => {
 	const [mounted, setMounted] = useState(false);
+	const [isMobile, setIsMobile] = useState(false);
 
 	useEffect(() => {
-		// eslint-disable-next-line react-hooks/set-state-in-effect
-		setMounted(true);
+		requestAnimationFrame(() => setMounted(true));
+		
+		const checkMobile = () => setIsMobile(window.innerWidth < 768);
+		checkMobile();
+		window.addEventListener("resize", checkMobile);
+		return () => window.removeEventListener("resize", checkMobile);
 	}, []);
 
 	const modalContent = (
@@ -50,17 +55,17 @@ const BaseModal: React.FC<BaseModalProps> = ({
 					{/* Modal Container */}
 					<motion.div
 						initial={
-							window.innerWidth < 768
+							isMobile
 								? { y: "100%" }
 								: { opacity: 0, scale: 0.95, y: 20 }
 						}
 						animate={
-							window.innerWidth < 768
+							isMobile
 								? { y: 0 }
 								: { opacity: 1, scale: 1, y: 0 }
 						}
 						exit={
-							window.innerWidth < 768
+							isMobile
 								? { y: "100%" }
 								: { opacity: 0, scale: 0.95, y: 20 }
 						}
