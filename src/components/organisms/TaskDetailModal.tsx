@@ -482,20 +482,19 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								{task.taskAssignees && task.taskAssignees.length > 0 ? (
 									<div className="space-y-2">
 										{task.taskAssignees
-											.filter((ta) => ta.user)
 											.map((ta) => (
 												<div
-													key={ta.user.id}
+													key={ta.id || ta.userId}
 													className="flex items-center gap-3 bg-white dark:bg-gray-900 p-3 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm"
 												>
 													<Avatar
-														name={ta.user.displayName}
-														src={ta.user.avatarUrl}
+														name={ta.user?.displayName || "Unknown User"}
+														src={ta.user?.avatarUrl}
 														size="xs"
 													/>
 													<div className="min-w-0">
 														<p className="text-[12px] font-bold text-gray-900 dark:text-white truncate">
-															{ta.user.displayName}
+															{ta.user?.displayName || "Loading collaborator..."}
 														</p>
 														<p className="text-[10px] text-gray-400 font-medium">
 															Collaborator

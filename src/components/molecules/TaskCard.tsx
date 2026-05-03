@@ -98,12 +98,11 @@ const TaskCard: React.FC<TaskCardProps> = ({
 				<div className="flex items-center -space-x-2">
 					{task.taskAssignees && task.taskAssignees.length > 0 ? (
 						task.taskAssignees
-							.filter((ta) => ta.user)
 							.map((ta) => (
 								<Avatar
-									key={ta.user.id}
-									name={ta.user.displayName}
-									src={ta.user.avatarUrl}
+									key={ta.id || ta.userId}
+									name={ta.user?.displayName || "Unknown"}
+									src={ta.user?.avatarUrl}
 									size="xs"
 									className="border-2 border-white dark:border-gray-950 w-6 h-6"
 								/>

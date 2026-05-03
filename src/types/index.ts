@@ -66,7 +66,9 @@ export interface Task {
 	branchName?: string;
 	assigneeId?: string;
 	taskAssignees?: {
-		user: {
+		id?: string;
+		userId?: string;
+		user?: {
 			id: string;
 			displayName: string;
 			avatarUrl?: string;
