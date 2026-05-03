@@ -174,7 +174,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						/>
 					) : (
 						<h2 className="text-2xl font-semibold text-[var(--text-main)] tracking-tight leading-tight">
-							{task.title} <span className="text-[var(--text-muted)] font-light ml-1">#{task.taskKey?.split('-').pop() || "???"}</span>
+							{task.title} <span className="text-[var(--text-muted)] font-light ml-1">#{task.taskKey && typeof task.taskKey === 'string' ? task.taskKey.split('-').pop() : "???"}</span>
 						</h2>
 					)}
 				</div>
@@ -483,15 +483,31 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							</div>
 						</div>
 
-						{task.parentTaskId && (
-							<div className="border-t border-[var(--border)] pt-4">
-								<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Hierarchy</h3>
-								<div className="flex items-center gap-2 text-[11px] font-medium text-[var(--color-primary)] hover:underline cursor-pointer">
-									<LinkIcon size={12} />
-									<span>Parent Task Connected</span>
-								</div>
+						<div className="border-t border-[var(--border)] pt-4">
+							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Hierarchy</h3>
+							<div className="relative">
+								<LinkIcon size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+								<select 
+									className="w-full bg-[var(--surface-hover)] border border-[var(--border-subtle)] rounded-github py-1.5 pl-7 pr-4 text-[11px] text-[var(--text-main)] outline-none focus:border-[var(--color-primary)] appearance-none cursor-pointer transition-all"
+									value={task.parentTaskId || ""}
+									onChange={async (e) => {
+										if (!user) return;
+										try {
+											await projectService.updateTaskParent(task.id, user.id, e.target.value || undefined);
+											success("Hierarchy Updated", "Parent task connection changed.");
+											onRefresh?.();
+										} catch {
+											toastError("Update Failed", "Could not change parent task.");
+										}
+									}}
+								>
+									<option value="">Independent (Root)</option>
+									{activeProject && (
+										<option value="loading" disabled>Syncing...</option>
+									)}
+								</select>
 							</div>
-						)}
+						</div>
 
 						<div className="border-t border-[var(--border)] pt-4">
 							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Development</h3>

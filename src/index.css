@@ -2,12 +2,12 @@
 @import "tailwindcss";
 
 :root {
-	/* GitHub Inspired Light Theme - Enhanced */
+	/* GitHub Inspired Light Theme - Enhanced Softness */
 	--background: #ffffff;
-	--surface: rgba(255, 255, 255, 0.85);
-	--surface-hover: rgba(246, 248, 250, 0.95);
-	--border: rgba(208, 215, 222, 0.8);
-	--border-subtle: rgba(235, 240, 244, 0.6);
+	--surface: rgba(255, 255, 255, 0.7);
+	--surface-hover: rgba(246, 248, 250, 0.85);
+	--border: rgba(208, 215, 222, 0.4);
+	--border-subtle: rgba(235, 240, 244, 0.3);
 	
 	--color-primary: #0969da;
 	--color-primary-hover: #085cc0;
@@ -19,19 +19,25 @@
 	--text-main: #1f2328;
 	--text-muted: #656d76;
 	
-	--shadow-sm: 0 1px 2px rgba(31,35,40,0.04);
-	--shadow-md: 0 8px 24px rgba(140,149,159,0.12);
-	--glass-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.08);
-	--glass-border: rgba(255, 255, 255, 0.7);
+	--shadow-sm: 0 1px 2px rgba(31,35,40,0.02);
+	--shadow-md: 0 12px 32px rgba(140,149,159,0.08);
+	--glass-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.05);
+	--glass-border: rgba(255, 255, 255, 0.6);
+
+	/* Roundness Tokens - Extreme Premium */
+	--radius-sm: 10px;
+	--radius-md: 20px;
+	--radius-lg: 32px;
+	--radius-xl: 44px;
 }
 
 .dark {
-	/* GitHub Inspired Dark Theme - Matte Material Aesthetic */
+	/* GitHub Inspired Dark Theme - Premium Matte Aesthetic */
 	--background: #0d1117;
-	--surface: rgba(22, 27, 34, 0.8);
-	--surface-hover: rgba(28, 33, 40, 0.9);
-	--border: rgba(48, 54, 61, 0.8);
-	--border-subtle: rgba(51, 58, 67, 0.5);
+	--surface: rgba(22, 27, 34, 0.65);
+	--surface-hover: rgba(28, 33, 40, 0.8);
+	--border: rgba(48, 54, 61, 0.4);
+	--border-subtle: rgba(51, 58, 67, 0.25);
 	
 	--color-primary: #2f81f7;
 	--color-primary-hover: #4b92f8;
@@ -43,10 +49,10 @@
 	--text-main: #e6edf3;
 	--text-muted: #7d8590;
 	
-	--shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
-	--shadow-md: 0 12px 32px rgba(1,4,9,0.4);
-	--glass-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
-	--glass-border: rgba(255, 255, 255, 0.15);
+	--shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+	--shadow-md: 0 16px 40px rgba(1,4,9,0.3);
+	--glass-shadow: 0 24px 60px 0 rgba(0, 0, 0, 0.4);
+	--glass-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -75,7 +81,7 @@ body {
 		background-color: var(--surface);
 		border: 1px solid var(--border);
 		color: var(--text-main);
-		border-radius: 6px;
+		border-radius: var(--radius-sm);
 		padding: 0.5rem 0.75rem;
 		font-size: 0.875rem;
 		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -90,6 +96,7 @@ body {
 
 	button {
 		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		border-radius: var(--radius-sm);
 	}
 
 	button:active {
@@ -100,35 +107,39 @@ body {
 @layer components {
 	.glass-panel {
 		background: var(--surface);
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
+		backdrop-filter: blur(24px);
+		-webkit-backdrop-filter: blur(24px);
 		border: 1px solid var(--border-subtle);
 		box-shadow: var(--glass-shadow);
+		border-radius: var(--radius-lg);
 	}
 
 	.glass-card {
 		background: var(--surface);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
 		border: 1px solid var(--border-subtle);
 		box-shadow: var(--shadow-sm);
+		border-radius: var(--radius-md);
 		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
 	.matte-panel {
 		background: var(--surface);
-		backdrop-filter: blur(32px) saturate(180%);
-		-webkit-backdrop-filter: blur(32px) saturate(180%);
+		backdrop-filter: blur(40px) saturate(200%);
+		-webkit-backdrop-filter: blur(40px) saturate(200%);
 		border: 1px solid var(--border-subtle);
 		box-shadow: var(--glass-shadow);
+		border-radius: var(--radius-xl);
 	}
 
 	.matte-card {
 		background: var(--surface);
-		backdrop-filter: blur(24px);
-		-webkit-backdrop-filter: blur(24px);
+		backdrop-filter: blur(28px);
+		-webkit-backdrop-filter: blur(28px);
 		border: 1px solid var(--border-subtle);
 		box-shadow: var(--shadow-md);
+		border-radius: var(--radius-lg);
 	}
 
 	.glass-card:hover {

@@ -1,4 +1,5 @@
 import * as signalR from "@microsoft/signalr";
+import { useAuthStore } from "../store/useAuthStore";
 
 class SignalRService {
 	private connection: signalR.HubConnection | null = null;
@@ -45,8 +46,8 @@ class SignalRService {
 				this.connection = new signalR.HubConnectionBuilder()
 					.withUrl(this.hubUrl, {
 						accessTokenFactory: () => {
-							const authData = localStorage.getItem("auth-storage");
-							return authData ? JSON.parse(authData).state.token : "";
+							const token = useAuthStore.getState().token;
+							return token || "";
 						},
 						skipNegotiation: false,
 						transport:

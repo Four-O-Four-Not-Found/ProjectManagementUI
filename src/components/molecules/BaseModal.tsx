@@ -78,7 +78,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 							stiffness: 300,
 							mass: 0.8,
 						}}
-						className={`relative w-full ${SIZES[size]} matte-panel md:rounded-github shadow-2xl overflow-hidden flex flex-col h-full md:h-auto md:max-h-[90vh] mt-auto md:mt-0 rounded-t-2xl md:rounded-b-github`}
+						className={`relative w-full ${SIZES[size]} matte-panel shadow-2xl overflow-hidden flex flex-col h-full md:h-auto md:max-h-[90vh] mt-auto md:mt-0 rounded-t-[var(--radius-xl)] md:rounded-[var(--radius-xl)]`}
 					>
 						{/* Header */}
 						<div className="px-4 py-4 md:py-3 border-b border-border flex items-center justify-between bg-surface-hover/50 backdrop-blur-md shrink-0">

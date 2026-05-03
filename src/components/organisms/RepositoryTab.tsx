@@ -212,7 +212,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 					isOpen={!!editingFile}
 					onClose={() => setEditingFile(null)}
 					onSave={handleSaveFile}
-					fileName={editingFile.path.split("/").pop() || ""}
+					fileName={editingFile.path && typeof editingFile.path === 'string' ? editingFile.path.split("/").pop() || "" : "Untitled"}
 					initialContent={editingFile.content}
 					branch={branches[0]?.name || "main"}
 				/>

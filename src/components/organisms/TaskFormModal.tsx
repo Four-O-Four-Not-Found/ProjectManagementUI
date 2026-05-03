@@ -114,7 +114,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							}));
 
 							setIsFetchingBranches(true);
-							const parts = (defaultRepo.repoName || "").split("/");
+							const parts = (defaultRepo.repoName || "").toString().split("/");
 							if (parts.length === 2) {
 								githubService
 									.getBranches(parts[0], parts[1])
@@ -153,7 +153,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 		setFormData((prev) => ({ ...prev, repositoryId: repoId }));
 
 		setIsFetchingBranches(true);
-		const parts = (repo.repoName || "").split("/");
+		const parts = (repo.repoName || "").toString().split("/");
 		if (parts.length === 2) {
 			githubService
 				.getBranches(parts[0], parts[1])
@@ -229,7 +229,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					};
 				}
 				if (isCreatingBranch && newBranchName && currentRepo) {
-					const parts = (currentRepo.repoName || "").split("/");
+					const parts = (currentRepo.repoName || "").toString().split("/");
 					if (parts.length === 2) {
 						const branch = await githubService.createBranch(
 							parts[0],
@@ -351,7 +351,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							<input
 								type="date"
 								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-								value={formData.dueDate ? formData.dueDate.split("T")[0] : ""}
+								value={formData.dueDate && typeof formData.dueDate === 'string' ? formData.dueDate.split("T")[0] : ""}
 								onChange={(e) =>
 									setFormData({ ...formData, dueDate: e.target.value })
 								}

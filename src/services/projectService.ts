@@ -132,4 +132,18 @@ export const projectService = {
 	deleteTask: async (taskId: string, userId: string): Promise<void> => {
 		await apiClient.delete(`/tasks/${taskId}`, { params: { userId } });
 	},
+
+	updateTaskParent: async (
+		taskId: string,
+		userId: string,
+		parentTaskId?: string,
+	): Promise<void> => {
+		const task = await projectService.getTask(taskId);
+		await apiClient.put(`/tasks/${taskId}`, {
+			userId,
+			title: task.title,
+			description: task.description,
+			parentTaskId,
+		});
+	},
 };
