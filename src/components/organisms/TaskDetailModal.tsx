@@ -134,10 +134,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					</span>
 					<div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface border border-border">
 						{task.type === "Issue" && (
-							<AlertCircle size={10} className="text-rose-500" />
+							<AlertCircle size={10} className="text-gray-500" />
 						)}
 						{task.type === "Suggestion" && (
-							<Lightbulb size={10} className="text-amber-500" />
+							<Lightbulb size={10} className="text-gray-400" />
 						)}
 						{task.type === "Feature" && (
 							<CheckCircle2 size={10} className="text-primary" />
@@ -222,7 +222,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								{activeTab === tab && (
 									<motion.div
 										layoutId="activeTabDetail"
-										className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-[0_0_8px_rgba(56,189,248,0.4)]"
+										className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-[0_0_8px_rgba(0,0,0,0.2)]"
 									/>
 								)}
 							</button>

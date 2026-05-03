@@ -25,11 +25,11 @@ interface TaskCardProps {
 const TypeIcon = ({ type }: { type: Task["type"] }) => {
 	switch (type) {
 		case "Issue":
-			return <AlertCircle size={12} className="text-rose-400" />;
+			return <AlertCircle size={12} className="text-gray-500" />;
 		case "Suggestion":
-			return <Lightbulb size={12} className="text-amber-400" />;
+			return <Lightbulb size={12} className="text-gray-400" />;
 		case "Bug":
-			return <AlertCircle size={12} className="text-rose-500" />;
+			return <AlertCircle size={12} className="text-gray-600 font-bold" />;
 		default:
 			return <Bookmark size={12} className="text-primary" />;
 	}

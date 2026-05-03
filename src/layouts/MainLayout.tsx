@@ -106,7 +106,7 @@ const MainLayout: React.FC = () => {
 								className="text-text-muted group-hover:text-text-main"
 							/>
 							{unreadCount > 0 && (
-								<span className="absolute top-1.5 right-1.5 min-w-[16px] h-4 flex items-center justify-center px-1 bg-danger text-white text-[9px] font-bold rounded-full border-2 border-surface">
+								<span className="absolute top-1.5 right-1.5 min-w-[16px] h-4 flex items-center justify-center px-1 bg-primary text-white text-[9px] font-bold rounded-full border-2 border-surface">
 									{unreadCount > 9 ? "9+" : unreadCount}
 								</span>
 							)}
@@ -233,7 +233,7 @@ const MainLayout: React.FC = () => {
 					>
 						<Bell size={20} />
 						{unreadCount > 0 && (
-							<span className="absolute top-2 right-3 w-2 h-2 bg-danger rounded-full border border-surface"></span>
+							<span className="absolute top-2 right-3 w-2 h-2 bg-primary rounded-full border border-surface"></span>
 						)}
 						<span className="text-[10px] font-bold uppercase tracking-widest">Alerts</span>
 					</button>
