@@ -103,7 +103,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							}));
 
 							setIsFetchingBranches(true);
-							const parts = defaultRepo.repoName.split("/");
+							const parts = (defaultRepo.repoName || "").split("/");
 							if (parts.length === 2) {
 								githubService
 									.getBranches(parts[0], parts[1])
@@ -142,7 +142,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 		setFormData((prev) => ({ ...prev, repositoryId: repoId }));
 
 		setIsFetchingBranches(true);
-		const parts = repo.repoName.split("/");
+		const parts = (repo.repoName || "").split("/");
 		if (parts.length === 2) {
 			githubService
 				.getBranches(parts[0], parts[1])
@@ -218,7 +218,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					};
 				}
 				if (isCreatingBranch && newBranchName && currentRepo) {
-					const parts = currentRepo.repoName.split("/");
+					const parts = (currentRepo.repoName || "").split("/");
 					if (parts.length === 2) {
 						const branch = await githubService.createBranch(
 							parts[0],

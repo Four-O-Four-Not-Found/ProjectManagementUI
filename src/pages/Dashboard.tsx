@@ -23,10 +23,10 @@ import ActivityDetailModal from "../components/organisms/ActivityDetailModal";
 import { useToast } from "../hooks/useToast";
 import type { Task, Project, Activity } from "../types";
 import { projectService } from "../services/projectService";
+import teamService, { type Team } from "../services/teamService";
 import apiClient from "../services/apiClient";
 import BurndownChart from "../components/molecules/BurndownChart";
 import WorkloadChart from "../components/molecules/WorkloadChart";
-import { twMerge } from "tailwind-merge";
 import { useAuthStore } from "../store/useAuthStore";
 import EmptyState from "../components/molecules/EmptyState";
 
@@ -51,6 +51,7 @@ const Dashboard: React.FC = () => {
 		null,
 	);
 	const [projects, setProjects] = useState<Project[]>([]);
+	const [teams, setTeams] = useState<Team[]>([]);
 	const [stats, setStats] = useState<DashboardStats | null>(null);
 	const [loading, setLoading] = useState(true);
 
@@ -58,13 +59,15 @@ const Dashboard: React.FC = () => {
 		const loadDashboardData = async () => {
 			setLoading(true);
 			try {
-				const [projectsData, statsData] = await Promise.all([
+				const [projectsData, teamsData, statsData] = await Promise.all([
 					projectService.getProjects(),
+					teamService.getMyTeams(),
 					apiClient
 						.get<DashboardStats>("/dashboard/stats")
 						.then((res) => res.data),
 				]);
 				setProjects(projectsData);
+				setTeams(teamsData);
 				setStats(statsData);
 			} catch (error) {
 				console.error("Dashboard load failed", error);
@@ -449,39 +452,59 @@ const Dashboard: React.FC = () => {
 													{project.key} • {status}
 												</p>
 											</div>
-											<ChevronRight
-												size={14}
-												className="text-text-muted group-hover:translate-x-1 group-hover:text-primary transition-all"
-											/>
+											<span className="text-[10px] font-mono text-text-muted">
+												{progress}%
+											</span>
 										</div>
-
-										<div className="space-y-2">
-											<div className="flex justify-between items-end">
-												<span className="text-[9px] font-bold text-text-muted">
-													Sprint Velocity
-												</span>
-												<span className="text-[10px] font-black text-text-main">
-													{progress}%
-												</span>
-											</div>
-											<div className="h-1.5 w-full bg-background rounded-full overflow-hidden border border-border/50">
-												<motion.div
-													initial={{ width: 0 }}
-													animate={{ width: `${progress}%` }}
-													className={twMerge(
-														"h-full rounded-full",
-														progress > 70
-															? "bg-success"
-															: progress > 30
-																? "bg-primary"
-																: "bg-warning",
-													)}
-												/>
-											</div>
+										<div className="h-1 bg-background rounded-full overflow-hidden">
+											<motion.div
+												initial={{ width: 0 }}
+												animate={{ width: `${progress}%` }}
+												className="h-full bg-primary"
+											/>
 										</div>
 									</div>
 								);
 							})}
+						</div>
+					</div>
+
+					<div className="space-y-4">
+						<div className="flex items-center justify-between">
+							<h3 className="text-xs font-extrabold text-accent-purple uppercase tracking-widest">
+								Joined Teams
+							</h3>
+							<span className="text-[10px] font-bold text-text-muted hover:text-accent-purple cursor-pointer transition-colors" onClick={() => navigate('/team')}>
+								Manage
+							</span>
+						</div>
+						<div className="space-y-3">
+							{teams.length === 0 ? (
+								<div className="p-4 border border-dashed border-border rounded-xl text-center bg-surface/10">
+									<p className="text-[10px] text-text-muted italic font-medium uppercase tracking-tighter">Not part of any teams yet.</p>
+								</div>
+							) : (
+								teams.slice(0, 3).map((team) => (
+									<div
+										key={team.id}
+										className="p-3 bg-surface border border-border rounded-xl hover:border-accent-purple/50 transition-all flex items-center gap-3 group cursor-pointer"
+										onClick={() => navigate('/team')}
+									>
+										<div className="w-10 h-10 rounded-lg bg-accent-purple/10 border border-accent-purple/20 flex items-center justify-center text-accent-purple shrink-0 group-hover:scale-105 transition-transform">
+											<Users size={18} />
+										</div>
+										<div className="flex-1 min-w-0">
+											<h4 className="text-xs font-bold text-text-main truncate">
+												{team.name}
+											</h4>
+											<p className="text-[9px] text-text-muted truncate">
+												{team.members?.length || 0} members
+											</p>
+										</div>
+										<ChevronRight size={14} className="text-text-muted group-hover:text-accent-purple transition-colors" />
+									</div>
+								))
+							)}
 						</div>
 					</div>
 				</div>

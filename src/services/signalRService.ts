@@ -42,12 +42,12 @@ class SignalRService {
 
 		this.startPromise = (async () => {
 			try {
-				const authData = localStorage.getItem("auth-storage");
-				const token = authData ? JSON.parse(authData).state.token : null;
-
 				this.connection = new signalR.HubConnectionBuilder()
 					.withUrl(this.hubUrl, {
-						accessTokenFactory: () => token || "",
+						accessTokenFactory: () => {
+							const authData = localStorage.getItem("auth-storage");
+							return authData ? JSON.parse(authData).state.token : "";
+						},
 						skipNegotiation: false,
 						transport:
 							signalR.HttpTransportType.WebSockets |

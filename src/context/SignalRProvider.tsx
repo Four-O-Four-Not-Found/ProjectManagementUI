@@ -4,14 +4,18 @@ import { useToast } from "../hooks/useToast";
 import { SignalRContext } from "./SignalRContext";
 import { useNotificationStore } from "../store/useNotificationStore";
 import { type Notification } from "../services/notificationService";
+import { useAuthStore } from "../store/useAuthStore";
 
 export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const { info, success } = useToast();
 	const { addNotification } = useNotificationStore();
+	const { isAuthenticated } = useAuthStore();
 
 	useEffect(() => {
+		if (!isAuthenticated) return;
+
 		let isSubscribed = true;
 
 		const init = async () => {
@@ -36,8 +40,6 @@ export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({
  
 				const handleTaskAssigned = () => {
 					success("Task Assigned", "Team member joined a task.");
-					// You might want to trigger a local state refresh here 
-					// or rely on the notification which is handled above
 				};
  
 				signalRService.on("TaskAssigned", handleTaskAssigned);
@@ -57,7 +59,7 @@ export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({
 				signalRService.stopConnection();
 			}, 100);
 		};
-	}, [info, success, addNotification]);
+	}, [isAuthenticated, info, success, addNotification]);
 
 	return (
 		<SignalRContext.Provider value={{ service: signalRService }}>

@@ -5,7 +5,6 @@ import {
 	List,
 	Users,
 	Settings,
-	Target,
 	ChevronLeft,
 	ChevronRight,
 	GitBranch,
@@ -37,8 +36,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 		>
 			{/* Brand */}
 			<div className="p-4 flex items-center gap-3 border-b border-border h-16">
-				<div className="w-8 h-8 rounded-md bg-text-main flex items-center justify-center">
-					<Target size={20} className="text-background" />
+				<div className="w-8 h-8 rounded-md flex items-center justify-center overflow-hidden">
+					<img src="/favicon.svg" alt="FlowState" className="w-6 h-6 object-contain" />
 				</div>
 				{!isCollapsed && (
 					<span className="font-bold text-lg text-text-main tracking-tight">

@@ -214,7 +214,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						{task.taskAssignees?.[0]?.user?.displayName || "Unassigned"}
 					</span>
 				</div>
-				<span>opened this {task.type.toLowerCase()}</span>
+				<span>opened this {task.type?.toLowerCase() || "item"}</span>
 				<span>•</span>
 				<span>{task.comments?.length || 0} comments</span>
 			</div>

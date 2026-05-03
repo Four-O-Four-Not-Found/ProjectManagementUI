@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { GitBranch, Target } from "lucide-react";
+import { GitBranch } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../components/atoms/Button";
 import { useAuthStore } from "../store/useAuthStore";
@@ -69,8 +69,8 @@ const Login: React.FC = () => {
 			<div className="w-full max-w-md animate-fade-in relative z-10">
 				<div className="glass-panel p-10 md:p-12 rounded-[40px] border-white/[0.1] shadow-2xl flex flex-col items-center">
 					<div className="flex flex-col items-center mb-12 text-center">
-						<div className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center mb-8 shadow-[0_0_40px_rgba(56,189,248,0.5)]">
-							<Target size={40} className="text-slate-900" />
+						<div className="w-20 h-20 rounded-3xl bg-slate-900 border border-white/10 flex items-center justify-center mb-8 shadow-2xl">
+							<img src="/favicon.svg" alt="FlowState" className="w-12 h-12 object-contain" />
 						</div>
 						<h1 className="text-5xl font-bold text-white mb-3 tracking-tighter">
 							FlowState
