@@ -44,8 +44,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 						</div>
 						<h3 className="text-text-main font-bold">No Team Assigned</h3>
 						<p className="text-sm text-text-muted max-w-sm mt-2">
-							There is no team assigned to this project yet. Go to Settings to
-							assign a workspace team.
+							There is no team assigned to this project yet. Go to Settings to assign a project team.
 						</p>
 						<Button variant="primary" className="mt-4" onClick={onGoToSettings}>
 							Go to Settings

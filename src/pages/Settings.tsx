@@ -401,7 +401,7 @@ const Settings: React.FC = () => {
 		<div className="space-y-8 animate-fade-in pb-20 max-w-5xl mx-auto px-4 md:px-0">
 			<PageHeader
 				title="Global Settings"
-				description="Customize your workspace experience and security preferences."
+				description="Customize your project experience and security preferences."
 			/>
 
 			<div className="grid grid-cols-1 md:grid-cols-4 gap-8">

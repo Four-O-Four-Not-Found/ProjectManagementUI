@@ -78,14 +78,14 @@ const JoinTeam: React.FC = () => {
 				</div>
 
 				<div className="bg-white/[0.03] p-4 rounded-lg border border-white/[0.05] text-left">
-					<h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Workspace Details</h3>
+					<h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Project Details</h3>
 					<div className="flex items-center gap-3">
 						<div className="w-8 h-8 rounded bg-accent-blue/20 flex items-center justify-center text-accent-blue">
 							<CheckCircle2 size={16} />
 						</div>
 						<div>
 							<p className="text-sm font-medium text-slate-200">Official Team</p>
-							<p className="text-[10px] text-slate-500">Verified Workspace</p>
+							<p className="text-[10px] text-slate-500">Verified Project</p>
 						</div>
 					</div>
 				</div>

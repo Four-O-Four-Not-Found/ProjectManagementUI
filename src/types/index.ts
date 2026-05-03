@@ -41,7 +41,7 @@ export interface Repository {
 	repoName: string;
 	repoURL: string;
 	ownerId: string;
-	ownerType: "User" | "Organization";
+	ownerType: "User" | "Team";
 	projectId?: string;
 }
 
@@ -93,8 +93,9 @@ export interface Project {
 	key: string;
 	description: string;
 	ownerId: string;
-	ownerType: "User" | "Organization";
+	ownerType: "User" | "Team";
 	teamId?: string;
+	status?: string;
 	createdAt: string;
 	updatedAt: string;
 	repositories?: Repository[];
@@ -123,15 +124,18 @@ export interface Notification {
 	taskId?: string;
 }
 
-export interface Organization {
-	id: string;
-	githubOrgId: string;
-	name: string;
-	avatarUrl: string;
-}
-
 export interface Team {
 	id: string;
 	name: string;
 	description: string;
+	githubOrgId?: string;
+	avatarUrl?: string;
+	inviteCode?: string;
+	memberCount?: number;
+	members?: {
+		userId: string;
+		name: string;
+		email: string;
+		role: string;
+	}[];
 }

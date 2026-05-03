@@ -105,7 +105,7 @@ const Dashboard: React.FC = () => {
 	const handleCreateProject = async (data: Partial<Project>) => {
 		try {
 			const newProject = await projectService.createProject(data);
-			success("Workspace Initialized", `Project "${data.name}" is now live.`);
+			success("Project Initialized", `Project "${data.name}" is now live.`);
 			setProjects([...projects, newProject]);
 			setIsProjectModalOpen(false);
 		} catch (error) {
@@ -119,7 +119,7 @@ const Dashboard: React.FC = () => {
 				<div className="flex flex-col items-center gap-4 text-text-muted">
 					<div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
 					<span className="text-sm font-bold uppercase tracking-widest">
-						Syncing Workspace...
+						Syncing Project...
 					</span>
 				</div>
 			</div>
@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
 				/>
 				<EmptyState
 					icon={Target}
-					title="No Workspaces Found"
+					title="No Projects Found"
 					description="Your project board is currently empty. Initialize your first project to start tracking tasks and sprints."
 					actionLabel="Create First Project"
 					onAction={() => setIsProjectModalOpen(true)}
@@ -191,7 +191,7 @@ const Dashboard: React.FC = () => {
 							className="flex-1 md:flex-none"
 							leftIcon={<FileText size={16} />}
 							onClick={() =>
-								info("Report Generating", "Compiling workspace metrics...")
+								info("Report Generating", "Compiling project metrics...")
 							}
 						>
 							Report
@@ -336,7 +336,7 @@ const Dashboard: React.FC = () => {
 							<div className="flex justify-between items-center mb-6">
 								<div>
 									<h3 className="font-bold text-text-main text-sm">
-										Workspace Performance
+										Project Performance
 									</h3>
 									<p className="text-[10px] text-text-muted">
 										Velocity trend across all connected projects
@@ -414,7 +414,7 @@ const Dashboard: React.FC = () => {
 					<div className="space-y-4">
 						<div className="flex items-center justify-between">
 							<h3 className="text-xs font-extrabold text-primary uppercase tracking-widest">
-								Active Workspaces
+								Active Projects
 							</h3>
 							<span className="text-[10px] font-bold text-text-muted hover:text-primary cursor-pointer transition-colors">
 								View All

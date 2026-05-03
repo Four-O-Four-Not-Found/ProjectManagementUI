@@ -146,7 +146,7 @@ const Board: React.FC = () => {
 				.catch((err) => {
 					console.error("Board Initialization Error:", err);
 					if (isMounted) {
-						error("Sync Failed", "Could not connect to the workspace API.");
+						error("Sync Failed", "Could not connect to the project API.");
 						setIsInitializing(false);
 						setCurrentProject(null);
 					}
@@ -197,7 +197,7 @@ const Board: React.FC = () => {
 
 	const handleCreateProject = async (data: Partial<Project>) => {
 		await createProject(data);
-		success("Workspace Ready", `Project "${data.name}" has been initialized.`);
+		success("Project Ready", `Project "${data.name}" has been initialized.`);
 		setIsProjectModalOpen(false);
 	};
 
@@ -216,8 +216,8 @@ const Board: React.FC = () => {
 				<EmptyState
 					icon={Target}
 					title="Project Not Found"
-					description="The workspace you are looking for does not exist or has been archived."
-					actionLabel="Select Workspace"
+					description="The project you are looking for does not exist or has been archived."
+					actionLabel="Select Project"
 					onAction={() => navigate("/board")}
 					className="max-w-2xl mx-auto"
 				/>
@@ -237,7 +237,7 @@ const Board: React.FC = () => {
 				<div className="max-w-6xl mx-auto w-full space-y-10">
 					<div className="text-center space-y-4">
 						<h1 className="text-4xl font-black tracking-tight text-white">
-							Choose your <span className="text-primary">Workspace</span>
+							Choose your <span className="text-primary">Project</span>
 						</h1>
 						<p className="text-text-muted max-w-xl mx-auto text-sm">
 							Select an active project below to open its task board, sprints,
@@ -248,8 +248,8 @@ const Board: React.FC = () => {
 					{allProjects.length === 0 ? (
 						<EmptyState
 							icon={Target}
-							title="No Active Workspaces"
-							description="You haven't initialized any projects yet. Create a workspace to start tracking tasks and automated pipelines."
+							title="No Active Projects"
+							description="You haven't initialized any projects yet. Create a project to start tracking tasks and automated pipelines."
 							actionLabel="Initialize Project"
 							onAction={() => setIsProjectModalOpen(true)}
 							className="max-w-2xl mx-auto"
@@ -284,7 +284,7 @@ const Board: React.FC = () => {
 
 										<p className="text-xs text-text-muted line-clamp-2 min-h-[32px]">
 											{project.description ||
-												"No description provided for this workspace."}
+												"No description provided for this project."}
 										</p>
 
 										<div className="pt-4 flex items-center justify-between border-t border-border/50">
@@ -318,7 +318,7 @@ const Board: React.FC = () => {
 								</div>
 								<div className="text-center">
 									<span className="block font-bold text-white text-sm">
-										New Workspace
+										New Project
 									</span>
 									<span className="text-[10px] text-text-muted">
 										Expand your registry
@@ -400,7 +400,7 @@ const Board: React.FC = () => {
 									>
 										<div className="p-2 border-b border-border bg-surface-hover">
 											<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
-												Switch Workspace
+												Switch Project
 											</span>
 										</div>
 										<div className="max-h-64 overflow-y-auto p-1 bg-background">

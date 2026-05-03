@@ -31,7 +31,7 @@ const Team: React.FC = () => {
 		async (isInitial = false) => {
 			if (!user) return;
 			try {
-				const data = await teamService.getMyTeams(user.id);
+				const data = await teamService.getMyTeams();
 				console.log("[TeamPage] Fetched teams data:", data);
 				setTeams(Array.isArray(data) ? data : []);
 
@@ -86,7 +86,7 @@ const Team: React.FC = () => {
 			setIsCreateModalOpen(false);
 			success(
 				"Team Initialized",
-				`"${data.name}" is now part of the workspace.`,
+				`"${data.name}" is now part of the project.`,
 			);
 		} catch {
 			error("Creation Failed", "Could not initialize new team.");
@@ -125,7 +125,7 @@ const Team: React.FC = () => {
 
 			<PageHeader
 				title="Team & Access"
-				description="Manage workspace members and their permission levels."
+				description="Manage project members and their permission levels."
 				actions={
 					<div className="flex gap-3">
 						<Button

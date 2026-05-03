@@ -135,7 +135,7 @@ const GitHubAdmin: React.FC = () => {
 		<div className="space-y-8 animate-fade-in pb-10">
 			<PageHeader
 				title="GitHub Pipeline"
-				description="Monitor your connected repositories and organization workspaces."
+				description="Monitor your connected repositories and organization projects."
 				actions={
 					<div className="flex gap-2">
 						<Button

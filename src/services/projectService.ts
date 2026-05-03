@@ -19,7 +19,7 @@ export const projectService = {
 		project: Partial<Project> & { 
 			gitHubRepoName?: string; 
 			ownerId?: string; 
-			ownerType?: "User" | "Organization";
+			ownerType?: "User" | "Team";
 		},
 	): Promise<Project> => {
 		const response = await apiClient.post<Project>("/projects", project);

@@ -265,7 +265,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 					<div className="space-y-1.5">
 						<label className="text-xs font-semibold text-text-main block ml-0.5">
-							Workspace Destination
+							Project Destination
 						</label>
 						<div className="relative">
 							<Target

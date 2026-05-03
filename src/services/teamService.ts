@@ -12,6 +12,8 @@ export interface Team {
 	name: string;
 	description: string;
 	inviteCode?: string;
+	githubOrgId?: string;
+	avatarUrl?: string;
 	members?: TeamMember[];
 }
 
@@ -27,11 +29,6 @@ export interface JoinTeamRequest {
 }
 
 const teamService = {
-	getMyTeams: async (userId: string): Promise<Team[]> => {
-		const response = await apiClient.get(`/teams/my-teams/${userId}`);
-		return response.data;
-	},
-
 	getTeam: async (id: string): Promise<Team> => {
 		const response = await apiClient.get(`/teams/${id}`);
 		return response.data;
@@ -61,8 +58,8 @@ const teamService = {
 	syncGithubMembers: async (teamId: string): Promise<void> => {
 		await apiClient.post(`/github/teams/${teamId}/sync`);
 	},
-	getWorkspaceTeams: async (workspaceId: string): Promise<Team[]> => {
-		const response = await apiClient.get(`/teams/workspace/${workspaceId}`);
+	getMyTeams: async (): Promise<Team[]> => {
+		const response = await apiClient.get("/teams");
 		return response.data;
 	},
 };

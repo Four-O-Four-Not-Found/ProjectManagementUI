@@ -17,7 +17,7 @@ interface ProjectFormModalProps {
 			gitHubRepoName?: string; 
 			teamId?: string;
 			ownerId?: string;
-			ownerType?: "User" | "Organization";
+			ownerType?: "User" | "Team";
 		},
 	) => void;
 }
@@ -48,7 +48,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 			// Fetch teams first as they are critical for the current issue
 			if (user) {
 				console.log("[ProjectFormModal] Initiating team fetch for user:", user.id);
-				teamService.getMyTeams(user.id)
+				teamService.getMyTeams()
 					.then((data) => {
 						console.log("[ProjectFormModal] Team API Success:", data);
 						setTeams(Array.isArray(data) ? data : []);
@@ -119,7 +119,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 						onClick={handleSubmit}
 						disabled={!formData.name || !formData.key}
 					>
-						Create Workspace
+						Create Project
 					</Button>
 				</>
 			}
@@ -238,7 +238,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 
 					<div className="space-y-2">
 						<label className="text-[10px] font-bold text-muted uppercase tracking-widest block ml-1">
-							Workspace Description
+							Project Description
 						</label>
 						<textarea
 							className="w-full bg-white/[0.03] border border-white/[0.05] rounded-2xl p-4 text-sm text-main outline-none focus:border-primary/50 transition-all min-h-[80px] resize-none"

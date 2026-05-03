@@ -37,10 +37,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 				"Are you absolutely sure? This action cannot be undone and will delete all tasks and associated data.",
 			)
 		) {
-			error(
-				"Restricted",
-				"Project deletion is restricted to workspace owners.",
-			);
+			error("Restricted", "Project deletion is restricted to project owners.");
 		}
 	};
 
@@ -153,7 +150,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 						))
 					) : (
 						<div className="p-8 text-center text-text-muted text-xs italic border border-dashed border-border rounded-xl bg-background/20">
-							No repositories linked to this workspace.
+							No repositories linked to this project.
 						</div>
 					)}
 					<div className="mt-4 p-4 border border-border/50 rounded-xl bg-surface/30">
@@ -187,10 +184,10 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-xs font-bold text-text-main">
-										Workspace Team
+										Project Team
 									</p>
 									<p className="text-[10px] text-text-muted italic">
-										Managed via Workspace Admin
+										Managed via Project Admin
 									</p>
 								</div>
 								<div className="p-2 bg-accent-purple/10 border border-accent-purple/20 rounded-lg text-accent-purple">

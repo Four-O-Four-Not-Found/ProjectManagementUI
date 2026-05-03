@@ -21,7 +21,7 @@ const Login: React.FC = () => {
 		if (error === "access_denied") {
 			toastWarning(
 				"Authorization Cancelled",
-				"GitHub access was denied. You need to authorize the app to access your workspace.",
+				"GitHub access was denied. You need to authorize the app to access your project.",
 			);
 			// Clean up URL
 			navigate("/login", { replace: true });
@@ -34,7 +34,7 @@ const Login: React.FC = () => {
 				setToken(token);
 				success(
 					"Authentication Successful",
-					"Welcome to your FlowState workspace.",
+					"Welcome to your FlowState project.",
 				);
 				navigate("/");
 			}, 1500);
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
 						<div className="text-center space-y-2 mb-8">
 							<h2 className="text-white font-medium">Access Restricted</h2>
 							<p className="text-slate-500 text-sm">
-								Please authenticate with your GitHub workspace account to
+								Please authenticate with your GitHub project account to
 								proceed.
 							</p>
 						</div>
@@ -99,7 +99,7 @@ const Login: React.FC = () => {
 						</Button>
 
 						<p className="text-[10px] text-center text-slate-600 uppercase tracking-widest font-bold mt-8">
-							Authorized Workspace Access Only
+							Authorized Project Access Only
 						</p>
 					</div>
 				</div>
