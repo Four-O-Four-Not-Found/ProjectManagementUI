@@ -38,6 +38,7 @@ import { projectService } from "../services/projectService";
 import teamService, { type Team } from "../services/teamService";
 import { twMerge } from "tailwind-merge";
 import EmptyState from "../components/molecules/EmptyState";
+import GlassCard from "../components/molecules/GlassCard";
 
 const columns = [
 	{ id: "New", title: "New", color: "border-gray-300" },
@@ -200,7 +201,23 @@ const Board: React.FC = () => {
 		if (projectId) projectService.getSprints(projectId).then(setSprints);
 	};
 
-	if (projectId && !currentProject && !isInitializing) {
+	if (isInitializing) {
+		return (
+			<div className="p-4 md:p-8 space-y-8 animate-fade-in">
+				<div className="max-w-xl mx-auto space-y-4 text-center">
+					<div className="h-10 w-64 bg-surface rounded-lg mx-auto shimmer" />
+					<div className="h-4 w-96 bg-surface rounded-lg mx-auto shimmer" />
+				</div>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+					{[1, 2, 3].map((i) => (
+						<div key={i} className="h-64 glass-card shimmer rounded-3xl" />
+					))}
+				</div>
+			</div>
+		);
+	}
+
+	if (projectId && !currentProject) {
 		return (
 			<div className="h-[80vh] flex flex-col justify-center">
 				<EmptyState
@@ -215,7 +232,7 @@ const Board: React.FC = () => {
 		);
 	}
 
-	if (!projectId && !isInitializing) {
+	if (!projectId) {
 		return (
 			<div className="h-full flex flex-col space-y-8 p-4 md:p-8 animate-fade-in overflow-y-auto scrollbar-custom">
 				<ProjectFormModal
@@ -226,12 +243,12 @@ const Board: React.FC = () => {
 
 				<div className="max-w-6xl mx-auto w-full space-y-10">
 					<div className="text-center space-y-4">
-						<h1 className="text-4xl font-black tracking-tight text-white">
-							Choose your <span className="text-primary">Project</span>
+						<h1 className="text-5xl font-black tracking-tight text-text-main animate-slide-up">
+							Project <span className="text-primary">Hub</span>
 						</h1>
-						<p className="text-text-muted max-w-xl mx-auto text-sm">
-							Select an active project below to open its task board, sprints,
-							and automated repository metrics.
+						<p className="text-text-muted max-w-xl mx-auto text-base animate-slide-up" style={{ animationDelay: '0.1s' }}>
+							Select an active repository below to access live boards, sprints,
+							and automated deployment pipelines.
 						</p>
 					</div>
 
@@ -242,79 +259,82 @@ const Board: React.FC = () => {
 							description="You haven't initialized any projects yet. Create a project to start tracking tasks and automated pipelines."
 							actionLabel="Initialize Project"
 							onAction={() => setIsProjectModalOpen(true)}
-							className="max-w-2xl mx-auto"
+							className="max-w-2xl mx-auto animate-slide-up"
 						/>
 					) : (
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-							{allProjects.map((project) => (
-								<motion.div
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+							{allProjects.map((project, idx) => (
+								<GlassCard
 									key={project.id}
-									whileHover={{ y: -5, scale: 1.02 }}
+									isInteractive
 									onClick={() => navigate(`/project/${project.id}`)}
-									className="group relative bg-surface border border-border rounded-3xl p-6 cursor-pointer hover:border-primary/50 transition-all overflow-hidden"
+									className="group animate-slide-up"
+									style={{ animationDelay: `${0.1 + idx * 0.05}s` }}
 								>
-									<div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-										<Target size={80} />
+									<div className="absolute -top-4 -right-4 p-8 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 transition-all duration-500">
+										<Target size={120} />
 									</div>
 
-									<div className="relative z-10 space-y-4">
-										<div className="flex items-center gap-3">
-											<div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-												<Layout size={20} />
+									<div className="space-y-6">
+										<div className="flex items-center gap-4">
+											<div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:scale-110 transition-transform duration-300">
+												<Layout size={24} />
 											</div>
 											<div>
-												<h3 className="font-black text-white group-hover:text-primary transition-colors">
+												<h3 className="text-lg font-black text-text-main group-hover:text-primary transition-colors">
 													{project.name}
 												</h3>
-												<span className="text-[10px] font-mono text-text-muted uppercase">
-													{project.key}
-												</span>
+												<div className="flex items-center gap-2">
+													<span className="px-2 py-0.5 rounded bg-surface border border-border text-[10px] font-mono text-text-muted uppercase">
+														{project.key}
+													</span>
+													<span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+												</div>
 											</div>
 										</div>
 
-										<p className="text-xs text-text-muted line-clamp-2 min-h-[32px]">
+										<p className="text-sm text-text-muted line-clamp-2 leading-relaxed">
 											{project.description ||
-												"No description provided for this project."}
+												"Enterprise-grade project tracking and automated workflow management."}
 										</p>
 
-										<div className="pt-4 flex items-center justify-between border-t border-border/50">
-											<div className="flex -space-x-2">
+										<div className="pt-6 flex items-center justify-between border-t border-border-subtle">
+											<div className="flex -space-x-3">
 												{[1, 2, 3].map((i) => (
 													<div
 														key={i}
-														className="w-6 h-6 rounded-full border-2 border-surface bg-surface-hover flex items-center justify-center"
+														className="w-8 h-8 rounded-full border-2 border-background bg-surface-hover flex items-center justify-center shadow-sm overflow-hidden"
 													>
-														<div className="w-full h-full rounded-full bg-primary/20 scale-75" />
+														<Avatar name={`Member ${i}`} size="sm" />
 													</div>
 												))}
+												<div className="w-8 h-8 rounded-full border-2 border-background bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+													+5
+												</div>
 											</div>
-											<span className="text-[10px] font-bold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-												Open Board{" "}
-												<ChevronDown size={14} className="-rotate-90" />
-											</span>
+											<Button variant="ghost" size="sm" className="group-hover:translate-x-1 transition-transform">
+												Enter Board
+											</Button>
 										</div>
 									</div>
-								</motion.div>
+								</GlassCard>
 							))}
 
 							{/* Create New Project Card */}
-							<motion.button
-								whileHover={{ scale: 1.02 }}
+							<GlassCard
 								onClick={() => setIsProjectModalOpen(true)}
-								className="group border-2 border-dashed border-border hover:border-primary/50 rounded-3xl p-6 flex flex-col items-center justify-center gap-4 transition-all bg-surface/10"
+								isInteractive
+								className="group border-dashed border-2 border-border/50 bg-transparent hover:bg-primary/5 hover:border-primary/50 animate-slide-up flex flex-col items-center justify-center min-h-[260px]"
+								style={{ animationDelay: `${0.1 + allProjects.length * 0.05}s` }}
 							>
-								<div className="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-text-muted group-hover:text-primary group-hover:bg-primary/10 transition-all">
-									<Plus size={24} />
+								<div className="w-16 h-16 rounded-full bg-surface-hover flex items-center justify-center text-text-muted mb-4 group-hover:scale-110 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300">
+									<Plus size={32} />
 								</div>
-								<div className="text-center">
-									<span className="block font-bold text-white text-sm">
-										New Project
-									</span>
-									<span className="text-[10px] text-text-muted">
-										Expand your registry
-									</span>
-								</div>
-							</motion.button>
+								<h3 className="font-black text-text-main group-hover:text-primary transition-colors">
+									Initialize Project
+								</h3>
+								<p className="text-xs text-text-muted mt-2">New workflow environment</p>
+							</GlassCard>
 						</div>
 					)}
 				</div>
@@ -563,23 +583,24 @@ const Board: React.FC = () => {
 								exit={{ opacity: 0 }}
 								className="h-full flex overflow-x-auto snap-x snap-mandatory md:snap-none gap-6 pb-6 scrollbar-custom min-h-0"
 							>
-								{columns.map((col) => (
+								{columns.map((col, idx) => (
 									<div
 										key={col.id}
-										className="flex flex-col w-[85vw] md:w-80 flex-shrink-0 snap-center transition-all duration-300"
+										className="flex flex-col w-[85vw] md:w-80 flex-shrink-0 snap-center animate-slide-up"
+										style={{ animationDelay: `${idx * 0.05}s` }}
 									>
 										<div className="flex items-center justify-between mb-4 px-1">
 											<div className="flex items-center gap-3">
-												<h3 className="text-xs font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest">
+												<h3 className="text-xs font-black text-text-main uppercase tracking-widest">
 													{col.title}
 												</h3>
-												<span className="text-[11px] font-bold text-gray-400 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
+												<span className="text-[10px] font-black text-text-muted bg-surface border border-border px-2 py-0.5 rounded-full">
 													{tasks.filter((t) => t.status === col.id).length}
 												</span>
 											</div>
 											<button
 												onClick={handleAddTask}
-												className="p-1 hover:bg-gray-200 dark:hover:bg-white/5 rounded-md transition-colors text-gray-400 hover:text-gray-900 dark:hover:text-white"
+												className="p-1 hover:bg-surface rounded-md transition-colors text-text-muted hover:text-primary"
 											>
 												<Plus size={16} />
 											</button>
@@ -588,9 +609,9 @@ const Board: React.FC = () => {
 										<div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide space-y-3 pb-4">
 											{tasks.filter((task) => task.status === col.id).length ===
 											0 ? (
-												<div className="h-32 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-xl flex items-center justify-center">
-													<span className="text-[11px] font-medium text-gray-400">
-														Empty
+												<div className="h-32 border-2 border-dashed border-border rounded-xl flex items-center justify-center bg-surface/50">
+													<span className="text-[10px] font-black uppercase tracking-widest text-text-muted opacity-50">
+														No Tasks
 													</span>
 												</div>
 											) : (

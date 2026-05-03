@@ -10,6 +10,7 @@ import {
 	Image as ImageIcon,
 	X,
 	Calendar,
+	Link as LinkIcon,
 } from "lucide-react";
 import type {
 	Task,
@@ -71,6 +72,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 	const [isSaving, setIsSaving] = useState(false);
 	const [imagePreview, setImagePreview] = useState<string | null>(null);
 	const [repositories, setRepositories] = useState<Repository[]>([]);
+	const [availableTasks, setAvailableTasks] = useState<Task[]>([]);
 
 	const [currentRepo, setCurrentRepo] = useState<Repository | undefined>(
 		undefined,
@@ -89,6 +91,15 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						.then((team) => setLocalTeamMembers(team.members || []))
 						.catch(console.error);
 				}
+
+				// Fetch tasks for parent task selection
+				projectService
+					.getTasks(projectId)
+					.then((tasks) => {
+						// Filter out current task if editing to prevent self-parenting
+						setAvailableTasks(tasks.filter((t) => t.id !== task?.id));
+					})
+					.catch(console.error);
 
 				projectService
 					.getRepositories(projectId)
@@ -350,23 +361,49 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
 					<div className="space-y-1.5">
 						<label className="text-xs font-semibold text-text-main block ml-0.5">
-							Category
+							Parent Connection (Hierarchy)
 						</label>
-						<div className="flex gap-2">
-							{(["Feature", "Bug", "Issue"] as TaskType[]).map((type) => (
-								<button
-									key={type}
-									onClick={() => setFormData({ ...formData, type })}
-									className={`flex-1 py-2 px-3 rounded-md border text-[10px] font-bold uppercase tracking-wider transition-all ${
-										formData.type === type
-											? "bg-primary/10 border-primary text-primary shadow-sm"
-											: "border-border text-text-muted hover:border-text-muted bg-surface"
-									}`}
-								>
-									{type}
-								</button>
-							))}
+						<div className="relative">
+							<LinkIcon
+								size={16}
+								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+							/>
+							<select
+								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+								value={formData.parentTaskId || ""}
+								onChange={(e) =>
+									setFormData({ ...formData, parentTaskId: e.target.value || undefined })
+								}
+							>
+								<option value="">Independent Task (Root)</option>
+								{availableTasks.map((t) => (
+									<option key={t.id} value={t.id}>
+										[{t.taskKey}] {t.title}
+									</option>
+								))}
+							</select>
 						</div>
+					</div>
+				</div>
+
+				<div className="space-y-1.5">
+					<label className="text-xs font-semibold text-text-main block ml-0.5">
+						Category
+					</label>
+					<div className="flex gap-2">
+						{(["Feature", "Bug", "Issue"] as TaskType[]).map((type) => (
+							<button
+								key={type}
+								onClick={() => setFormData({ ...formData, type })}
+								className={`flex-1 py-2 px-3 rounded-md border text-[10px] font-bold uppercase tracking-wider transition-all ${
+									formData.type === type
+										? "bg-primary/10 border-primary text-primary shadow-sm"
+										: "border-border text-text-muted hover:border-text-muted bg-surface"
+								}`}
+							>
+								{type}
+							</button>
+						))}
 					</div>
 				</div>
 

@@ -7,20 +7,26 @@ interface GlassCardProps {
 	isHoverable?: boolean;
 	isInteractive?: boolean;
 	noPadding?: boolean;
+	onClick?: () => void;
+	style?: React.CSSProperties;
 }
 
 const GlassCard: React.FC<GlassCardProps> = ({
 	children,
 	className,
-	isHoverable = false,
+	isHoverable = true,
 	isInteractive = false,
 	noPadding = false,
+	onClick,
+	style,
 }) => {
 	return (
 		<div
+			onClick={onClick}
+			style={style}
 			className={twMerge(
-				"glass-panel rounded-2xl md:rounded-3xl relative overflow-hidden",
-				isHoverable && "hover:bg-white/[0.05] transition-all duration-300",
+				"glass-card animate-slide-up relative overflow-hidden",
+				isHoverable && "hover:translate-y-[-2px] hover:shadow-lg",
 				isInteractive && "cursor-pointer active:scale-[0.99]",
 				noPadding ? "p-0" : "p-4 md:p-6",
 				className,

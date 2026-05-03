@@ -78,10 +78,10 @@ const BaseModal: React.FC<BaseModalProps> = ({
 							stiffness: 300,
 							mass: 0.8,
 						}}
-						className={`relative w-full ${SIZES[size]} bg-surface md:border border-border md:rounded-github shadow-2xl overflow-hidden flex flex-col h-full md:h-auto md:max-h-[90vh] mt-auto md:mt-0 rounded-t-2xl md:rounded-b-github`}
+						className={`relative w-full ${SIZES[size]} matte-panel md:rounded-github shadow-2xl overflow-hidden flex flex-col h-full md:h-auto md:max-h-[90vh] mt-auto md:mt-0 rounded-t-2xl md:rounded-b-github`}
 					>
 						{/* Header */}
-						<div className="px-4 py-4 md:py-3 border-b border-border flex items-center justify-between bg-surface-hover shrink-0">
+						<div className="px-4 py-4 md:py-3 border-b border-border flex items-center justify-between bg-surface-hover/50 backdrop-blur-md shrink-0">
 							<div className="flex-1">
 								{typeof title === "string" ? (
 									<h3 className="text-base md:text-sm font-bold text-text-main tracking-tight">
@@ -93,20 +93,20 @@ const BaseModal: React.FC<BaseModalProps> = ({
 							</div>
 							<button
 								onClick={onClose}
-								className="p-2 md:p-1.5 rounded-xl md:rounded-md hover:bg-background text-text-muted hover:text-text-main transition-all ml-4"
+								className="p-2 md:p-1.5 rounded-xl md:rounded-md hover:bg-background/50 text-text-muted hover:text-text-main transition-all ml-4"
 							>
 								<X size={20} className="md:w-[18px] md:h-[18px]" />
 							</button>
 						</div>
 
 						{/* Body */}
-						<div className="flex-1 overflow-y-auto p-5 md:p-6 scrollbar-custom bg-background pb-24 md:pb-6">
+						<div className="flex-1 overflow-y-auto p-5 md:p-6 scrollbar-custom bg-background/30 backdrop-blur-sm pb-24 md:pb-6">
 							{children}
 						</div>
 
 						{/* Footer */}
 						{footer && (
-							<div className="px-4 py-4 md:py-3 border-t border-border bg-surface-hover flex items-center justify-end gap-3 shrink-0 pb-safe-offset">
+							<div className="px-4 py-4 md:py-3 border-t border-border bg-surface-hover/50 backdrop-blur-md flex items-center justify-end gap-3 shrink-0 pb-safe-offset">
 								{footer}
 							</div>
 						)}

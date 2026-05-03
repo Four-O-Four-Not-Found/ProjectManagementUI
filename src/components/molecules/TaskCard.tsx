@@ -7,8 +7,8 @@ import {
 	Bookmark,
 	Calendar,
 	CheckCircle2,
+	Plus,
 } from "lucide-react";
-import Badge from "../atoms/Badge";
 import Avatar from "../atoms/Avatar";
 import { twMerge } from "tailwind-merge";
 import type { Task } from "../../types";
@@ -35,19 +35,17 @@ const TypeIcon = ({ type }: { type: Task["type"] }) => {
 };
 
 const PriorityBadge = ({ priority }: { priority: Task["priority"] }) => {
-	const variants: Record<
-		Task["priority"],
-		"secondary" | "primary" | "warning" | "danger"
-	> = {
-		Low: "secondary",
-		Medium: "primary",
-		High: "warning",
-		Urgent: "danger",
+	const colors: Record<Task["priority"], string> = {
+		Low: "bg-surface text-text-muted border-border",
+		Medium: "bg-primary/10 text-primary border-primary/20",
+		High: "bg-warning/10 text-warning border-warning/20",
+		Urgent: "bg-danger/10 text-danger border-danger/20",
 	};
+
 	return (
-		<Badge variant={variants[priority]} size="xs">
+		<span className={twMerge("px-1.5 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider", colors[priority])}>
 			{priority}
-		</Badge>
+		</span>
 	);
 };
 
@@ -70,29 +68,31 @@ const TaskCard: React.FC<TaskCardProps> = ({
 			exit={{ opacity: 0, scale: 0.95 }}
 			onClick={onClick}
 			className={twMerge(
-				"bg-[var(--surface)] border border-[var(--border)] p-3 rounded-github cursor-pointer group hover:border-[var(--text-muted)] transition-all duration-200 mb-3 flex flex-col gap-2 min-h-[100px]",
-				isOverdue && "border-[#da3633]/40 bg-[#da3633]/5",
+				"glass-card p-4 cursor-pointer group mb-3 flex flex-col gap-3",
+				isOverdue && "border-danger/40 bg-danger/5",
 				className,
 			)}
 		>
-			<div className="flex justify-between items-start">
-				<div className="flex items-center gap-1.5 min-w-0">
-					<TypeIcon type={task.type} />
-					<span className="text-[12px] font-semibold text-[var(--text-main)] truncate group-hover:text-[var(--color-primary)] transition-colors">
+			<div className="flex justify-between items-start gap-2">
+				<div className="flex items-start gap-2 min-w-0">
+					<div className="mt-1 flex-shrink-0">
+						<TypeIcon type={task.type} />
+					</div>
+					<span className="text-sm font-bold text-text-main line-clamp-2 leading-snug group-hover:text-primary transition-colors">
 						{task.title}
 					</span>
 				</div>
 			</div>
 
-			<div className="flex items-center gap-2">
-				<span className="text-[11px] font-mono text-[var(--text-muted)]">
+			<div className="flex items-center gap-3">
+				<span className="text-[10px] font-black font-mono text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border">
 					{task.taskKey}
 				</span>
 				<PriorityBadge priority={task.priority} />
 			</div>
 
-			<div className="flex justify-between items-center mt-1">
-				<div className="flex items-center -space-x-1">
+			<div className="flex justify-between items-center mt-2 pt-3 border-t border-border-subtle">
+				<div className="flex items-center -space-x-2">
 					{task.taskAssignees && task.taskAssignees.length > 0 ? (
 						task.taskAssignees.slice(0, 3).map((ta) => (
 							<Avatar
@@ -100,26 +100,30 @@ const TaskCard: React.FC<TaskCardProps> = ({
 								name={ta.user?.displayName || "Unknown"}
 								src={ta.user?.avatarUrl}
 								size="xs"
-								className="border-2 border-[var(--surface)] w-5 h-5"
+								className="border-2 border-background w-6 h-6 shadow-sm"
 							/>
 						))
-					) : null}
+					) : (
+						<div className="w-6 h-6 rounded-full border-2 border-dashed border-border flex items-center justify-center text-text-muted">
+							<Plus size={10} />
+						</div>
+					)}
 					{task.taskAssignees && task.taskAssignees.length > 3 && (
-						<div className="w-5 h-5 rounded-full bg-[var(--surface-hover)] border border-[var(--border)] flex items-center justify-center text-[8px] text-[var(--text-muted)]">
+						<div className="w-6 h-6 rounded-full bg-surface-hover border-2 border-background flex items-center justify-center text-[8px] font-bold text-text-muted">
 							+{task.taskAssignees.length - 3}
 						</div>
 					)}
 				</div>
 
-				<div className="flex items-center gap-3 text-[var(--text-muted)]">
+				<div className="flex items-center gap-3 text-text-muted">
 					{task.comments && task.comments.length > 0 && (
-						<div className="flex items-center gap-1">
+						<div className="flex items-center gap-1 hover:text-text-main transition-colors">
 							<MessageSquare size={12} />
-							<span className="text-[10px]">{task.comments.length}</span>
+							<span className="text-[10px] font-bold">{task.comments.length}</span>
 						</div>
 					)}
 					{task.dueDate && (
-						<div className={twMerge("flex items-center gap-1 text-[10px]", isOverdue && "text-[#da3633]")}>
+						<div className={twMerge("flex items-center gap-1 text-[10px] font-bold", isOverdue ? "text-danger" : "text-text-muted")}>
 							<Calendar size={12} />
 							<span>{new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
 						</div>

@@ -118,12 +118,21 @@ const Dashboard: React.FC = () => {
 
 	if (loading || !stats) {
 		return (
-			<div className="flex items-center justify-center h-[60vh]">
-				<div className="flex flex-col items-center gap-4 text-text-muted">
-					<div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-					<span className="text-sm font-bold uppercase tracking-widest">
-						Syncing Project...
-					</span>
+			<div className="space-y-8 animate-fade-in p-6">
+				<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+					{[1, 2, 3, 4].map((i) => (
+						<div key={i} className="h-32 glass-card shimmer rounded-xl" />
+					))}
+				</div>
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+					<div className="lg:col-span-2 space-y-8">
+						<div className="h-[400px] glass-card shimmer rounded-2xl" />
+						<div className="h-[350px] glass-card shimmer rounded-2xl" />
+					</div>
+					<div className="space-y-8">
+						<div className="h-[500px] glass-card shimmer rounded-2xl" />
+						<div className="h-64 glass-card shimmer rounded-2xl" />
+					</div>
 				</div>
 			</div>
 		);

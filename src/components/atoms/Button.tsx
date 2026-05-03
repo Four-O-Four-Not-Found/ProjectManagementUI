@@ -31,20 +31,20 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
 	const isButtonLoading = isLoading || loading;
 	const baseStyles =
-		"inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed tracking-tight select-none border";
+		"inline-flex items-center justify-center rounded-md font-semibold transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed tracking-tight select-none border shadow-sm cursor-pointer";
 
 	const variants = {
-		primary: "bg-[var(--color-primary)] text-white border-transparent hover:opacity-90 shadow-sm",
-		secondary: "bg-[var(--surface-hover)] text-[var(--text-muted)] border-[var(--border-subtle)] hover:text-[var(--text-main)] shadow-sm",
-		ghost: "bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)] hover:bg-[var(--surface-hover)]",
-		danger: "bg-[var(--color-danger)]/10 text-[var(--color-danger)] border-[var(--color-danger)]/20 hover:bg-[var(--color-danger)]/20",
-		success: "bg-[var(--color-success)]/10 text-[var(--color-success)] border-[var(--color-success)]/20 hover:bg-[var(--color-success)]/20",
+		primary: "bg-[var(--color-primary)] text-white border-transparent hover:bg-[var(--color-primary-hover)] hover:shadow-md",
+		secondary: "bg-[var(--surface-hover)] text-[var(--text-main)] border-[var(--border)] hover:bg-[var(--surface)] hover:border-[var(--text-muted)]",
+		ghost: "bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)] hover:bg-[var(--surface-hover)] shadow-none",
+		danger: "bg-[var(--background)] text-[var(--color-danger)] border-[var(--border)] hover:bg-[var(--color-danger)] hover:text-white hover:border-[var(--color-danger)]",
+		success: "bg-[var(--color-success)] text-white border-transparent hover:opacity-90",
 		warning: "bg-[var(--color-warning)]/10 text-[var(--color-warning)] border-[var(--color-warning)]/20 hover:bg-[var(--color-warning)]/20",
-		purple: "bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20",
+		purple: "bg-[var(--color-accent-purple)]/10 text-[var(--color-accent-purple)] border-[var(--color-accent-purple)]/20 hover:bg-[var(--color-accent-purple)]/20",
 	};
 
 	const sizes = {
-		xs: "px-2 py-1 text-[11px] gap-1 rounded-md",
+		xs: "px-2.5 py-1 text-[11px] gap-1",
 		sm: "px-3 py-1.5 text-xs gap-1.5",
 		md: "px-4 py-2 text-sm gap-2",
 		lg: "px-6 py-3 text-base gap-3",
@@ -54,21 +54,25 @@ const Button: React.FC<ButtonProps> = ({
 		<button
 			className={twMerge(
 				baseStyles,
-				variants[variant],
+				variants[variant as keyof typeof variants],
 				sizes[size],
 				fullWidth ? "w-full" : "",
+				isButtonLoading ? "pointer-events-none opacity-80" : "",
 				className,
 			)}
 			disabled={isButtonLoading || props.disabled}
 			{...props}
 		>
 			{isButtonLoading ? (
-				<div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+				<div className="flex items-center gap-2">
+					<div className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+					{size !== "xs" && <span>Processing...</span>}
+				</div>
 			) : (
 				<>
-					{leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+					{leftIcon && <span className="flex-shrink-0 opacity-80">{leftIcon}</span>}
 					{children}
-					{rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+					{rightIcon && <span className="flex-shrink-0 opacity-80">{rightIcon}</span>}
 				</>
 			)}
 		</button>

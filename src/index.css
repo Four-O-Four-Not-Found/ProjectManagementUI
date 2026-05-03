@@ -2,43 +2,51 @@
 @import "tailwindcss";
 
 :root {
-	/* GitHub Inspired Light Theme */
+	/* GitHub Inspired Light Theme - Enhanced */
 	--background: #ffffff;
-	--surface: #f6f8fa;
-	--surface-hover: #f3f4f6;
-	--border: #d0d7de;
-	--border-subtle: #ebf0f4;
+	--surface: rgba(255, 255, 255, 0.85);
+	--surface-hover: rgba(246, 248, 250, 0.95);
+	--border: rgba(208, 215, 222, 0.8);
+	--border-subtle: rgba(235, 240, 244, 0.6);
 	
 	--color-primary: #0969da;
+	--color-primary-hover: #085cc0;
 	--color-success: #1a7f37;
 	--color-danger: #cf222e;
 	--color-warning: #9a6700;
+	--color-accent-purple: #8250df;
 	
 	--text-main: #1f2328;
 	--text-muted: #656d76;
 	
-	--shadow-sm: 0 1px 0 rgba(31,35,40,0.04);
-	--shadow-md: 0 3px 6px rgba(140,149,159,0.15);
+	--shadow-sm: 0 1px 2px rgba(31,35,40,0.04);
+	--shadow-md: 0 8px 24px rgba(140,149,159,0.12);
+	--glass-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.08);
+	--glass-border: rgba(255, 255, 255, 0.7);
 }
 
 .dark {
-	/* GitHub Inspired Dark Theme */
+	/* GitHub Inspired Dark Theme - Matte Material Aesthetic */
 	--background: #0d1117;
-	--surface: #161b22;
-	--surface-hover: #1c2128;
-	--border: #30363d;
-	--border-subtle: #21262d;
+	--surface: rgba(22, 27, 34, 0.8);
+	--surface-hover: rgba(28, 33, 40, 0.9);
+	--border: rgba(48, 54, 61, 0.8);
+	--border-subtle: rgba(51, 58, 67, 0.5);
 	
 	--color-primary: #2f81f7;
+	--color-primary-hover: #4b92f8;
 	--color-success: #238636;
 	--color-danger: #da3633;
 	--color-warning: #d29922;
+	--color-accent-purple: #a371f7;
 	
 	--text-main: #e6edf3;
 	--text-muted: #7d8590;
 	
-	--shadow-sm: 0 0 transparent;
-	--shadow-md: 0 8px 24px rgba(1,4,9,0.2);
+	--shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+	--shadow-md: 0 12px 32px rgba(1,4,9,0.4);
+	--glass-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
+	--glass-border: rgba(255, 255, 255, 0.15);
 }
 
 body {
@@ -46,9 +54,7 @@ body {
 	color: var(--text-main);
 	font-family: 'Inter', system-ui, -apple-system, sans-serif;
 	-webkit-font-smoothing: antialiased;
-	transition:
-		background-color 0.2s ease,
-		color 0.2s ease;
+	transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	margin: 0;
 	padding-top: env(safe-area-inset-top);
 	padding-bottom: env(safe-area-inset-bottom);
@@ -56,178 +62,139 @@ body {
 
 @layer base {
 	:root {
-		--overlay: rgba(0, 0, 0, 0.85);
+		--overlay: rgba(0, 0, 0, 0.8);
 		color-scheme: light dark;
 	}
 
-	/* Focus rings */
 	:focus-visible {
-		outline: 2px solid var(--github-blue);
+		outline: 2px solid var(--color-primary);
 		outline-offset: 2px;
 	}
 
-	/* Global Form Elements Theming */
-	input[type="text"],
-	input[type="email"],
-	input[type="password"],
-	input[type="number"],
-	input[type="date"],
-	input[type="search"],
-	input[type="url"],
-	input[type="tel"],
-	textarea,
-	select {
+	input, textarea, select {
 		background-color: var(--surface);
 		border: 1px solid var(--border);
 		color: var(--text-main);
-		border-radius: 8px;
-		padding: 0.625rem 1rem;
+		border-radius: 6px;
+		padding: 0.5rem 0.75rem;
 		font-size: 0.875rem;
-		line-height: 1.25rem;
 		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 		outline: none;
-		width: 100%;
-		box-shadow: var(--shadow-sm);
 	}
 
-	input:hover,
-	textarea:hover,
-	select:hover {
-		border-color: var(--gray-600);
-	}
-
-	input:focus,
-	textarea:focus,
-	select:focus {
+	input:focus, textarea:focus, select:focus {
 		border-color: var(--color-primary);
-		box-shadow: 0 0 0 3px var(--color-primary-transparent);
-		background-color: var(--surface-hover);
+		box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.15);
+		background-color: var(--background);
 	}
 
-	input::placeholder,
-	textarea::placeholder {
-		color: var(--text-muted);
-		opacity: 0.5;
+	button {
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	/* Checkbox and Radio */
-	input[type="checkbox"],
-	input[type="radio"] {
-		width: 1rem;
-		height: 1rem;
-		border-radius: 4px;
-		border: 1px solid var(--border);
-		background-color: var(--surface);
-		cursor: pointer;
-		appearance: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		transition: all 0.2s;
-	}
-
-	input[type="checkbox"]:checked {
-		background-color: var(--color-primary);
-		border-color: var(--color-primary);
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
-	}
-
-	input[type="radio"] {
-		border-radius: 50%;
-	}
-
-	input[type="radio"]:checked {
-		border-color: var(--color-primary);
-		border-width: 4px;
-	}
-
-	select {
-		appearance: none;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239E9E9E' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-position: right 0.75rem center;
-		background-size: 1rem;
-		padding-right: 2.5rem;
-	}
-
-	.light input,
-	.light textarea,
-	.light select {
-		background-color: #ffffff;
-		border-color: #d0d7de;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-	}
-
-	.light input:hover,
-	.light textarea:hover,
-	.light select:hover {
-		border-color: #afb8c1;
-	}
-
-	.light input:focus,
-	.light textarea:focus,
-	.light select:focus {
-		border-color: #0969da;
-		box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
-		background-color: #ffffff;
+	button:active {
+		transform: scale(0.98);
 	}
 }
 
 @layer components {
 	.glass-panel {
-		background-color: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		box-shadow: var(--shadow-sm);
+		background: var(--surface);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		border: 1px solid var(--border-subtle);
+		box-shadow: var(--glass-shadow);
 	}
 
 	.glass-card {
-		background-color: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 6px;
+		background: var(--surface);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--border-subtle);
 		box-shadow: var(--shadow-sm);
-		transition: all 0.12s ease;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	.glass-card:hover {
-		border-color: var(--border-subtle);
-		background-color: var(--surface-hover);
+	.matte-panel {
+		background: var(--surface);
+		backdrop-filter: blur(32px) saturate(180%);
+		-webkit-backdrop-filter: blur(32px) saturate(180%);
+		border: 1px solid var(--border-subtle);
+		box-shadow: var(--glass-shadow);
+	}
+
+	.matte-card {
+		background: var(--surface);
+		backdrop-filter: blur(24px);
+		-webkit-backdrop-filter: blur(24px);
+		border: 1px solid var(--border-subtle);
 		box-shadow: var(--shadow-md);
 	}
 
-	.scrollbar-custom::-webkit-scrollbar {
-		width: 8px;
-		height: 8px;
+	.glass-card:hover {
+		transform: translateY(-2px);
+		background: var(--surface-hover);
+		border-color: var(--color-primary);
+		box-shadow: var(--glass-shadow);
 	}
 
-	.scrollbar-custom::-webkit-scrollbar-track {
-		background: var(--background);
+	.shimmer {
+		background: linear-gradient(
+			90deg,
+			rgba(255, 255, 255, 0) 0%,
+			rgba(255, 255, 255, 0.05) 50%,
+			rgba(255, 255, 255, 0) 100%
+		);
+		background-size: 200% 100%;
+		animation: shimmer 1.5s infinite;
+	}
+
+	.scrollbar-custom::-webkit-scrollbar {
+		width: 10px;
 	}
 
 	.scrollbar-custom::-webkit-scrollbar-thumb {
 		background: var(--border);
-		border-radius: 10px;
-		border: 2px solid var(--background);
+		border-radius: 5px;
+		border: 2px solid transparent;
+		background-clip: content-box;
 	}
 
 	.scrollbar-custom::-webkit-scrollbar-thumb:hover {
 		background: var(--text-muted);
+		background-clip: content-box;
 	}
+}
 
-	.rounded-github {
-		border-radius: 6px;
-	}
+@keyframes shimmer {
+	0% { background-position: -200% 0; }
+	100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+	0%, 100% { transform: translateY(0); }
+	50% { transform: translateY(-5px); }
 }
 
 .animate-fade-in {
-	animation: fadeIn 0.2s ease-out forwards;
+	animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-up {
+	animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
+	from { opacity: 0; }
+	to { opacity: 1; }
 }
+
+@keyframes slideUp {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* GitHub-specific utility classes */
+.bg-github-green { background-color: var(--color-success); }
+.text-github-blue { color: var(--color-primary); }
+.border-github { border-color: var(--border); }

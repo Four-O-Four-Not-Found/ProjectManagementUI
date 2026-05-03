@@ -16,6 +16,7 @@ import {
 	Lightbulb,
 	CheckCircle2,
 	Bookmark,
+	Link as LinkIcon,
 } from "lucide-react";
 import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
@@ -254,7 +255,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					</div>
 
 					<div className="mt-8 flex gap-4 border-b border-[var(--border)]">
-						{(["activity", "attachments"] as const).map((tab) => (
+						{(["details", "activity", "attachments"] as const).map((tab) => (
 							<button
 								key={tab}
 								onClick={() => setActiveTab(tab)}
@@ -264,7 +265,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										: "text-[var(--text-muted)] hover:text-[var(--text-main)]"
 								}`}
 							>
-								{tab === "activity" ? "Discussion" : "Files"}
+								{tab === "details" ? "Overview" : tab === "activity" ? "Discussion" : "Files"}
 								{activeTab === tab && (
 									<motion.div
 										layoutId="activeTabDetail"
@@ -481,6 +482,16 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								{activeProject?.name || "No project"}
 							</div>
 						</div>
+
+						{task.parentTaskId && (
+							<div className="border-t border-[var(--border)] pt-4">
+								<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Hierarchy</h3>
+								<div className="flex items-center gap-2 text-[11px] font-medium text-[var(--color-primary)] hover:underline cursor-pointer">
+									<LinkIcon size={12} />
+									<span>Parent Task Connected</span>
+								</div>
+							</div>
+						)}
 
 						<div className="border-t border-[var(--border)] pt-4">
 							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Development</h3>
