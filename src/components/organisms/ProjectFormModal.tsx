@@ -5,7 +5,6 @@ import Button from "../atoms/Button";
 import { Target, Hash, GitBranch, Search, Check, Users } from "lucide-react";
 import { githubService, type GitHubRepo } from "../../services/githubService";
 import teamService, { type Team } from "../../services/teamService";
-import { useToast } from "../../hooks/useToast";
 import { useAuthStore } from "../../store/useAuthStore";
 import type { Project } from "../../types";
 
@@ -13,8 +12,8 @@ interface ProjectFormModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onSave: (
-		data: Partial<Project> & { 
-			gitHubRepoName?: string; 
+		data: Partial<Project> & {
+			gitHubRepoName?: string;
 			teamId?: string;
 			ownerId?: string;
 			ownerType?: "User" | "Team";
@@ -28,7 +27,6 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 	onSave,
 }) => {
 	const { user } = useAuthStore();
-	const { error: toastError } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [repos, setRepos] = useState<GitHubRepo[]>([]);
 	const [teams, setTeams] = useState<Team[]>([]);
@@ -47,8 +45,12 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		try {
 			// Fetch teams first as they are critical for the current issue
 			if (user) {
-				console.log("[ProjectFormModal] Initiating team fetch for user:", user.id);
-				teamService.getMyTeams()
+				console.log(
+					"[ProjectFormModal] Initiating team fetch for user:",
+					user.id,
+				);
+				teamService
+					.getMyTeams()
 					.then((data) => {
 						console.log("[ProjectFormModal] Team API Success:", data);
 						setTeams(Array.isArray(data) ? data : []);
@@ -61,9 +63,14 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 
 			// Fetch repos separately
 			console.log("[ProjectFormModal] Initiating repo fetch...");
-			githubService.getRepositories()
+			githubService
+				.getRepositories()
 				.then((data) => {
-					console.log("[ProjectFormModal] Repo API Success:", data.length, "repos");
+					console.log(
+						"[ProjectFormModal] Repo API Success:",
+						data.length,
+						"repos",
+					);
 					setRepos(data);
 				})
 				.catch((err) => {
@@ -75,7 +82,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 		} finally {
 			setLoading(false);
 		}
-	}, [user, toastError]);
+	}, [user]);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -115,10 +122,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 					<Button variant="secondary" onClick={onClose}>
 						Cancel
 					</Button>
-					<Button
-						onClick={handleSubmit}
-						disabled={!formData.name || !formData.key}
-					>
+					<Button onClick={handleSubmit} disabled={!formData.name}>
 						Create Project
 					</Button>
 				</>
@@ -140,7 +144,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 							/>
 						</div>
 						<Input
-							label="Key"
+							label="Key (Optional)"
 							placeholder="e.g. ORN"
 							icon={<Hash size={16} />}
 							value={formData.key}
@@ -148,7 +152,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 								const val = e.target.value.toUpperCase().slice(0, 5);
 								setFormData({ ...formData, key: val });
 							}}
-							required
+							helperText="Leave empty to auto-generate from name"
 						/>
 					</div>
 

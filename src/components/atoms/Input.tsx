@@ -5,9 +5,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   icon?: React.ReactNode;
   error?: string;
+  helperText?: string;
 }
 
-const Input: React.FC<InputProps> = ({ label, icon, error, className, ...props }) => {
+const Input: React.FC<InputProps> = ({ label, icon, error, helperText, className, ...props }) => {
   return (
     <div className="w-full space-y-1.5">
       {label && (
@@ -33,6 +34,9 @@ const Input: React.FC<InputProps> = ({ label, icon, error, className, ...props }
         />
       </div>
       {error && <p className="text-[10px] font-bold text-danger ml-1">{error}</p>}
+      {helperText && !error && (
+        <p className="text-[10px] text-text-muted ml-1 opacity-70 italic">{helperText}</p>
+      )}
     </div>
   );
 };

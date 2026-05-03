@@ -10,11 +10,13 @@ export interface User {
 }
 
 export type TaskStatus =
-	| "Backlog"
-	| "ToDo"
+	| "New"
 	| "InProgress"
-	| "InReview"
-	| "Done";
+	| "ReadyForQA"
+	| "QAFailed"
+	| "Developed"
+	| "Closed"
+	| "OnHold";
 export type Priority = "Low" | "Medium" | "High" | "Urgent";
 export type TaskType = "Feature" | "Bug" | "Suggestion" | "Issue";
 
@@ -54,7 +56,6 @@ export interface Task {
 	priority: Priority;
 	type: TaskType;
 	projectId: string;
-	columnId: string;
 	sprintId?: string;
 	repositoryId?: string;
 	branchName?: string;

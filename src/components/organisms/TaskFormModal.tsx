@@ -52,7 +52,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			priority: "Medium",
 			projectId: defaultProjectId || "",
 			assigneeId: "",
-			status: "ToDo",
+			status: "New",
 			dueDate: "",
 		},
 	);

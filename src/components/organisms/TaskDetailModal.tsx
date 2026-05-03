@@ -352,7 +352,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						</h3>
 						{task.dueDate ? (
 							<div
-								className={`flex items-center gap-3 p-2.5 rounded-xl border ${new Date(task.dueDate) < new Date() && task.status !== "Done" ? "bg-danger/10 border-danger/20 text-danger" : "bg-background border-border text-text-main"}`}
+								className={`flex items-center gap-3 p-2.5 rounded-xl border ${new Date(task.dueDate) < new Date() && task.status !== "Closed" ? "bg-danger/10 border-danger/20 text-danger" : "bg-background border-border text-text-main"}`}
 							>
 								<Calendar size={16} />
 								<div className="min-w-0">
@@ -365,7 +365,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									</p>
 									<p className="text-[9px] opacity-70">
 										{new Date(task.dueDate) < new Date() &&
-										task.status !== "Done"
+										task.status !== "Closed"
 											? "Overdue"
 											: "Scheduled Completion"}
 									</p>

@@ -62,10 +62,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
 		e.stopPropagation();
 		if (onMove) {
 			const statuses: Task["status"][] = [
-				"ToDo",
+				"New",
 				"InProgress",
-				"InReview",
-				"Done",
+				"ReadyForQA",
+				"QAFailed",
+				"Developed",
+				"Closed",
+				"OnHold",
 			];
 			const currentIndex = statuses.indexOf(task.status);
 			const nextStatus = statuses[(currentIndex + 1) % statuses.length];
@@ -77,7 +80,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 	const isOverdue =
 		task.dueDate &&
 		new Date(task.dueDate) < new Date() &&
-		task.status !== "Done";
+		task.status !== "Closed";
 
 	return (
 		<motion.div

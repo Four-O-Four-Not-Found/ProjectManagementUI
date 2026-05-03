@@ -41,10 +41,13 @@ import { twMerge } from "tailwind-merge";
 import EmptyState from "../components/molecules/EmptyState";
 
 const columns = [
-	{ id: "ToDo", title: "To Do", color: "border-slate-500" },
+	{ id: "New", title: "New", color: "border-slate-500" },
 	{ id: "InProgress", title: "In Progress", color: "border-primary" },
-	{ id: "InReview", title: "In Review", color: "border-accent-purple" },
-	{ id: "Done", title: "Done", color: "border-success" },
+	{ id: "ReadyForQA", title: "Ready For QA", color: "border-merged" },
+	{ id: "QAFailed", title: "QA Failed", color: "border-danger" },
+	{ id: "Developed", title: "Developed", color: "border-primary-light" },
+	{ id: "Closed", title: "Closed", color: "border-success" },
+	{ id: "OnHold", title: "On Hold", color: "border-warning" },
 ];
 
 type ViewTab =
