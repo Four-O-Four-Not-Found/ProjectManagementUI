@@ -14,6 +14,16 @@ export const useProject = () => {
   const dispatch = useAppDispatch();
   const { projects, activeProject, tasks, loading, error } = useAppSelector((state) => state.project);
 
+	const refreshTask = useCallback(async (taskId: string) => {
+		try {
+			const updatedTask = await projectService.getTask(taskId);
+			// We need a reducer for this
+			dispatch(setTasks(tasks.map(t => t.id === taskId ? updatedTask : t)));
+		} catch (err) {
+			console.error("Refresh task failed:", err);
+		}
+	}, [dispatch, tasks]);
+
 	const fetchProjects = useCallback(async () => {
 		dispatch(setLoading(true));
 		try {
@@ -54,11 +64,12 @@ export const useProject = () => {
 	const assignTask = useCallback(async (taskId: string, profileId: string) => {
 		try {
 			await projectService.assignTask(taskId, profileId);
+			await refreshTask(taskId);
 		} catch (err) {
 			console.error("Assign task failed:", err);
 			dispatch(setError("Failed to assign task"));
 		}
-	}, [dispatch]);
+	}, [dispatch, refreshTask]);
 
 	const createTask = useCallback(async (data: Partial<Task>) => {
 		try {
@@ -85,12 +96,12 @@ export const useProject = () => {
 	const addComment = useCallback(async (taskId: string, userId: string, content: string) => {
 		try {
 			await projectService.addComment(taskId, userId, content);
-			// Ideally we refresh the specific task or use a reducer to add the comment
+			await refreshTask(taskId);
 		} catch (err) {
 			console.error("Add comment failed:", err);
 			dispatch(setError("Failed to add comment"));
 		}
-	}, [dispatch]);
+	}, [dispatch, refreshTask]);
 
 	const addAttachment = useCallback(async (taskId: string, attachment: { fileName: string; fileUrl: string; fileType: string; fileSize: number }) => {
 		try {
@@ -109,16 +120,6 @@ export const useProject = () => {
 			dispatch(setError("Failed to update task details"));
 		}
 	}, [dispatch]);
-
-	const refreshTask = useCallback(async (taskId: string) => {
-		try {
-			const updatedTask = await projectService.getTask(taskId);
-			// We need a reducer for this
-			dispatch(setTasks(tasks.map(t => t.id === taskId ? updatedTask : t)));
-		} catch (err) {
-			console.error("Refresh task failed:", err);
-		}
-	}, [dispatch, tasks]);
 
 	return {
 		projects,

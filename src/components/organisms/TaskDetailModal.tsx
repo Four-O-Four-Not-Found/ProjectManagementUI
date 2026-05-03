@@ -3,16 +3,15 @@ import { motion } from "framer-motion";
 import {
 	Send,
 	Plus,
-	User,
 	Calendar,
 	Sparkles,
 	Wand2,
 	Loader2,
 	Edit2,
-	Check,
-	X,
-	Trash2,
 	MessageSquare,
+	CircleDot,
+	GitBranch,
+	Settings,
 	AlertCircle,
 	Lightbulb,
 	CheckCircle2,
@@ -25,13 +24,13 @@ import BaseModal from "../molecules/BaseModal";
 import { useAuthStore } from "../../store/useAuthStore";
 import { projectService } from "../../services/projectService";
 import { useToast } from "../../hooks/useToast";
+import { useProject } from "../../hooks/useProject";
 import type { Task } from "../../types";
 
 interface TaskDetailModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	task: Task;
-	onAssign?: (taskId: string, userId: string) => void;
 	onRefresh?: () => void;
 }
 
@@ -42,22 +41,23 @@ const TypeIcon = ({ type }: { type: Task["type"] }) => {
 		case "Suggestion":
 			return <Lightbulb size={12} className="text-gray-400" />;
 		case "Bug":
-			return <AlertCircle size={12} className="text-gray-600 font-bold" />;
+			return <AlertCircle size={12} className="text-[#da3633]" />;
 		case "Feature":
-			return <CheckCircle2 size={12} className="text-gray-900" />;
+			return <CheckCircle2 size={12} className="text-[#238636]" />;
 		default:
-			return <Bookmark size={12} className="text-gray-900" />;
+			return <Bookmark size={12} className="text-gray-500" />;
 	}
 };
+
 
 const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	isOpen,
 	onClose,
 	task,
-	onAssign,
 	onRefresh,
 }) => {
 	const { user } = useAuthStore();
+	const { activeProject } = useProject();
 	const { success, error: toastError } = useToast();
 	const [comment, setComment] = useState("");
 	const [isDecomposing, setIsDecomposing] = useState(false);
@@ -70,6 +70,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const [isSaving, setIsSaving] = useState(false);
 	const [isPostingComment, setIsPostingComment] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const { assignTask, addComment } = useProject();
 
 	const handleDecompose = async () => {
 		setIsDecomposing(true);
@@ -123,14 +125,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		}
 	};
 
+
 	const handlePostComment = async () => {
 		if (!user || !comment.trim()) return;
 		setIsPostingComment(true);
 		try {
-			await projectService.addComment(task.id, user.id, comment);
+			await addComment(task.id, user.id, comment);
 			setComment("");
 			success("Comment Posted", "Your message has been added.");
-			onRefresh?.();
 		} catch {
 			toastError("Post Failed", "Could not add comment.");
 		} finally {
@@ -159,103 +161,114 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	};
 
 	const modalHeader = (
-		<div className="flex items-center justify-between w-full pr-8">
-			<div className="space-y-1.5">
-				<div className="flex items-center gap-3">
-					<span className="text-[11px] font-mono font-bold text-gray-500 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded border border-gray-200 dark:border-white/10">
-						{task.taskKey}
-					</span>
-					<div className="flex items-center gap-1.5">
-						<TypeIcon type={task.type} />
-						<span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-							{task.type}
-						</span>
-					</div>
+		<div className="flex flex-col w-full pr-8 py-1">
+			<div className="flex items-start justify-between gap-4">
+				<div className="flex-1 min-w-0">
+					{isEditing ? (
+						<input
+							value={editedTitle}
+							onChange={(e) => setEditedTitle(e.target.value)}
+							className="text-2xl font-semibold text-[var(--text-main)] bg-[var(--background)] border border-[var(--border-subtle)] rounded-github px-3 py-1 outline-none focus:border-[var(--color-primary)] w-full transition-all"
+							autoFocus
+						/>
+					) : (
+						<h2 className="text-2xl font-semibold text-[var(--text-main)] tracking-tight leading-tight">
+							{task.title} <span className="text-[var(--text-muted)] font-light ml-1">#{task.taskKey.split('-').pop()}</span>
+						</h2>
+					)}
 				</div>
-				{isEditing ? (
-					<input
-						value={editedTitle}
-						onChange={(e) => setEditedTitle(e.target.value)}
-						className="text-xl font-bold text-gray-900 dark:text-white bg-transparent border-b border-gray-200 dark:border-white/10 py-1 outline-none focus:border-gray-900 dark:focus:border-white w-full max-w-lg transition-colors"
-						autoFocus
-					/>
-				) : (
-					<h2 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
-						{task.title}
-					</h2>
-				)}
+				<div className="flex items-center gap-2 shrink-0">
+					{isEditing ? (
+						<>
+							<Button size="sm" variant="primary" onClick={handleUpdateTask} loading={isSaving}>Save</Button>
+							<Button size="sm" variant="secondary" onClick={() => setIsEditing(false)}>Cancel</Button>
+						</>
+					) : (
+						<div className="flex items-center gap-2">
+							<Button size="sm" variant="secondary" onClick={() => setIsEditing(true)} leftIcon={<Edit2 size={14} />}>Edit</Button>
+							<Button 
+								size="sm" 
+								variant="secondary" 
+								className="text-red-500 hover:text-red-600 hover:bg-red-50"
+								onClick={handleDeleteTask} 
+								loading={isSaving}
+							>
+								Delete
+							</Button>
+						</div>
+					)}
+				</div>
 			</div>
- 
-			<div className="flex items-center gap-3">
-				{isEditing ? (
-					<div className="flex items-center gap-2">
-						<Button
-							size="sm"
-							variant="secondary"
-							onClick={() => {
-								setIsEditing(false);
-								setEditedTitle(task.title);
-								setEditedDescription(task.description);
-							}}
-						>
-							<X size={16} />
-						</Button>
-						<Button
-							size="sm"
-							variant="primary"
-							loading={isSaving}
-							onClick={handleUpdateTask}
-							leftIcon={<Check size={16} />}
-						>
-							Save Changes
-						</Button>
-					</div>
-				) : (
-					<div className="flex items-center gap-2">
-						<Button
-							size="sm"
-							variant="secondary"
-							onClick={() => setIsEditing(true)}
-							leftIcon={<Edit2 size={14} />}
-						>
-							Edit
-						</Button>
-						<Button
-							size="sm"
-							variant="secondary"
-							className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10"
-							onClick={handleDeleteTask}
-							loading={isSaving}
-						>
-							<Trash2 size={14} />
-						</Button>
-					</div>
-				)}
+			
+			<div className="flex items-center gap-2 mt-3 text-[13px] text-[var(--text-muted)]">
+				<Badge 
+					variant={task.status === "Closed" ? "purple" : "success"} 
+					className="flex items-center gap-1 py-1 px-3 rounded-full font-medium"
+				>
+					<CircleDot size={14} />
+					{task.status === "Closed" ? "Closed" : "Open"}
+				</Badge>
+				<div className="flex items-center gap-1.5 ml-1">
+					<TypeIcon type={task.type} />
+					<span className="font-semibold text-[var(--text-main)]">
+						{task.taskAssignees?.[0]?.user?.displayName || "Unassigned"}
+					</span>
+				</div>
+				<span>opened this {task.type.toLowerCase()}</span>
+				<span>•</span>
+				<span>{task.comments?.length || 0} comments</span>
 			</div>
 		</div>
 	);
- 
+
 	return (
 		<BaseModal isOpen={isOpen} onClose={onClose} title={modalHeader} size="xl">
-			<div className="flex flex-col md:flex-row min-h-[600px] bg-white dark:bg-gray-950">
-				{/* Left Content */}
-				<div className="flex-1 p-6 md:p-10">
-					<div className="flex gap-8 border-b border-gray-100 dark:border-white/5 mb-8">
-						{(["details", "activity", "attachments"] as const).map((tab) => (
+			<div className="flex flex-col md:flex-row min-h-[600px] bg-[var(--background)]">
+				{/* Left Content (Discussion/Description) */}
+				<div className="flex-1 p-6 md:p-8 border-r border-[var(--border)]">
+					<div className="space-y-6">
+						<div className="glass-card rounded-github overflow-hidden">
+							<div className="px-4 py-2 bg-[var(--surface-hover)] border-b border-[var(--border)] flex items-center justify-between">
+								<div className="flex items-center gap-2">
+									<span className="font-semibold text-[13px]">{task.taskAssignees?.[0]?.user?.displayName || "author"}</span>
+									<span className="text-[var(--text-muted)] text-[13px]">commented on {new Date(task.createdAt).toLocaleDateString()}</span>
+								</div>
+								<div className="px-2 py-0.5 rounded-full border border-[var(--border)] text-[11px] text-[var(--text-muted)] font-medium">
+									Author
+								</div>
+							</div>
+							<div className="p-4 bg-[var(--surface)]">
+								{isEditing ? (
+									<textarea
+										value={editedDescription}
+										onChange={(e) => setEditedDescription(e.target.value)}
+										className="w-full bg-[var(--background)] border border-[var(--border-subtle)] rounded-github p-4 text-[14px] text-[var(--text-main)] outline-none focus:border-[var(--color-primary)] min-h-[200px] resize-none"
+									/>
+								) : (
+									<div className="text-[14px] text-[var(--text-main)] leading-relaxed whitespace-pre-wrap">
+										{task.description || "No description provided."}
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+
+					<div className="mt-8 flex gap-4 border-b border-[var(--border)]">
+						{(["activity", "attachments"] as const).map((tab) => (
 							<button
 								key={tab}
 								onClick={() => setActiveTab(tab)}
-								className={`pb-4 text-xs font-semibold uppercase tracking-widest transition-all relative ${
+								className={`pb-2 text-[14px] font-medium transition-all relative ${
 									activeTab === tab
-										? "text-gray-900 dark:text-white"
-										: "text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+										? "text-[var(--text-main)]"
+										: "text-[var(--text-muted)] hover:text-[var(--text-main)]"
 								}`}
 							>
-								{tab === "details" ? "Details" : tab === "activity" ? "Discussion" : "Files"}
+								{tab === "activity" ? "Discussion" : "Files"}
 								{activeTab === tab && (
 									<motion.div
 										layoutId="activeTabDetail"
-										className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 dark:bg-white"
+										className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#f78166]"
 									/>
 								)}
 							</button>
@@ -418,148 +431,93 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						)}
 					</div>
 				</div>
- 
-				{/* Sidebar Details */}
-				<div className="w-full md:w-80 bg-gray-50/50 dark:bg-white/2 border-l border-gray-100 dark:border-white/5 p-6 md:p-10 space-y-10">
-					<div>
-						<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-5">
-							AI Assistance
-						</h3>
-						<Button
-							variant="secondary"
-							size="sm"
-							className="w-full justify-start py-2.5 px-4 bg-white dark:bg-gray-900 border-gray-200 dark:border-white/10 shadow-sm"
-							onClick={handleDecompose}
-							disabled={isDecomposing}
-							leftIcon={
-								isDecomposing ? (
-									<Loader2 size={16} className="animate-spin" />
-								) : (
-									<Sparkles size={16} className="text-amber-500" />
-								)
-							}
-						>
-							<span className="text-xs font-semibold">{isDecomposing ? "Decomposing..." : "AI Breakdown"}</span>
-						</Button>
-					</div>
- 
-					<div className="space-y-8">
-						<div className="space-y-4">
-							<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-								Properties
-							</h3>
-							<div className="space-y-3">
-								<div className="flex items-center justify-between text-xs">
-									<span className="text-gray-500">Status</span>
-									<Badge variant="primary" size="xs">
-										{task.status}
-									</Badge>
-								</div>
-								<div className="flex items-center justify-between text-xs">
-									<span className="text-gray-500">Priority</span>
-									<Badge
-										variant={task.priority === "Urgent" ? "danger" : task.priority === "High" ? "warning" : "secondary"}
-										size="xs"
-									>
-										{task.priority}
-									</Badge>
-								</div>
-								<div className="flex items-center justify-between text-xs">
-									<span className="text-gray-500">Type</span>
-									<div className="flex items-center gap-1.5 font-bold text-gray-900 dark:text-white">
-										<TypeIcon type={task.type} />
-										{task.type}
-									</div>
-								</div>
+				{/* Right Sidebar (Metadata) */}
+				<div className="w-full md:w-[280px] p-6 space-y-6 shrink-0 bg-[var(--background)]">
+					<div className="space-y-6">
+						<div>
+							<div className="flex items-center justify-between mb-2">
+								<h3 className="text-[12px] font-semibold text-[var(--text-muted)]">Assignees</h3>
+								<Settings size={14} className="text-[var(--text-muted)] hover:text-[var(--text-main)] cursor-pointer" />
 							</div>
-						</div>
- 
-						<div className="space-y-4">
-							<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-								Assignees
-							</h3>
-							<div className="space-y-3">
+							<div className="space-y-2">
 								{task.taskAssignees && task.taskAssignees.length > 0 ? (
-									<div className="space-y-2">
-										{task.taskAssignees
-											.map((ta) => (
-												<div
-													key={ta.id || ta.userId}
-													className="flex items-center gap-3 bg-white dark:bg-gray-900 p-3 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm"
-												>
-													<Avatar
-														name={ta.user?.displayName || "Unknown User"}
-														src={ta.user?.avatarUrl}
-														size="xs"
-													/>
-													<div className="min-w-0">
-														<p className="text-[12px] font-bold text-gray-900 dark:text-white truncate">
-															{ta.user?.displayName || "Loading collaborator..."}
-														</p>
-														<p className="text-[10px] text-gray-400 font-medium">
-															Collaborator
-														</p>
-													</div>
-												</div>
-											))}
-									</div>
-								) : (
-									<div className="flex items-center gap-3 bg-gray-100/50 dark:bg-white/2 p-3 rounded-xl border border-dashed border-gray-300 dark:border-white/10">
-										<div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-white/10 flex items-center justify-center text-gray-400">
-											<User size={16} />
+									task.taskAssignees.map((ta) => (
+										<div key={ta.id || ta.userId} className="flex items-center gap-2 group">
+											<Avatar 
+												src={ta.user?.avatarUrl} 
+												name={ta.user?.displayName || "Unknown User"} 
+												size="xs" 
+												className="w-5 h-5"
+											/>
+											<span className="text-[12px] font-medium text-[var(--text-main)] hover:text-[var(--color-primary)] cursor-pointer truncate">
+												{ta.user?.displayName || "Assignee"}
+											</span>
 										</div>
-										<p className="text-[11px] font-bold text-gray-400 italic">
-											Pick up this task
-										</p>
-									</div>
+									))
+								) : (
+									<p className="text-[12px] text-[var(--text-muted)]">No one—<span className="text-[var(--color-primary)] cursor-pointer hover:underline" onClick={() => user && assignTask(task.id, user.id)}>assign yourself</span></p>
 								)}
- 
-								{user &&
-									!task.taskAssignees?.some((ta) => ta.user?.id === user.id) && (
-										<Button
-											size="sm"
-											className="w-full py-2.5 rounded-xl shadow-md"
-											variant="primary"
-											onClick={() => onAssign?.(task.id, user.id)}
-										>
-											{task.taskAssignees?.length
-												? "Join Collaboration"
-												: "Volunteer Now"}
-										</Button>
-									)}
 							</div>
 						</div>
- 
-						<div className="space-y-4">
-							<h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-								Timeline
-							</h3>
-							{task.dueDate ? (
-								<div
-									className={`flex items-center gap-4 p-4 rounded-2xl border ${new Date(task.dueDate) < new Date() && task.status !== "Closed" ? "bg-red-50 border-red-200 text-red-700 dark:bg-red-500/5 dark:border-red-500/20 dark:text-red-400" : "bg-white dark:bg-gray-900 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 shadow-sm"}`}
-								>
-									<Calendar size={18} className="shrink-0" />
-									<div className="min-w-0">
-										<p className="text-[12px] font-bold">
-											{new Date(task.dueDate).toLocaleDateString(undefined, {
-												month: "short",
-												day: "numeric",
-												year: "numeric",
-											})}
-										</p>
-										<p className="text-[10px] font-medium opacity-60">
-											{new Date(task.dueDate) < new Date() &&
-											task.status !== "Closed"
-												? "Overdue"
-												: "Target Date"}
-										</p>
-									</div>
+
+						<div className="border-t border-[var(--border)] pt-4">
+							<div className="flex items-center justify-between mb-2">
+								<h3 className="text-[12px] font-semibold text-[var(--text-muted)]">Labels</h3>
+								<Settings size={14} className="text-[var(--text-muted)] hover:text-[var(--text-main)] cursor-pointer" />
+							</div>
+							<div className="flex flex-wrap gap-1">
+								<Badge variant={task.priority === "Urgent" ? "danger" : task.priority === "High" ? "warning" : "secondary"} className="rounded-full text-[11px] px-2">
+									{task.priority}
+								</Badge>
+								<Badge variant="secondary" className="rounded-full text-[11px] px-2 font-mono">
+									{task.type}
+								</Badge>
+							</div>
+						</div>
+
+						<div className="border-t border-[var(--border)] pt-4">
+							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Projects</h3>
+							<div className="text-[12px] font-medium text-[var(--text-main)] hover:text-[var(--color-primary)] cursor-pointer truncate">
+								{activeProject?.name || "No project"}
+							</div>
+						</div>
+
+						<div className="border-t border-[var(--border)] pt-4">
+							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Development</h3>
+							{task.branchName ? (
+								<div className="flex items-center gap-2 text-[12px] font-mono text-[var(--color-primary)] bg-[var(--color-primary)]/10 px-2 py-1 rounded-github border border-[var(--color-primary)]/20">
+									<GitBranch size={12} />
+									<span className="truncate">{task.branchName}</span>
 								</div>
 							) : (
-								<p className="text-[11px] text-gray-400 italic font-medium">
-									No deadline set.
-								</p>
+								<p className="text-[12px] text-[var(--text-muted)] italic">No branch linked</p>
 							)}
+						</div>
+
+						<div className="border-t border-[var(--border)] pt-4">
+							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Timeline</h3>
+							{task.dueDate ? (
+								<div className="flex items-center gap-2 text-[12px] text-[var(--text-main)]">
+									<Calendar size={14} className="text-[var(--text-muted)]" />
+									<span>Due on {new Date(task.dueDate).toLocaleDateString()}</span>
+								</div>
+							) : (
+								<p className="text-[12px] text-[var(--text-muted)] italic font-light">No deadline</p>
+							)}
+						</div>
+
+						<div className="border-t border-[var(--border)] pt-4">
+							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-3">AI Breakdown</h3>
+							<Button
+								variant="secondary"
+								size="sm"
+								className="w-full text-xs font-semibold py-1.5"
+								onClick={handleDecompose}
+								disabled={isDecomposing}
+								leftIcon={isDecomposing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} className="text-amber-500" />}
+							>
+								{isDecomposing ? "Running AI..." : "Decompose Task"}
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -569,3 +527,4 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 };
 
 export default TaskDetailModal;
+;

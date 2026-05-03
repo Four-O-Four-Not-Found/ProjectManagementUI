@@ -9,7 +9,6 @@ import Avatar from "../components/atoms/Avatar";
 import {
 	Search,
 	Bell,
-	Command,
 	Menu,
 	Layout,
 	User as UserIcon,
@@ -27,7 +26,9 @@ const MainLayout: React.FC = () => {
 	const { unreadCount } = useNotificationStore();
 
 	const isDashActive = location.pathname === "/";
-	const isBoardActive = location.pathname.startsWith("/board") || location.pathname.startsWith("/project/");
+	const isBoardActive =
+		location.pathname.startsWith("/board") ||
+		location.pathname.startsWith("/project/");
 	const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 	const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -75,70 +76,59 @@ const MainLayout: React.FC = () => {
 			{/* Main Content Area */}
 			<main className="flex-1 flex flex-col min-w-0 h-full relative">
 				{/* Header */}
-				<header className="h-16 flex items-center justify-between px-4 md:px-6 border-b border-border bg-surface z-20">
-					<div className="flex items-center gap-4">
+				<header className="h-[64px] flex items-center justify-between px-4 border-b border-[var(--border)] bg-[var(--surface)] z-20">
+					<div className="flex items-center gap-3">
 						<button
 							onClick={() => setIsMobileSidebarOpen(true)}
-							className="p-2 rounded-md lg:hidden text-text-muted hover:bg-background transition-colors"
+							className="p-2 rounded-md lg:hidden text-[var(--text-muted)] hover:bg-[var(--surface-hover)] transition-colors"
 						>
 							<Menu size={20} />
 						</button>
 
-						<div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md bg-background border border-border text-text-muted text-sm hover:border-text-muted transition-colors cursor-pointer group">
-							<Search size={16} />
+						<div className="hidden md:flex items-center gap-2 px-2 py-1.5 rounded-github bg-[var(--background)] border border-[var(--border)] text-[var(--text-muted)] text-[13px] hover:border-[var(--text-muted)] transition-colors cursor-pointer w-[300px]">
+							<Search size={14} className="ml-1" />
 							<span>Search or jump to...</span>
-							<div className="hidden xl:flex items-center gap-1 ml-4 text-[10px] font-mono opacity-50">
-								<Command size={10} />
-								<span>K</span>
+							<div className="flex items-center gap-1 ml-auto mr-1 text-[10px] font-mono opacity-50 px-1.5 py-0.5 rounded border border-[var(--border)]">
+								<span className="text-[12px]">/</span>
 							</div>
 						</div>
 					</div>
 
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-2">
 						<ThemeToggle />
 
 						<button
 							onClick={() => setIsNotificationsOpen(true)}
-							className="p-2 rounded-md hover:bg-background relative transition-colors group"
+							className="p-2 rounded-md hover:bg-[var(--surface-hover)] relative transition-colors group"
 						>
 							<Bell
-								size={20}
-								className="text-text-muted group-hover:text-text-main"
+								size={18}
+								className="text-[var(--text-muted)] group-hover:text-[var(--text-main)]"
 							/>
 							{unreadCount > 0 && (
-								<span className="absolute top-1.5 right-1.5 min-w-[16px] h-4 flex items-center justify-center px-1 bg-primary text-white text-[9px] font-bold rounded-full border-2 border-surface">
+								<span className="absolute top-1.5 right-1.5 w-4 h-4 flex items-center justify-center bg-[var(--color-primary)] text-white text-[9px] font-bold rounded-full border-2 border-[var(--surface)]">
 									{unreadCount > 9 ? "9+" : unreadCount}
 								</span>
 							)}
 						</button>
 
-						<div className="h-8 w-px bg-border"></div>
-
-						<div className="relative">
+						<div className="relative ml-2">
 							<div
-								className="flex items-center gap-3 pl-2 group cursor-pointer select-none"
+								className="flex items-center gap-2 p-1 pl-2 hover:bg-[var(--surface-hover)] rounded-github cursor-pointer select-none border border-transparent hover:border-[var(--border)] transition-all"
 								onClick={(e) => {
 									e.stopPropagation();
 									setIsProfileDropdownOpen(!isProfileDropdownOpen);
 								}}
 							>
-								<div className="text-right hidden sm:block">
-									<p className="text-sm font-semibold text-text-main leading-tight">
-										{user?.displayName || "Guest"}
-									</p>
-									<p className="text-[10px] text-text-muted uppercase tracking-wider">
-										{user?.role || "Visitor"}
-									</p>
-								</div>
-									<Avatar 
-										src={user?.avatarUrl} 
-										name={user?.displayName} 
-										size="sm" 
-										className="border-border group-hover:border-primary transition-colors"
-									/>
+								<Avatar
+									src={user?.avatarUrl}
+									name={user?.displayName}
+									size="xs"
+									className="border-[var(--border)] w-6 h-6"
+								/>
 								<ChevronDown
-									size={14}
-									className={`text-text-muted transition-transform duration-200 ${isProfileDropdownOpen ? "rotate-180" : ""}`}
+									size={12}
+									className={`text-[var(--text-muted)] transition-transform duration-200 ${isProfileDropdownOpen ? "rotate-180" : ""}`}
 								/>
 							</div>
 
@@ -206,36 +196,44 @@ const MainLayout: React.FC = () => {
 
 				{/* Mobile Bottom Navigation */}
 				<nav className="lg:hidden fixed bottom-0 left-0 right-0 h-[calc(4rem+env(safe-area-inset-bottom))] bg-surface/80 backdrop-blur-xl border-t border-border z-[80] flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
-					<NavLink 
+					<NavLink
 						to="/"
-						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isDashActive ? 'text-primary' : 'text-text-muted hover:text-primary'}`}
+						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isDashActive ? "text-primary" : "text-text-muted hover:text-primary"}`}
 					>
 						<Layout size={20} />
-						<span className="text-[10px] font-bold uppercase tracking-widest">Home</span>
+						<span className="text-[10px] font-bold uppercase tracking-widest">
+							Home
+						</span>
 					</NavLink>
-					<NavLink 
+					<NavLink
 						to="/board"
-						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isBoardActive ? 'text-primary' : 'text-text-muted hover:text-primary'}`}
+						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isBoardActive ? "text-primary" : "text-text-muted hover:text-primary"}`}
 					>
 						<Target size={20} />
-						<span className="text-[10px] font-bold uppercase tracking-widest">Board</span>
+						<span className="text-[10px] font-bold uppercase tracking-widest">
+							Board
+						</span>
 					</NavLink>
-					<button 
+					<button
 						onClick={() => setIsMobileSidebarOpen(true)}
 						className="flex flex-col items-center gap-1 p-2 text-text-muted hover:text-text-main transition-colors"
 					>
 						<Menu size={20} />
-						<span className="text-[10px] font-bold uppercase tracking-widest">Menu</span>
+						<span className="text-[10px] font-bold uppercase tracking-widest">
+							Menu
+						</span>
 					</button>
-					<button 
+					<button
 						onClick={() => setIsNotificationsOpen(true)}
-						className={`flex flex-col items-center gap-1 p-2 transition-colors relative ${isNotificationsOpen ? 'text-primary' : 'text-text-muted hover:text-primary'}`}
+						className={`flex flex-col items-center gap-1 p-2 transition-colors relative ${isNotificationsOpen ? "text-primary" : "text-text-muted hover:text-primary"}`}
 					>
 						<Bell size={20} />
 						{unreadCount > 0 && (
 							<span className="absolute top-2 right-3 w-2 h-2 bg-primary rounded-full border border-surface"></span>
 						)}
-						<span className="text-[10px] font-bold uppercase tracking-widest">Alerts</span>
+						<span className="text-[10px] font-bold uppercase tracking-widest">
+							Alerts
+						</span>
 					</button>
 				</nav>
 			</main>
