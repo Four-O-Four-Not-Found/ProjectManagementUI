@@ -9,8 +9,8 @@ export default {
       colors: {
         primary: {
           DEFAULT: 'var(--github-blue)',
-          dark: '#1f6feb',
-          light: '#58a6ff',
+          dark: 'var(--gray-900)',
+          light: 'var(--gray-200)',
         },
         success: 'var(--github-green)',
         danger: 'var(--github-red)',
@@ -25,7 +25,7 @@ export default {
         'text-muted': 'var(--text-muted)',
       },
       fontFamily: {
-        sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         'github': '6px',
