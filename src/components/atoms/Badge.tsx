@@ -10,12 +10,12 @@ interface BadgeProps {
 
 const Badge: React.FC<BadgeProps> = ({ children, variant = 'secondary', size = 'sm', className }) => {
   const variants = {
-    primary: "bg-gray-900 text-white border-transparent",
-    secondary: "bg-gray-100 text-gray-600 border-gray-200 dark:bg-white/5 dark:text-gray-400 dark:border-white/10",
-    success: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20",
-    warning: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20",
-    danger: "bg-red-50 text-red-700 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
-    purple: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20",
+    primary: "bg-[var(--color-primary)] text-white border-transparent",
+    secondary: "bg-[var(--surface-hover)] text-[var(--text-muted)] border-[var(--border-subtle)]",
+    success: "bg-[var(--color-success)]/10 text-[var(--color-success)] border-[var(--color-success)]/20",
+    warning: "bg-[var(--color-warning)]/10 text-[var(--color-warning)] border-[var(--color-warning)]/20",
+    danger: "bg-[var(--color-danger)]/10 text-[var(--color-danger)] border-[var(--color-danger)]/20",
+    purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   };
 
   const sizes = {

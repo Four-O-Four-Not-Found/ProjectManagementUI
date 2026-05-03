@@ -516,7 +516,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								)}
  
 								{user &&
-									!task.taskAssignees?.some((ta) => ta.user.id === user.id) && (
+									!task.taskAssignees?.some((ta) => ta.user?.id === user.id) && (
 										<Button
 											size="sm"
 											className="w-full py-2.5 rounded-xl shadow-md"

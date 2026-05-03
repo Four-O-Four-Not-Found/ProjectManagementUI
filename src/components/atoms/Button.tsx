@@ -31,17 +31,16 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
 	const isButtonLoading = isLoading || loading;
 	const baseStyles =
-		"inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed tracking-tight select-none";
+		"inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed tracking-tight select-none border";
 
 	const variants = {
-		primary: "bg-gray-900 text-white hover:bg-gray-800 shadow-sm",
-		secondary:
-			"bg-white border border-gray-200 text-gray-800 hover:bg-gray-50 shadow-sm dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 dark:hover:bg-gray-800",
-		ghost:
-			"bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800",
-		danger: "bg-red-500 text-white hover:bg-red-600 shadow-sm",
-		success: "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm",
-		warning: "bg-amber-500 text-white hover:bg-amber-600 shadow-sm",
+		primary: "bg-[var(--color-primary)] text-white border-transparent hover:opacity-90 shadow-sm",
+		secondary: "bg-[var(--surface-hover)] text-[var(--text-muted)] border-[var(--border-subtle)] hover:text-[var(--text-main)] shadow-sm",
+		ghost: "bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)] hover:bg-[var(--surface-hover)]",
+		danger: "bg-[var(--color-danger)]/10 text-[var(--color-danger)] border-[var(--color-danger)]/20 hover:bg-[var(--color-danger)]/20",
+		success: "bg-[var(--color-success)]/10 text-[var(--color-success)] border-[var(--color-success)]/20 hover:bg-[var(--color-success)]/20",
+		warning: "bg-[var(--color-warning)]/10 text-[var(--color-warning)] border-[var(--color-warning)]/20 hover:bg-[var(--color-warning)]/20",
+		purple: "bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20",
 	};
 
 	const sizes = {
