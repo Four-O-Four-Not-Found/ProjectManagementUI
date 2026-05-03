@@ -33,8 +33,8 @@ const TreeNode: React.FC<{
 	depth: number;
 	onClick: (path: string) => void;
 }> = ({ item, depth, onClick }) => {
-	const parts = item.path.split("/");
-	const fileName = parts[parts.length - 1];
+	const parts = (item.path || "").split("/");
+	const fileName = parts[parts.length - 1] || "";
 	const isFolder = item.type === "tree";
 
 	return (
@@ -87,9 +87,9 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 		content: string;
 	} | null>(null);
 
-	const parts = gitHubRepo.split("/");
-	const owner = parts[0];
-	const repo = parts[1];
+	const parts = (gitHubRepo || "").split("/");
+	const owner = parts[0] || "";
+	const repo = parts[1] || "";
 
 	useEffect(() => {
 		let isMounted = true;

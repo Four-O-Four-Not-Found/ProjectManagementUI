@@ -173,7 +173,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						/>
 					) : (
 						<h2 className="text-2xl font-semibold text-[var(--text-main)] tracking-tight leading-tight">
-							{task.title} <span className="text-[var(--text-muted)] font-light ml-1">#{task.taskKey.split('-').pop()}</span>
+							{task.title} <span className="text-[var(--text-muted)] font-light ml-1">#{task.taskKey?.split('-').pop() || "???"}</span>
 						</h2>
 					)}
 				</div>
