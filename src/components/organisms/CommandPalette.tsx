@@ -66,7 +66,7 @@ const CommandPalette: React.FC = () => {
 					results.map((item) => (
 						<div
 							key={item.id}
-							className="flex items-center justify-between p-3 rounded-xl hover:bg-surface-hover cursor-pointer group transition-all border border-transparent hover:border-border"
+							className="flex items-center justify-between p-3 rounded-xl hover:bg-[var(--accent-primary)]/10 cursor-pointer group transition-all border border-transparent hover:border-border"
 						>
 							<div className="flex items-center gap-4">
 								<div className="w-10 h-10 rounded-lg bg-surface border border-border flex items-center justify-center text-text-muted group-hover:text-primary transition-colors">

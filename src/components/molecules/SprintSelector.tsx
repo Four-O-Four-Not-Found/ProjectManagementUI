@@ -15,7 +15,7 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({ activeSprint }) => {
   const progress = (completed / total) * 100;
 
   return (
-    <div className="flex items-center gap-4 bg-surface border border-border rounded-md px-3 py-2 hover:bg-surface-hover transition-colors cursor-pointer group">
+    <div className="flex items-center gap-4 bg-surface border border-border rounded-md px-3 py-2 hover:bg-[var(--accent-primary)]/10 transition-colors cursor-pointer group">
       <div className="w-8 h-8 rounded bg-merged/10 flex items-center justify-center text-merged">
         <Zap size={16} />
       </div>

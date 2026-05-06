@@ -280,7 +280,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				{/* Architecture Diagram (File Tree) */}
 				<div className="md:col-span-2 bg-surface border border-border rounded-xl overflow-hidden flex flex-col shadow-lg shadow-black/20">
-					<div className="px-5 py-4 border-b border-border bg-surface-hover/50 flex justify-between items-center">
+					<div className="px-5 py-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center">
 						<div className="flex items-center gap-2">
 							<Layers size={16} className="text-primary" />
 							<h3 className="font-extrabold text-text-main text-xs uppercase tracking-wider">
@@ -319,7 +319,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 				<div className="space-y-6">
 					{/* Branches */}
 					<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col h-[215px]">
-						<div className="p-3 border-b border-border bg-surface-hover flex items-center gap-2">
+						<div className="p-3 border-b border-border bg-[var(--accent-primary)]/10 flex items-center gap-2">
 							<GitBranch size={14} className="text-primary" />
 							<h3 className="font-bold text-text-main text-xs">Branches</h3>
 						</div>
@@ -350,7 +350,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 
 					{/* Pull Requests */}
 					<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col h-[215px]">
-						<div className="p-3 border-b border-border bg-surface-hover flex items-center gap-2">
+						<div className="p-3 border-b border-border bg-[var(--accent-primary)]/10 flex items-center gap-2">
 							<GitPullRequest size={14} className="text-accent-purple" />
 							<h3 className="font-bold text-text-main text-xs">PRs</h3>
 						</div>
@@ -389,7 +389,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 
 			{/* Commits Section */}
 			<div className="bg-surface border border-border rounded-xl overflow-hidden shadow-lg shadow-black/20">
-				<div className="px-5 py-3 border-b border-border bg-surface-hover/30 flex items-center gap-2">
+				<div className="px-5 py-3 border-b border-border bg-[var(--accent-primary)]/10 flex items-center gap-2">
 					<GitCommit size={14} className="text-success" />
 					<h3 className="font-extrabold text-text-main text-[10px] uppercase tracking-wider">
 						Recent Deployment Stream

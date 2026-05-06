@@ -36,16 +36,16 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md glass-panel z-[15001] border-l border-white/[0.1] flex flex-col shadow-2xl shadow-black/50"
+            className="fixed top-0 right-0 h-full w-full max-w-md glass-panel z-[15001] border-l border-[var(--card-border)] flex flex-col shadow-2xl shadow-black/50"
           >
-            <div className="p-6 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.02]">
+            <div className="p-6 border-b border-[var(--card-border)] flex items-center justify-between bg-[var(--card-bg)]">
               <div className="flex items-center gap-3">
                 <Bell size={20} className="text-primary" />
-                <h2 className="text-xl font-bold text-white">Notifications</h2>
+                <h2 className="text-xl font-bold text-[var(--text-primary)]">Notifications</h2>
               </div>
               <button 
                 onClick={onClose}
-                className="p-2 rounded-xl hover:bg-white/[0.05] text-slate-400 transition-all"
+                className="p-2 rounded-xl hover:bg-[var(--card-bg)] text-slate-400 transition-all"
               >
                 <X size={20} />
               </button>
@@ -73,7 +73,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
               )}
             </div>
 
-            <div className="p-4 border-t border-white/[0.05] bg-white/[0.01] space-y-3">
+            <div className="p-4 border-t border-[var(--card-border)] bg-[var(--card-bg)] space-y-3">
                {Notification.permission !== 'granted' && (
                  <button 
                   onClick={async () => {
@@ -91,7 +91,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                )}
                <button 
                 onClick={markAllAsRead}
-                className="w-full py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05] text-sm font-bold text-slate-300 hover:text-white hover:bg-white/[0.05] transition-all"
+                className="w-full py-2.5 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] text-sm font-bold text-slate-300 hover:text-[var(--text-primary)] hover:bg-[var(--card-bg)] transition-all"
                >
                  Mark all as read
                </button>

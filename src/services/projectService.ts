@@ -1,14 +1,11 @@
 import type {
 	Task,
-	TaskStatus,
-	TaskType,
 	Project,
 	Sprint,
 	Repository,
 	Comment,
 	Attachment,
 } from "../types";
-import { signalRService } from "./signalRService";
 import apiClient from "./apiClient";
 
 export const projectService = {
@@ -67,19 +64,10 @@ export const projectService = {
 		return response.data;
 	},
 
-	updateTaskStatus: async (
-		taskId: string,
-		status: TaskStatus,
-	): Promise<void> => {
-		await signalRService.invoke("UpdateTaskStatus", { taskId, status });
-	},
-
-	updateTaskType: async (taskId: string, type: TaskType): Promise<void> => {
-		await signalRService.invoke("UpdateTaskType", { taskId, type });
-	},
-
 	assignTask: async (taskId: string, userId: string): Promise<void> => {
-		await signalRService.invoke("AssignTask", { taskId, userId });
+		await apiClient.put(`/tasks/${taskId}/assign`, userId, {
+			headers: { "Content-Type": "application/json" },
+		});
 	},
 
 	decomposeTask: async (taskId: string): Promise<Task[]> => {
@@ -117,11 +105,9 @@ export const projectService = {
 
 	updateTaskDetails: async (
 		taskId: string,
-		userId: string,
-		title: string,
-		description: string,
+		taskData: Partial<Task> & { userId: string },
 	): Promise<void> => {
-		await apiClient.put(`/tasks/${taskId}`, { userId, title, description });
+		await apiClient.put(`/tasks/${taskId}`, taskData);
 	},
 
 	getTask: async (taskId: string): Promise<Task> => {
@@ -133,16 +119,24 @@ export const projectService = {
 		await apiClient.delete(`/tasks/${taskId}`, { params: { userId } });
 	},
 
+	updateTaskStatus: async (
+		taskId: string,
+		status: Task["status"],
+	): Promise<void> => {
+		await apiClient.put(`/tasks/${taskId}/status`, `"${status}"`, {
+			headers: { "Content-Type": "application/json" },
+		});
+	},
+
 	updateTaskParent: async (
 		taskId: string,
 		userId: string,
 		parentTaskId?: string,
 	): Promise<void> => {
 		const task = await projectService.getTask(taskId);
-		await apiClient.put(`/tasks/${taskId}`, {
+		await projectService.updateTaskDetails(taskId, {
+			...task,
 			userId,
-			title: task.title,
-			description: task.description,
 			parentTaskId,
 		});
 	},

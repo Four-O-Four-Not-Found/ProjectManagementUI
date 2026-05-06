@@ -57,9 +57,9 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   };
 
   const getConfirmButtonClass = () => {
-     if (type === 'danger') return 'bg-rose-600 hover:bg-rose-700 border-rose-500/30 text-white';
-     if (type === 'warning') return 'bg-amber-600 hover:bg-amber-700 border-amber-500/30 text-white';
-     if (type === 'success') return 'bg-emerald-600 hover:bg-emerald-700 border-emerald-500/30 text-white';
+     if (type === 'danger') return 'bg-rose-600 hover:bg-rose-700 border-rose-500/30 text-[var(--text-primary)]';
+     if (type === 'warning') return 'bg-amber-600 hover:bg-amber-700 border-amber-500/30 text-[var(--text-primary)]';
+     if (type === 'success') return 'bg-emerald-600 hover:bg-emerald-700 border-emerald-500/30 text-[var(--text-primary)]';
      return '';
   };
 

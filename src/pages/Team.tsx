@@ -168,7 +168,7 @@ const Team: React.FC = () => {
 								className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all ${
 									selectedTeam?.id === team.id
 										? "bg-primary/10 border border-primary/20 text-primary"
-										: "hover:bg-white/[0.03] text-slate-400"
+										: "hover:bg-[var(--card-bg)] text-slate-400"
 								}`}
 							>
 								<Users size={18} />
@@ -204,9 +204,9 @@ const Team: React.FC = () => {
 						</div>
 					) : selectedTeam ? (
 						<div className="overflow-x-auto scrollbar-custom">
-							<div className="p-6 border-b border-white/[0.05] flex justify-between items-center bg-white/[0.01]">
+							<div className="p-6 border-b border-[var(--card-border)] flex justify-between items-center bg-[var(--card-bg)]">
 								<div>
-									<h2 className="text-lg font-bold text-white">
+									<h2 className="text-lg font-bold text-[var(--text-primary)]">
 										{selectedTeam.name}
 									</h2>
 									<p className="text-xs text-slate-500">
@@ -242,7 +242,7 @@ const Team: React.FC = () => {
 							</div>
 							<table className="hidden md:table w-full text-left border-collapse min-w-[800px] md:min-w-0">
 								<thead>
-									<tr className="border-b border-white/[0.05] bg-white/[0.02]">
+									<tr className="border-b border-[var(--card-border)] bg-[var(--card-bg)]">
 										<th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
 											Member
 										</th>
@@ -259,13 +259,13 @@ const Team: React.FC = () => {
 									{selectedTeam.members?.map((member) => (
 										<tr
 											key={member.userId}
-											className="hover:bg-white/[0.01] transition-colors group"
+											className="hover:bg-[var(--card-bg)] transition-colors group"
 										>
 											<td className="px-6 py-4">
 												<div className="flex items-center gap-4">
 													<Avatar name={member.name} size="md" />
 													<div>
-														<p className="text-sm font-bold text-white">
+														<p className="text-sm font-bold text-[var(--text-primary)]">
 															{member.name}
 														</p>
 														<p className="text-xs text-slate-500">
@@ -276,7 +276,7 @@ const Team: React.FC = () => {
 											</td>
 											<td className="px-6 py-4">
 												<span
-													className={`bg-white/[0.05] border border-white/[0.1] rounded px-2 py-1 text-xs font-medium ${
+													className={`bg-[var(--card-bg)] border border-[var(--card-border)] rounded px-2 py-1 text-xs font-medium ${
 														["Project Manager", "Product Owner"].includes(
 															member.role,
 														)
@@ -324,13 +324,13 @@ const Team: React.FC = () => {
 								{selectedTeam.members?.map((member) => (
 									<div
 										key={member.userId}
-										className="p-4 space-y-3 active:bg-white/[0.02]"
+										className="p-4 space-y-3 active:bg-[var(--card-bg)]"
 									>
 										<div className="flex justify-between items-start">
 											<div className="flex items-center gap-3">
 												<Avatar name={member.name} size="md" />
 												<div>
-													<p className="text-sm font-bold text-white">
+													<p className="text-sm font-bold text-[var(--text-primary)]">
 														{member.name}
 													</p>
 													<p className="text-[10px] text-slate-500">
@@ -344,7 +344,7 @@ const Team: React.FC = () => {
 										</div>
 										<div className="flex items-center justify-between">
 											<span
-												className={`bg-white/[0.05] border border-white/[0.1] rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${
+												className={`bg-[var(--card-bg)] border border-[var(--card-border)] rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${
 													["Project Manager", "Product Owner"].includes(
 														member.role,
 													)

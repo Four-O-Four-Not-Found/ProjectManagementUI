@@ -66,7 +66,7 @@ const AIPredictor: React.FC<AIPredictorProps> = ({ tasks, sprint, className }) =
 					</div>
 				</div>
 
-				<div className="h-1.5 w-full bg-surface-hover rounded-full overflow-hidden">
+				<div className="h-1.5 w-full bg-[var(--accent-primary)]/10 rounded-full overflow-hidden">
 					<div 
 						className={`h-full transition-all duration-1000 ${
 							analysis.probability < 60 ? "bg-danger" : 

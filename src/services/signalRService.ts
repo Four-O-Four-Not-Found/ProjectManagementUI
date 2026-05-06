@@ -1,5 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import { useAuthStore } from "../store/useAuthStore";
+import { useNotificationStore } from "../store/useNotificationStore";
 
 class SignalRService {
 	private connection: signalR.HubConnection | null = null;
@@ -59,8 +60,14 @@ class SignalRService {
 					.build();
 
 				// Listen for notifications
-				this.connection.on("ReceiveNotification", (message: string) => {
-					this.showNativeNotification("Project Update", { body: message });
+				this.connection.on("ReceiveNotification", (notification: any) => {
+					// Add to store
+					useNotificationStore.getState().addNotification(notification);
+
+					// Show native notification
+					this.showNativeNotification(notification.title || "Project Update", {
+						body: notification.message,
+					});
 				});
 
 				console.log("SignalR: Connecting...");

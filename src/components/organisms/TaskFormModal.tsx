@@ -32,6 +32,7 @@ interface TaskFormModalProps {
 	onSave: (task: Partial<Task>) => void;
 	task?: Task | null;
 	defaultProjectId?: string;
+	defaultParentTaskId?: string;
 	projects?: Project[];
 	teamMembers?: TeamMember[];
 }
@@ -42,6 +43,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 	onSave,
 	task,
 	defaultProjectId,
+	defaultParentTaskId,
 	projects = [],
 	teamMembers = [],
 }) => {
@@ -55,6 +57,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 			assigneeId: "",
 			status: "New",
 			dueDate: "",
+			parentTaskId: defaultParentTaskId,
 		},
 	);
 
@@ -208,6 +211,12 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 
 				if (updatedFormData.assigneeId === "") {
 					updatedFormData.assigneeId = undefined;
+				}
+				if (updatedFormData.dueDate === "") {
+					updatedFormData.dueDate = undefined;
+				}
+				if (updatedFormData.parentTaskId === "") {
+					updatedFormData.parentTaskId = undefined;
 				}
 
 				if (imagePreview) {
@@ -421,7 +430,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								/>
 								<button
 									onClick={() => setImagePreview(null)}
-									className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
+									className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[var(--text-primary)]"
 								>
 									<X size={16} />
 								</button>

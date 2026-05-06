@@ -64,7 +64,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 			exit={{ opacity: 0, x: -20 }}
 			className="h-full bg-surface/30 border border-border rounded-md overflow-hidden flex flex-col"
 		>
-			<div className="p-4 border-b border-border bg-surface-hover/50 flex justify-between items-center shrink-0">
+			<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center shrink-0">
 				<div className="flex items-center gap-3">
 					<div className="p-2 bg-primary/10 rounded-lg text-primary">
 						<CalendarIcon size={18} />
@@ -86,7 +86,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 								onClick={() => setViewMode(mode)}
 								className={`px-3 py-1 rounded text-[10px] font-bold uppercase transition-all ${
 									viewMode === mode
-										? "bg-primary text-white"
+										? "bg-primary text-[var(--text-primary)]"
 										: "text-text-muted hover:text-text-main"
 								}`}
 							>
@@ -121,7 +121,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 								key={i}
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => handleDrop(e, i)}
-								className="w-20 shrink-0 border-r border-border/30 p-2 flex flex-col items-center justify-center bg-surface-hover/10"
+								className="w-20 shrink-0 border-r border-border/30 p-2 flex flex-col items-center justify-center bg-[var(--accent-primary)]/10"
 							>
 								<span className="text-[8px] font-bold text-text-muted uppercase">
 									{day.toLocaleDateString(undefined, { weekday: "short" })}
@@ -149,7 +149,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 						tasks.map((task, idx) => (
 							<div
 								key={task.id}
-								className="flex border-b border-border/30 group hover:bg-surface-hover/30 transition-colors"
+								className="flex border-b border-border/30 group hover:bg-[var(--accent-primary)]/10 transition-colors"
 							>
 								<div className="w-64 border-r border-border p-3 shrink-0 flex items-center gap-3">
 									<div
@@ -204,7 +204,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 				</div>
 			</div>
 
-			<div className="p-4 bg-surface-hover/30 border-t border-border flex items-center justify-between shrink-0">
+			<div className="p-4 bg-[var(--accent-primary)]/10 border-t border-border flex items-center justify-between shrink-0">
 				<div className="flex items-center gap-6">
 					<div className="flex items-center gap-2">
 						<div className="w-3 h-3 rounded-sm bg-primary/20 border border-primary/40" />

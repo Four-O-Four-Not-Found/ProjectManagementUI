@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import type { DropResult } from "@hello-pangea/dnd";
 import {
 	Plus,
 	Layout,
@@ -40,14 +42,14 @@ import { twMerge } from "tailwind-merge";
 import EmptyState from "../components/molecules/EmptyState";
 import GlassCard from "../components/molecules/GlassCard";
 
-const columns = [
-	{ id: "New", title: "New", color: "border-gray-300" },
-	{ id: "InProgress", title: "In Progress", color: "border-gray-900" },
-	{ id: "ReadyForQA", title: "Ready For QA", color: "border-gray-600" },
-	{ id: "QAFailed", title: "QA Failed", color: "border-gray-800" },
-	{ id: "Developed", title: "Developed", color: "border-gray-400" },
-	{ id: "Closed", title: "Closed", color: "border-gray-200" },
-	{ id: "OnHold", title: "On Hold", color: "border-gray-500" },
+const columns: { id: Task["status"]; title: string; color: string }[] = [
+	{ id: "New", title: "New", color: "border-blue-500/50" },
+	{ id: "InProgress", title: "In Progress", color: "border-cyan-400/50" },
+	{ id: "ReadyForQA", title: "Ready For QA", color: "border-purple-500/50" },
+	{ id: "QAFailed", title: "QA Failed", color: "border-red-500/50" },
+	{ id: "Developed", title: "Developed", color: "border-emerald-400/50" },
+	{ id: "Closed", title: "Closed", color: "border-slate-500/50" },
+	{ id: "OnHold", title: "On Hold", color: "border-amber-500/50" },
 ];
 
 type ViewTab =
@@ -68,9 +70,27 @@ const Board: React.FC = () => {
 		fetchProjects,
 		createTask,
 		createProject,
+		moveTask,
 		projects: allProjects,
 	} = useProject();
-	const { success, error } = useToast();
+	const { success, error: toastError } = useToast();
+
+	const onDragEnd = (result: DropResult) => {
+		const { destination, source, draggableId } = result;
+
+		if (!destination) return;
+
+		if (
+			destination.droppableId === source.droppableId &&
+			destination.index === source.index
+		) {
+			return;
+		}
+
+		const newStatus = destination.droppableId as Task["status"];
+		moveTask(draggableId, newStatus);
+		success("Task Moved", `Task status updated to ${newStatus}`);
+	};
 
 	const [activeTab, setActiveTab] = useState<ViewTab>("Board");
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -96,6 +116,17 @@ const Board: React.FC = () => {
 		}
 	}, [currentProject?.teamId]);
 
+	const handleSelectTask = async (task: Task) => {
+		// Optimistically show current data
+		setSelectedTask(task);
+		try {
+			const fullTask = await projectService.getTask(task.id);
+			setSelectedTask(fullTask);
+		} catch (err) {
+			console.error("Failed to fetch task details:", err);
+		}
+	};
+
 	const handleRoleChange = async (userId: string, newRole: string) => {
 		if (!currentProject?.teamId) return;
 		try {
@@ -115,7 +146,7 @@ const Board: React.FC = () => {
 				};
 			});
 		} catch {
-			error("Update Failed", "Could not change member role.");
+			toastError("Update Failed", "Could not change member role.");
 		}
 	};
 
@@ -141,7 +172,7 @@ const Board: React.FC = () => {
 				.catch((err) => {
 					console.error("Board Initialization Error:", err);
 					if (isMounted) {
-						error("Sync Failed", "Could not connect to the project API.");
+						toastError("Sync Failed", "Could not connect to the project API.");
 						setIsInitializing(false);
 						setCurrentProject(null);
 					}
@@ -161,7 +192,7 @@ const Board: React.FC = () => {
 			setCurrentProject(null);
 			setIsInitializing(true);
 		};
-	}, [fetchTasks, fetchProjects, projectId, navigate, error]);
+	}, [fetchTasks, fetchProjects, projectId, navigate]);
 
 
 	const handleAddTask = useCallback(() => {
@@ -303,7 +334,7 @@ const Board: React.FC = () => {
 												{[1, 2, 3].map((i) => (
 													<div
 														key={i}
-														className="w-8 h-8 rounded-full border-2 border-background bg-surface-hover flex items-center justify-center shadow-sm overflow-hidden"
+														className="w-8 h-8 rounded-full border-2 border-background bg-[var(--accent-primary)]/10 flex items-center justify-center shadow-sm overflow-hidden"
 													>
 														<Avatar name={`Member ${i}`} size="sm" />
 													</div>
@@ -327,7 +358,7 @@ const Board: React.FC = () => {
 								className="group border-dashed border-2 border-border/50 bg-transparent hover:bg-primary/5 hover:border-primary/50 animate-slide-up flex flex-col items-center justify-center min-h-[260px]"
 								style={{ animationDelay: `${0.1 + allProjects.length * 0.05}s` }}
 							>
-								<div className="w-16 h-16 rounded-full bg-surface-hover flex items-center justify-center text-text-muted mb-4 group-hover:scale-110 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300">
+								<div className="w-16 h-16 rounded-full bg-[var(--accent-primary)]/10 flex items-center justify-center text-text-muted mb-4 group-hover:scale-110 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300">
 									<Plus size={32} />
 								</div>
 								<h3 className="font-black text-text-main group-hover:text-primary transition-colors">
@@ -354,6 +385,7 @@ const Board: React.FC = () => {
 				onClose={() => setSelectedTask(null)}
 				task={selectedTask || ({} as Task)}
 				onRefresh={() => projectId && fetchTasks(projectId)}
+				onSelectTask={handleSelectTask}
 			/>
 
 			<TaskFormModal
@@ -384,7 +416,7 @@ const Board: React.FC = () => {
 					<div className="relative">
 						<button
 							onClick={() => setIsProjectSelectorOpen(!isProjectSelectorOpen)}
-							className="flex items-center gap-2 hover:bg-surface-hover px-2 py-1 -ml-2 rounded-md transition-all group"
+							className="flex items-center gap-2 hover:bg-[var(--accent-primary)]/10 px-2 py-1 -ml-2 rounded-md transition-all group"
 						>
 							<span className="font-black tracking-tight text-xl md:text-2xl">
 								{currentProject?.name || "Select Project"}
@@ -408,7 +440,7 @@ const Board: React.FC = () => {
 										exit={{ opacity: 0, y: 10 }}
 										className="absolute top-full left-0 mt-2 w-72 bg-surface border border-border rounded-md shadow-2xl z-50 overflow-hidden"
 									>
-										<div className="p-2 border-b border-border bg-surface-hover">
+										<div className="p-2 border-b border-border bg-[var(--accent-primary)]/10">
 											<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
 												Switch Project
 											</span>
@@ -424,7 +456,7 @@ const Board: React.FC = () => {
 													className={`w-full flex items-center gap-3 p-3 rounded-md transition-all ${p.id === projectId ? "bg-primary/10 border border-primary/20" : "hover:bg-surface border border-transparent"}`}
 												>
 													<div
-														className={`w-8 h-8 rounded flex items-center justify-center ${p.id === projectId ? "bg-primary text-white" : "bg-surface border border-border text-text-muted"}`}
+														className={`w-8 h-8 rounded flex items-center justify-center ${p.id === projectId ? "bg-primary text-[var(--text-primary)]" : "bg-surface border border-border text-text-muted"}`}
 													>
 														<Target size={16} />
 													</div>
@@ -503,7 +535,7 @@ const Board: React.FC = () => {
 			/>
 
 			{/* Navigation Tabs - Sticky */}
-			<div className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 dark:border-white/5 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md px-4 shrink-0 overflow-x-auto scrollbar-hide">
+			<div className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 dark:border-[var(--card-border)] bg-[var(--card-bg)] dark:bg-gray-950/80 backdrop-blur-md px-4 shrink-0 overflow-x-auto scrollbar-hide">
 				<div className="flex items-center gap-1">
 					{(
 						[
@@ -532,7 +564,7 @@ const Board: React.FC = () => {
 								onClick={() => setActiveTab(tab)}
 								className={`flex items-center gap-2 px-4 py-3 text-[13px] font-medium transition-all relative border-b-2 whitespace-nowrap ${
 									activeTab === tab
-										? "border-gray-900 dark:border-white text-gray-950 dark:text-white"
+										? "border-gray-900 dark:border-white text-gray-950 dark:text-[var(--text-primary)]"
 										: "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
 								}`}
 							>
@@ -545,7 +577,7 @@ const Board: React.FC = () => {
 											: tab}
 								</span>
 								{tab === "Backlog" && (
-									<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-white/5 text-[10px] font-semibold">
+									<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-[var(--card-bg)] text-[10px] font-semibold">
 										{tasks.length}
 									</span>
 								)}
@@ -561,8 +593,8 @@ const Board: React.FC = () => {
 							className={twMerge(
 								"flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border",
 								showAI
-									? "bg-gray-900 text-white border-gray-900 shadow-md"
-									: "bg-white dark:bg-gray-950 border-gray-200 dark:border-white/5 text-gray-500 hover:text-gray-900 dark:hover:text-white",
+									? "bg-gray-900 text-[var(--text-primary)] border-gray-900 shadow-md"
+									: "bg-white dark:bg-gray-950 border-gray-200 dark:border-[var(--card-border)] text-gray-500 hover:text-gray-900 dark:hover:text-[var(--text-primary)]",
 							)}
 						>
 							<Sparkles size={14} className={showAI ? "animate-pulse" : ""} />
@@ -576,65 +608,94 @@ const Board: React.FC = () => {
 				<div className="flex-1 overflow-hidden">
 					<AnimatePresence mode="wait">
 						{activeTab === "Board" && (
-							<motion.div
-								key="board"
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-								className="h-full flex overflow-x-auto snap-x snap-mandatory md:snap-none gap-6 pb-6 scrollbar-custom min-h-0"
-							>
-								{columns.map((col, idx) => (
-									<div
-										key={col.id}
-										className="flex flex-col w-[85vw] md:w-80 flex-shrink-0 snap-center animate-slide-up"
-										style={{ animationDelay: `${idx * 0.05}s` }}
-									>
-										<div className="flex items-center justify-between mb-4 px-1">
-											<div className="flex items-center gap-3">
-												<h3 className="text-xs font-black text-text-main uppercase tracking-widest">
-													{col.title}
-												</h3>
-												<span className="text-[10px] font-black text-text-muted bg-surface border border-border px-2 py-0.5 rounded-full">
-													{tasks.filter((t) => t.status === col.id).length}
-												</span>
-											</div>
-											<button
-												onClick={handleAddTask}
-												className="p-1 hover:bg-surface rounded-md transition-colors text-text-muted hover:text-primary"
-											>
-												<Plus size={16} />
-											</button>
-										</div>
-
-										<div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide space-y-3 pb-4">
-											{tasks.filter((task) => task.status === col.id).length ===
-											0 ? (
-												<div className="h-32 border-2 border-dashed border-border rounded-xl flex items-center justify-center bg-surface/50">
-													<span className="text-[10px] font-black uppercase tracking-widest text-text-muted opacity-50">
-														No Tasks
+							<DragDropContext onDragEnd={onDragEnd}>
+								<motion.div
+									key="board"
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									className="h-full flex overflow-x-auto snap-x snap-mandatory md:snap-none gap-6 pb-6 scrollbar-custom min-h-0"
+								>
+									{columns.map((col, idx) => (
+										<div
+											key={col.id}
+											className="flex flex-col w-[85vw] md:w-80 flex-shrink-0 snap-center animate-slide-up"
+											style={{ animationDelay: `${idx * 0.05}s` }}
+										>
+											<div className="flex items-center justify-between mb-4 px-1">
+												<div className="flex items-center gap-3">
+													<h3 className="text-xs font-black text-text-main uppercase tracking-widest">
+														{col.title}
+													</h3>
+													<span className="text-[10px] font-black text-text-muted bg-surface border border-border px-2 py-0.5 rounded-full">
+														{tasks.filter((t) => t.status === col.id).length}
 													</span>
 												</div>
-											) : (
-												tasks
-													.filter((task) => task.status === col.id)
-													.map((task) => (
-														<TaskCard
-															key={task.id}
-															task={task}
-															onClick={() => setSelectedTask(task)}
-														/>
-													))
-											)}
+												<button
+													onClick={handleAddTask}
+													className="p-1 hover:bg-surface rounded-md transition-colors text-text-muted hover:text-primary"
+												>
+													<Plus size={16} />
+												</button>
+											</div>
+
+											<Droppable droppableId={col.id}>
+												{(provided, snapshot) => (
+													<div
+														{...provided.droppableProps}
+														ref={provided.innerRef}
+														className={`flex-1 min-h-[150px] overflow-y-auto scrollbar-hide space-y-3 pb-4 transition-colors rounded-xl p-2 ${
+															snapshot.isDraggingOver
+																? "bg-primary/5 border-2 border-dashed border-primary/20"
+																: ""
+														}`}
+													>
+														{tasks.filter((task) => task.status === col.id).length ===
+														0 ? (
+															<div className="h-32 border-2 border-dashed border-border rounded-xl flex items-center justify-center bg-surface/50">
+																<span className="text-[10px] font-black uppercase tracking-widest text-text-muted opacity-50">
+																	No Tasks
+																</span>
+															</div>
+														) : (
+															tasks
+																.filter((task) => task.status === col.id)
+																.map((task, index) => (
+																	<Draggable
+																		key={task.id}
+																		draggableId={task.id}
+																		index={index}
+																	>
+																		{(provided, snapshot) => (
+																			<div
+																				ref={provided.innerRef}
+																				{...provided.draggableProps}
+																				{...provided.dragHandleProps}
+																				className={snapshot.isDragging ? "z-50" : ""}
+																			>
+																				<TaskCard
+																					task={task}
+																					onClick={() => handleSelectTask(task)}
+																				/>
+																			</div>
+																		)}
+																	</Draggable>
+																))
+														)}
+														{provided.placeholder}
+													</div>
+												)}
+											</Droppable>
 										</div>
-									</div>
-								))}
-							</motion.div>
+									))}
+								</motion.div>
+							</DragDropContext>
 						)}
 
 						{activeTab === "Backlog" && (
 							<BacklogTab
 								tasks={tasks}
-								onSelectTask={(task) => setSelectedTask(task)}
+								onSelectTask={handleSelectTask}
 								onAddTask={handleAddTask}
 							/>
 						)}

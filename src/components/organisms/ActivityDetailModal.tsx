@@ -22,7 +22,7 @@ const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({ isOpen, onClo
       size="sm"
     >
       <div className="space-y-6">
-        <div className="flex items-center gap-4 p-4 bg-surface-hover/30 rounded-md border border-border">
+        <div className="flex items-center gap-4 p-4 bg-[var(--accent-primary)]/10 rounded-md border border-border">
           <Avatar name={activity.userId || "User"} size="md" />
           <div className="flex-1">
             <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ const ActivityDetailModal: React.FC<ActivityDetailModalProps> = ({ isOpen, onClo
           </div>
         </div>
 
-        <button className="w-full py-2.5 rounded-md border border-border bg-surface hover:bg-surface-hover text-xs font-bold text-text-main flex items-center justify-center gap-2 transition-all">
+        <button className="w-full py-2.5 rounded-md border border-border bg-surface hover:bg-[var(--accent-primary)]/10 text-xs font-bold text-text-main flex items-center justify-center gap-2 transition-all">
           <ExternalLink size={14} />
           View Related Task
         </button>

@@ -166,13 +166,13 @@ const GitHubAdmin: React.FC = () => {
 			<div className="flex items-center gap-2 mb-2">
 				<button
 					onClick={() => setActiveView("repos")}
-					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "repos" ? "bg-primary text-slate-900" : "bg-white/5 text-slate-400 hover:bg-white/10"}`}
+					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "repos" ? "bg-primary text-slate-900" : "bg-[var(--card-bg)] text-slate-400 hover:bg-[var(--card-bg)]"}`}
 				>
 					Your Repositories
 				</button>
 				<button
 					onClick={() => setActiveView("orgs")}
-					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "orgs" ? "bg-primary text-slate-900" : "bg-white/5 text-slate-400 hover:bg-white/10"}`}
+					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "orgs" ? "bg-primary text-slate-900" : "bg-[var(--card-bg)] text-slate-400 hover:bg-[var(--card-bg)]"}`}
 				>
 					Organizations
 				</button>
@@ -184,8 +184,8 @@ const GitHubAdmin: React.FC = () => {
 						noPadding
 						className="overflow-hidden h-[500px] lg:h-[650px] flex flex-col"
 					>
-						<div className="px-6 py-4 border-b border-white/[0.05] bg-white/[0.02] flex justify-between items-center shrink-0">
-							<h3 className="font-bold text-white capitalize">
+						<div className="px-6 py-4 border-b border-[var(--card-border)] bg-[var(--card-bg)] flex justify-between items-center shrink-0">
+							<h3 className="font-bold text-[var(--text-primary)] capitalize">
 								{activeView === "repos"
 									? "Available Repositories"
 									: "GitHub Organizations"}
@@ -217,17 +217,17 @@ const GitHubAdmin: React.FC = () => {
 									repos.map((repo) => (
 										<div
 											key={repo.fullName}
-											className="p-6 flex items-center justify-between hover:bg-white/[0.01] transition-all group"
+											className="p-6 flex items-center justify-between hover:bg-[var(--card-bg)] transition-all group"
 										>
 											<div className="flex items-center gap-4">
-												<div className="w-12 h-12 rounded-2xl bg-slate-900 border border-white/[0.05] flex items-center justify-center text-slate-400 group-hover:border-primary/30 transition-all">
+												<div className="w-12 h-12 rounded-2xl bg-slate-900 border border-[var(--card-border)] flex items-center justify-center text-slate-400 group-hover:border-primary/30 transition-all">
 													<GitBranch
 														size={24}
 														className="group-hover:text-primary transition-colors"
 													/>
 												</div>
 												<div>
-													<h4 className="font-bold text-white flex items-center gap-2">
+													<h4 className="font-bold text-[var(--text-primary)] flex items-center gap-2">
 														{repo.name}
 														<a
 															href={repo.url}
@@ -281,16 +281,16 @@ const GitHubAdmin: React.FC = () => {
 								orgs.map((org) => (
 									<div
 										key={org.login}
-										className="p-6 flex items-center justify-between hover:bg-white/[0.01] transition-all group"
+										className="p-6 flex items-center justify-between hover:bg-[var(--card-bg)] transition-all group"
 									>
 										<div className="flex items-center gap-4">
 											<img
 												src={org.avatarUrl}
 												alt={org.login}
-												className="w-12 h-12 rounded-2xl border border-white/[0.05] group-hover:border-primary/30 transition-all"
+												className="w-12 h-12 rounded-2xl border border-[var(--card-border)] group-hover:border-primary/30 transition-all"
 											/>
 											<div>
-												<h4 className="font-bold text-white flex items-center gap-2">
+												<h4 className="font-bold text-[var(--text-primary)] flex items-center gap-2">
 													{org.login}
 												</h4>
 												<p className="text-xs text-slate-500 line-clamp-1 max-w-xs md:max-w-md">
@@ -321,7 +321,7 @@ const GitHubAdmin: React.FC = () => {
 					<GlassCard className="p-6 border-amber-500/20 bg-amber-500/5">
 						<div className="flex items-center gap-3 mb-6">
 							<Shield size={20} className="text-amber-400" />
-							<h3 className="font-bold text-white">Security & Permissions</h3>
+							<h3 className="font-bold text-[var(--text-primary)]">Security & Permissions</h3>
 						</div>
 						<p className="text-sm text-slate-400 mb-4">
 							You are currently using an OAuth token with{" "}
@@ -348,12 +348,12 @@ const GitHubAdmin: React.FC = () => {
 
 				<div className="space-y-6">
 					<GlassCard className="p-6">
-						<h3 className="font-bold text-white mb-6">Webhook Health</h3>
+						<h3 className="font-bold text-[var(--text-primary)] mb-6">Webhook Health</h3>
 						<div className="space-y-6">
 							<div className="flex items-center gap-4">
 								<div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
 								<div className="flex-1">
-									<p className="text-sm font-bold text-white">
+									<p className="text-sm font-bold text-[var(--text-primary)]">
 										Project Pipeline
 									</p>
 									<p className="text-[10px] text-slate-500 uppercase">
@@ -364,7 +364,7 @@ const GitHubAdmin: React.FC = () => {
 							<div className="flex items-center gap-4">
 								<div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
 								<div className="flex-1">
-									<p className="text-sm font-bold text-white">
+									<p className="text-sm font-bold text-[var(--text-primary)]">
 										GitHub API Relay
 									</p>
 									<p className="text-[10px] text-slate-500 uppercase">
@@ -376,16 +376,16 @@ const GitHubAdmin: React.FC = () => {
 					</GlassCard>
 
 					<GlassCard className="p-6 bg-primary/5 border-primary/20">
-						<h3 className="font-bold text-white mb-4">Pipeline Stats</h3>
+						<h3 className="font-bold text-[var(--text-primary)] mb-4">Pipeline Stats</h3>
 						<div className="grid grid-cols-2 gap-4">
-							<div className="p-3 bg-white/[0.03] rounded-2xl border border-white/[0.05]">
-								<p className="text-2xl font-bold text-white">{repos.length}</p>
+							<div className="p-3 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+								<p className="text-2xl font-bold text-[var(--text-primary)]">{repos.length}</p>
 								<p className="text-[10px] text-slate-500 uppercase">
 									Repos Accessible
 								</p>
 							</div>
-							<div className="p-3 bg-white/[0.03] rounded-2xl border border-white/[0.05]">
-								<p className="text-2xl font-bold text-white">{orgs.length}</p>
+							<div className="p-3 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
+								<p className="text-2xl font-bold text-[var(--text-primary)]">{orgs.length}</p>
 								<p className="text-[10px] text-slate-500 uppercase">
 									Orgs Found
 								</p>

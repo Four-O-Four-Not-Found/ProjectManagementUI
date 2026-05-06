@@ -83,7 +83,7 @@ const TeamInviteModal: React.FC<TeamInviteModalProps> = ({
 					<div className="space-y-2">
 						<label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Invitation Link</label>
 						<div className="flex gap-2">
-							<div className="flex-1 bg-white/[0.03] border border-white/[0.1] rounded-lg px-4 py-2.5 text-sm text-slate-300 font-mono truncate">
+							<div className="flex-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg px-4 py-2.5 text-sm text-slate-300 font-mono truncate">
 								{joinUrl}
 							</div>
 							<Button

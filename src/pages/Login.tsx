@@ -67,12 +67,12 @@ const Login: React.FC = () => {
 			<div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-purple/10 rounded-full blur-[120px] animate-pulse delay-700"></div>
 
 			<div className="w-full max-w-md animate-fade-in relative z-10">
-				<div className="glass-panel p-10 md:p-12 rounded-[40px] border-white/[0.1] shadow-2xl flex flex-col items-center">
+				<div className="glass-panel p-10 md:p-12 rounded-[40px] border-[var(--card-border)] shadow-2xl flex flex-col items-center">
 					<div className="flex flex-col items-center mb-12 text-center">
-						<div className="w-20 h-20 rounded-3xl bg-slate-900 border border-white/10 flex items-center justify-center mb-8 shadow-2xl">
+						<div className="w-20 h-20 rounded-3xl bg-slate-900 border border-[var(--card-border)] flex items-center justify-center mb-8 shadow-2xl">
 							<img src="/favicon.svg" alt="FlowState" className="w-12 h-12 object-contain" />
 						</div>
-						<h1 className="text-5xl font-bold text-white mb-3 tracking-tighter">
+						<h1 className="text-5xl font-bold text-[var(--text-primary)] mb-3 tracking-tighter">
 							FlowState
 						</h1>
 						<p className="text-slate-400 text-lg">
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
 
 					<div className="w-full space-y-6">
 						<div className="text-center space-y-2 mb-8">
-							<h2 className="text-white font-medium">Access Restricted</h2>
+							<h2 className="text-[var(--text-primary)] font-medium">Access Restricted</h2>
 							<p className="text-slate-500 text-sm">
 								Please authenticate with your GitHub project account to
 								proceed.

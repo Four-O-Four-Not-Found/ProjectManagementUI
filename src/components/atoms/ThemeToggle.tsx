@@ -9,7 +9,7 @@ const ThemeToggle: React.FC = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex items-center w-12 h-6 bg-white/[0.05] border border-white/[0.08] rounded-full p-1 cursor-pointer hover:border-white/[0.2] transition-all group"
+      className="relative flex items-center w-12 h-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-full p-1 cursor-pointer hover:border-[var(--card-border)] transition-all group"
       aria-label="Toggle Theme"
     >
       <motion.div
@@ -26,7 +26,7 @@ const ThemeToggle: React.FC = () => {
       
       <div className="absolute inset-0 flex justify-between items-center px-2 pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity">
         <Sun size={10} className={theme === 'light' ? 'text-amber-500' : 'text-slate-500'} />
-        <Moon size={10} className={theme === 'dark' ? 'text-white' : 'text-slate-500'} />
+        <Moon size={10} className={theme === 'dark' ? 'text-[var(--text-primary)]' : 'text-slate-500'} />
       </div>
     </button>
   );

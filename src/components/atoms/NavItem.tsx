@@ -27,10 +27,10 @@ const NavItem: React.FC<NavItemProps> = ({
 			to={to}
 			className={
 				clsx(
-					"flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all relative group",
+					"flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all relative group",
 					isLinkActive
-						? "bg-background text-text-main border-l-2 border-primary rounded-l-none"
-						: "text-text-muted hover:bg-surface-hover hover:text-text-main",
+						? "bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-l-[3px] border-[var(--accent-primary)] rounded-l-none font-bold shadow-[inset_4px_0_10px_rgba(0,132,255,0.05)]"
+						: "text-[var(--text-secondary)] hover:bg-[var(--accent-primary)]/5 hover:text-[var(--text-primary)]",
 				)
 			}
 		>

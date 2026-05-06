@@ -86,7 +86,7 @@ const Settings: React.FC = () => {
 										className="ring-4 ring-primary/20"
 									/>
 									<div className="absolute inset-0 bg-black/40 rounded-[24px] opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
-										<Smartphone size={20} className="text-white" />
+										<Smartphone size={20} className="text-[var(--text-primary)]" />
 									</div>
 								</div>
 								<div className="text-center md:text-left">
@@ -337,7 +337,7 @@ const Settings: React.FC = () => {
 											{t.label}
 										</span>
 										{currentTheme === t.id && (
-											<div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center text-white">
+											<div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center text-[var(--text-primary)]">
 												<Check size={10} />
 											</div>
 										)}
@@ -381,7 +381,7 @@ const Settings: React.FC = () => {
 												className={twMerge(
 													"px-2 py-1 rounded text-[10px] font-bold transition-all",
 													glassIntensity === level
-														? "bg-primary text-white"
+														? "bg-primary text-[var(--text-primary)]"
 														: "bg-surface border border-border text-text-muted hover:text-text-main",
 												)}
 											>
@@ -419,7 +419,7 @@ const Settings: React.FC = () => {
 							className={twMerge(
 								"w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-bold border-2",
 								activeTab === item.id
-									? "bg-primary text-white border-primary shadow-xl shadow-primary/20"
+									? "bg-primary text-[var(--text-primary)] border-primary shadow-xl shadow-primary/20"
 									: "text-text-muted bg-surface/30 border-transparent hover:bg-surface hover:border-border",
 							)}
 						>

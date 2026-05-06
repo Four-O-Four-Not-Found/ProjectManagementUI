@@ -22,7 +22,7 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = ({
 		>
 			<button
 				onClick={onClickTitle}
-				className="flex items-center gap-2 hover:bg-white/[0.05] pr-2 py-1 rounded transition-all text-left"
+				className="flex items-center gap-2 hover:bg-[var(--card-bg)] pr-2 py-1 rounded transition-all text-left"
 			>
 				<h3 className="font-black text-text-main text-[11px] uppercase tracking-[0.2em]">
 					{title}

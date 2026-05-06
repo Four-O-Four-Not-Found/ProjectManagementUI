@@ -167,13 +167,13 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 							<input
 								type="text"
 								placeholder="Search your repositories..."
-								className="w-full bg-white/[0.03] border border-white/[0.05] rounded-2xl pl-12 pr-4 py-3 text-sm text-main outline-none focus:border-primary/50 transition-all"
+								className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl pl-12 pr-4 py-3 text-sm text-main outline-none focus:border-primary/50 transition-all"
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
 							/>
 						</div>
 
-						<div className="h-48 overflow-y-auto rounded-2xl border border-white/[0.05] bg-white/[0.02] divide-y divide-white/[0.05] scrollbar-thin scrollbar-thumb-white/10">
+						<div className="h-48 overflow-y-auto rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] divide-y divide-white/[0.05] scrollbar-thin scrollbar-thumb-white/10">
 							{loading ? (
 								<div className="h-full flex items-center justify-center text-slate-500 text-xs font-mono animate-pulse">
 									Fetching Repositories...
@@ -186,18 +186,18 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 								filteredRepos.map((repo) => (
 									<div
 										key={repo.fullName}
-										className={`p-3 flex items-center justify-between cursor-pointer hover:bg-white/[0.03] transition-all ${selectedRepo?.fullName === repo.fullName ? "bg-primary/5" : ""}`}
+										className={`p-3 flex items-center justify-between cursor-pointer hover:bg-[var(--card-bg)] transition-all ${selectedRepo?.fullName === repo.fullName ? "bg-primary/5" : ""}`}
 										onClick={() => setSelectedRepo(repo)}
 									>
 										<div className="flex items-center gap-3">
 											<div
-												className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all ${selectedRepo?.fullName === repo.fullName ? "border-primary/50 bg-primary/10 text-primary" : "border-white/[0.05] bg-slate-900 text-slate-400"}`}
+												className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all ${selectedRepo?.fullName === repo.fullName ? "border-primary/50 bg-primary/10 text-primary" : "border-[var(--card-border)] bg-slate-900 text-slate-400"}`}
 											>
 												<GitBranch size={14} />
 											</div>
 											<div>
 												<p
-													className={`text-sm font-bold transition-colors ${selectedRepo?.fullName === repo.fullName ? "text-primary" : "text-white"}`}
+													className={`text-sm font-bold transition-colors ${selectedRepo?.fullName === repo.fullName ? "text-primary" : "text-[var(--text-primary)]"}`}
 												>
 													{repo.name}
 												</p>
@@ -223,7 +223,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 							Assign Team (Optional)
 						</label>
 						<select
-							className="w-full bg-white/[0.03] border border-white/[0.05] rounded-2xl px-4 py-3 text-sm text-main outline-none focus:border-primary/50 transition-all appearance-none"
+							className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl px-4 py-3 text-sm text-main outline-none focus:border-primary/50 transition-all appearance-none"
 							value={formData.teamId || ""}
 							onChange={(e) =>
 								setFormData({ ...formData, teamId: e.target.value })
@@ -245,7 +245,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 							Project Description
 						</label>
 						<textarea
-							className="w-full bg-white/[0.03] border border-white/[0.05] rounded-2xl p-4 text-sm text-main outline-none focus:border-primary/50 transition-all min-h-[80px] resize-none"
+							className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-4 text-sm text-main outline-none focus:border-primary/50 transition-all min-h-[80px] resize-none"
 							placeholder="What is the mission of this project?"
 							value={formData.description}
 							onChange={(e) =>

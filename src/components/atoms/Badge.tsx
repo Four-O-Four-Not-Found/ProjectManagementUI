@@ -21,13 +21,13 @@ const Badge: React.FC<BadgeProps> = ({
 	className,
 }) => {
 	const variants = {
-		primary: "bg-[var(--color-primary)] text-white border-transparent",
+		primary: "bg-[var(--color-primary)] text-[var(--text-primary)] border-transparent",
 		secondary:
 			"bg-[var(--surface-hover)] text-[var(--text-muted)] border-[var(--border-subtle)]",
-		success: "bg-[#238636] text-white border-transparent",
-		warning: "bg-[#9e6a03] text-white border-transparent",
-		danger: "bg-[#da3633] text-white border-transparent",
-		purple: "bg-[#8250df] text-white border-transparent",
+		success: "bg-[#238636] text-[var(--text-primary)] border-transparent",
+		warning: "bg-[#9e6a03] text-[var(--text-primary)] border-transparent",
+		danger: "bg-[#da3633] text-[var(--text-primary)] border-transparent",
+		purple: "bg-[#8250df] text-[var(--text-primary)] border-transparent",
 	};
 
 	const sizes = {

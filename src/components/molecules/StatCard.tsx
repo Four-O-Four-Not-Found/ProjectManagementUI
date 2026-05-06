@@ -22,7 +22,7 @@ const StatCard: React.FC<StatCardProps> = ({
 		<div className="bg-surface border border-border rounded-xl p-2 md:p-3 flex items-center gap-2 md:gap-4 hover:border-primary/50 transition-all group relative overflow-hidden">
 			<div
 				className={twMerge(
-					"w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-white shrink-0 shadow-lg",
+					"w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-[var(--text-primary)] shrink-0 shadow-lg",
 					colorClass || "bg-primary",
 				)}
 			>

@@ -105,13 +105,13 @@ const TimelineView: React.FC = () => {
           <div className="flex items-center gap-1 bg-background border border-border rounded-md p-1">
             <button 
               onClick={() => setViewMode('Week')}
-              className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${viewMode === 'Week' ? 'bg-primary text-white' : 'text-text-muted hover:text-text-main'}`}
+              className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${viewMode === 'Week' ? 'bg-primary text-[var(--text-primary)]' : 'text-text-muted hover:text-text-main'}`}
             >
               Weekly
             </button>
             <button 
               onClick={() => setViewMode('Month')}
-              className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${viewMode === 'Month' ? 'bg-primary text-white' : 'text-text-muted hover:text-text-main'}`}
+              className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${viewMode === 'Month' ? 'bg-primary text-[var(--text-primary)]' : 'text-text-muted hover:text-text-main'}`}
             >
               Monthly
             </button>
@@ -120,14 +120,14 @@ const TimelineView: React.FC = () => {
           <div className="flex items-center gap-1 bg-background border border-border rounded-md p-1">
             <button 
               onClick={() => setDataMode('Tasks')}
-              className={`flex items-center gap-2 px-3 py-1 text-[10px] font-bold rounded transition-all ${dataMode === 'Tasks' ? 'bg-merged text-white' : 'text-text-muted hover:text-text-main'}`}
+              className={`flex items-center gap-2 px-3 py-1 text-[10px] font-bold rounded transition-all ${dataMode === 'Tasks' ? 'bg-merged text-[var(--text-primary)]' : 'text-text-muted hover:text-text-main'}`}
             >
               <Layout size={12} />
               Sprint Gantt
             </button>
             <button 
               onClick={() => setDataMode('Projects')}
-              className={`flex items-center gap-2 px-3 py-1 text-[10px] font-bold rounded transition-all ${dataMode === 'Projects' ? 'bg-merged text-white' : 'text-text-muted hover:text-text-main'}`}
+              className={`flex items-center gap-2 px-3 py-1 text-[10px] font-bold rounded transition-all ${dataMode === 'Projects' ? 'bg-merged text-[var(--text-primary)]' : 'text-text-muted hover:text-text-main'}`}
             >
               <Target size={12} />
               Portfolio Gantt
@@ -158,15 +158,15 @@ const TimelineView: React.FC = () => {
         <div className="flex items-center gap-2">
           <Button size="xs" variant="secondary" onClick={() => setTimelineStart(subDays(today, 5))}>Today</Button>
           <div className="flex items-center border border-border rounded-md overflow-hidden bg-background">
-             <button onClick={() => navigateTimeline('prev')} className="p-1.5 hover:bg-surface-hover text-text-muted border-r border-border"><ChevronLeft size={14} /></button>
-             <button onClick={() => navigateTimeline('next')} className="p-1.5 hover:bg-surface-hover text-text-muted"><ChevronRight size={14} /></button>
+             <button onClick={() => navigateTimeline('prev')} className="p-1.5 hover:bg-[var(--accent-primary)]/10 text-text-muted border-r border-border"><ChevronLeft size={14} /></button>
+             <button onClick={() => navigateTimeline('next')} className="p-1.5 hover:bg-[var(--accent-primary)]/10 text-text-muted"><ChevronRight size={14} /></button>
           </div>
         </div>
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden relative" ref={containerRef}>
         {/* Dates Header */}
-        <div className="flex bg-surface-hover/50 border-b border-border z-20">
+        <div className="flex bg-[var(--accent-primary)]/10 border-b border-border z-20">
           <div className="w-32 md:w-64 border-r border-border p-4 shrink-0 flex items-center gap-2 bg-surface">
             <CalendarIcon size={16} className="text-primary" />
             <span className="text-xs font-bold text-text-main uppercase tracking-wider">{dataMode === 'Tasks' ? 'Schedule' : 'Roadmap'}</span>
@@ -206,7 +206,7 @@ const TimelineView: React.FC = () => {
             const color = !isProject && (item as Task).type === 'Bug' ? 'bg-danger' : (!isProject && (item as Task).type === 'Issue' ? 'bg-warning' : 'bg-success');
             
             return (
-              <div key={item.id} className="flex border-b border-border/50 hover:bg-surface-hover/10 transition-colors group relative">
+              <div key={item.id} className="flex border-b border-border/50 hover:bg-[var(--accent-primary)]/10 transition-colors group relative">
                 <div className="w-32 md:w-64 border-r border-border p-3 shrink-0 flex items-center gap-3 bg-surface/20 z-10 sticky left-0">
                   {isProject ? (
                     <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
@@ -280,7 +280,7 @@ const TimelineView: React.FC = () => {
       </div>
 
       {/* Gantt Legend */}
-      <div className="p-3 border-t border-border bg-surface-hover/30 flex items-center gap-6 overflow-x-auto scrollbar-hide">
+      <div className="p-3 border-t border-border bg-[var(--accent-primary)]/10 flex items-center gap-6 overflow-x-auto scrollbar-hide">
         <div className="flex items-center gap-2">
            <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Legend:</span>
         </div>

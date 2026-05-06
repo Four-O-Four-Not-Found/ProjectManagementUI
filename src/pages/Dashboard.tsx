@@ -189,7 +189,7 @@ const Dashboard: React.FC = () => {
 				description={
 					<>
 						Welcome back,{" "}
-						<span className="text-white font-bold">
+						<span className="text-[var(--accent-primary)] font-bold">
 							{user?.displayName || "Agent"}
 						</span>
 						! Here's what's happening with{" "}
@@ -243,7 +243,7 @@ const Dashboard: React.FC = () => {
 					colorClass="bg-merged"
 				/>
 				<StatCard
-					label="Team Members"
+					label="Joined Teams"
 					value={stats.teamMembers.toString()}
 					icon={Users}
 					colorClass="bg-primary"
@@ -291,7 +291,7 @@ const Dashboard: React.FC = () => {
 					</AnimatePresence>
 
 					<GlassCard className="p-0 flex flex-col overflow-hidden">
-						<div className="p-4 border-b border-border bg-surface-hover/50 flex justify-between items-center">
+						<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center">
 							<div className="flex items-center gap-2">
 								<Bookmark size={16} className="text-primary" />
 								<h3 className="font-bold text-text-main text-sm">
@@ -378,7 +378,7 @@ const Dashboard: React.FC = () => {
 				{/* Right Column: Activity Feed & Projects */}
 				<div className="space-y-8">
 					<GlassCard className="p-0 flex flex-col h-[500px]">
-						<div className="p-4 border-b border-border bg-surface-hover/50">
+						<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10">
 							<h3 className="font-bold text-text-main text-sm">
 								Movement Feed
 							</h3>
@@ -419,7 +419,7 @@ const Dashboard: React.FC = () => {
 								))
 							)}
 						</div>
-						<button className="w-full py-3 border-t border-border bg-surface-hover/30 text-[10px] font-bold text-text-muted hover:text-text-main transition-all uppercase tracking-widest">
+						<button className="w-full py-3 border-t border-border bg-[var(--accent-primary)]/10 text-[10px] font-bold text-text-muted hover:text-text-main transition-all uppercase tracking-widest">
 							Full Audit Log
 						</button>
 					</GlassCard>

@@ -22,6 +22,7 @@ import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
 import Badge from "../atoms/Badge";
 import BaseModal from "../molecules/BaseModal";
+import TaskFormModal from "./TaskFormModal";
 import { useAuthStore } from "../../store/useAuthStore";
 import { projectService } from "../../services/projectService";
 import { useToast } from "../../hooks/useToast";
@@ -33,6 +34,7 @@ interface TaskDetailModalProps {
 	onClose: () => void;
 	task: Task;
 	onRefresh?: () => void;
+	onSelectTask?: (task: Task) => void;
 }
 
 const TypeIcon = ({ type }: { type: Task["type"] }) => {
@@ -56,9 +58,10 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	onClose,
 	task,
 	onRefresh,
+	onSelectTask,
 }) => {
 	const { user } = useAuthStore();
-	const { activeProject } = useProject();
+	const { activeProject, projects } = useProject();
 	const { success, error: toastError } = useToast();
 	const [comment, setComment] = useState("");
 	const [isDecomposing, setIsDecomposing] = useState(false);
@@ -68,6 +71,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedTitle, setEditedTitle] = useState(task.title);
 	const [editedDescription, setEditedDescription] = useState(task.description);
+	const [editedPriority, setEditedPriority] = useState(task.priority);
+	const [editedType, setEditedType] = useState(task.type);
+	const [isTaskFormModalOpen, setIsTaskFormModalOpen] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
 	const [isPostingComment, setIsPostingComment] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -91,12 +97,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		if (!user) return;
 		setIsSaving(true);
 		try {
-			await projectService.updateTaskDetails(
-				task.id,
-				user.id,
-				editedTitle,
-				editedDescription,
-			);
+			await projectService.updateTaskDetails(task.id, {
+				...task,
+				userId: user.id,
+				title: editedTitle,
+				description: editedDescription,
+				priority: editedPriority,
+				type: editedType,
+			});
 			success("Task Updated", "Changes saved successfully.");
 			setIsEditing(false);
 			onRefresh?.();
@@ -287,7 +295,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										<textarea
 											value={editedDescription}
 											onChange={(e) => setEditedDescription(e.target.value)}
-											className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-6 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[250px] resize-none"
+											className="w-full bg-gray-50 dark:bg-[var(--card-bg)] border border-gray-200 dark:border-[var(--card-border)] rounded-xl p-6 text-sm text-gray-900 dark:text-[var(--text-primary)] placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[250px] resize-none"
 											placeholder="Write a detailed task description..."
 										/>
 									) : (
@@ -307,7 +315,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											{task.subTasks.map((sub) => (
 												<div
 													key={sub.id}
-													className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 rounded-xl hover:border-gray-200 dark:hover:border-white/10 transition-colors"
+													className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[var(--card-bg)] border border-gray-100 dark:border-[var(--card-border)] rounded-xl hover:border-gray-200 dark:hover:border-[var(--card-border)] transition-colors"
 												>
 													<div className="flex items-center gap-3">
 														<div className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
@@ -339,14 +347,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 												/>
 												<div className="flex-1 space-y-1.5">
 													<div className="flex items-center justify-between">
-														<span className="text-xs font-bold text-gray-900 dark:text-white">
+														<span className="text-xs font-bold text-gray-900 dark:text-[var(--text-primary)]">
 															{comment.user?.displayName}
 														</span>
 														<span className="text-[10px] text-gray-400 font-medium">
 															{new Date(comment.createdAt).toLocaleDateString()}
 														</span>
 													</div>
-													<div className="bg-gray-50 dark:bg-white/5 rounded-2xl rounded-tl-none p-4 border border-gray-100 dark:border-white/5 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+													<div className="bg-gray-50 dark:bg-[var(--card-bg)] rounded-2xl rounded-tl-none p-4 border border-gray-100 dark:border-[var(--card-border)] text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
 														{comment.content}
 													</div>
 												</div>
@@ -360,7 +368,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									)}
 								</div>
  
-								<div className="flex gap-4 pt-6 border-t border-gray-100 dark:border-white/5">
+								<div className="flex gap-4 pt-6 border-t border-gray-100 dark:border-[var(--card-border)]">
 									<Avatar
 										name={user?.displayName || "You"}
 										src={user?.avatarUrl}
@@ -371,7 +379,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											value={comment}
 											onChange={(e) => setComment(e.target.value)}
 											placeholder="Write a comment..."
-											className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-white/10 rounded-2xl p-4 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[100px] resize-none shadow-sm"
+											className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-[var(--card-border)] rounded-2xl p-4 text-sm text-gray-900 dark:text-[var(--text-primary)] placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[100px] resize-none shadow-sm"
 										/>
 										<div className="absolute bottom-3 right-3">
 											<Button
@@ -396,7 +404,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									{task.attachments?.map((img) => (
 										<div
 											key={img.id}
-											className="aspect-[4/3] rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 group relative cursor-pointer shadow-sm hover:shadow-md transition-all"
+											className="aspect-[4/3] rounded-2xl overflow-hidden border border-gray-200 dark:border-[var(--card-border)] group relative cursor-pointer shadow-sm hover:shadow-md transition-all"
 										>
 											<img
 												src={img.fileUrl}
@@ -404,8 +412,8 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 												className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
 											/>
 											<div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-4 text-center">
-												<span className="text-white text-[10px] font-bold truncate w-full">{img.fileName}</span>
-												<Button size="xs" variant="secondary" className="bg-white/10 border-white/20 text-white backdrop-blur-md">View Full</Button>
+												<span className="text-[var(--text-primary)] text-[10px] font-bold truncate w-full">{img.fileName}</span>
+												<Button size="xs" variant="secondary" className="bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-primary)] backdrop-blur-md">View Full</Button>
 											</div>
 										</div>
 									))}
@@ -418,9 +426,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									/>
 									<button
 										onClick={() => fileInputRef.current?.click()}
-										className="aspect-[4/3] rounded-2xl border-2 border-dashed border-gray-200 dark:border-white/10 hover:border-gray-400 dark:hover:border-white/30 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex flex-col items-center justify-center gap-3 group"
+										className="aspect-[4/3] rounded-2xl border-2 border-dashed border-gray-200 dark:border-[var(--card-border)] hover:border-gray-400 dark:hover:border-[var(--card-border)] hover:bg-gray-50 dark:hover:bg-[var(--card-bg)] transition-all flex flex-col items-center justify-center gap-3 group"
 									>
-										<div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-400 group-hover:text-gray-600 dark:group-hover:text-white transition-colors">
+										<div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[var(--card-bg)] flex items-center justify-center text-gray-400 group-hover:text-gray-600 dark:group-hover:text-[var(--text-primary)] transition-colors">
 											<Plus size={20} />
 										</div>
 										<span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
@@ -467,45 +475,116 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								<Settings size={14} className="text-[var(--text-muted)] hover:text-[var(--text-main)] cursor-pointer" />
 							</div>
 							<div className="flex flex-wrap gap-1">
-								<Badge variant={task.priority === "Urgent" ? "danger" : task.priority === "High" ? "warning" : "secondary"} className="rounded-full text-[11px] px-2">
-									{task.priority}
-								</Badge>
-								<Badge variant="secondary" className="rounded-full text-[11px] px-2 font-mono">
-									{task.type}
-								</Badge>
+								{isEditing ? (
+									<>
+										<select 
+											value={editedPriority}
+											onChange={(e) => setEditedPriority(e.target.value as any)}
+											className="bg-slate-900 border border-[var(--card-border)] rounded px-2 py-1 text-[11px] text-[var(--text-primary)] outline-none focus:border-primary/50"
+										>
+											<option value="Low">Low</option>
+											<option value="Medium">Medium</option>
+											<option value="High">High</option>
+											<option value="Urgent">Urgent</option>
+										</select>
+										<select 
+											value={editedType}
+											onChange={(e) => setEditedType(e.target.value as any)}
+											className="bg-slate-900 border border-[var(--card-border)] rounded px-2 py-1 text-[11px] text-[var(--text-primary)] outline-none focus:border-primary/50 font-mono"
+										>
+											<option value="Feature">Feature</option>
+											<option value="Bug">Bug</option>
+											<option value="Suggestion">Suggestion</option>
+											<option value="Issue">Issue</option>
+										</select>
+									</>
+								) : (
+									<>
+										<Badge variant={task.priority === "Urgent" ? "danger" : task.priority === "High" ? "warning" : "secondary"} className="rounded-full text-[11px] px-2">
+											{task.priority}
+										</Badge>
+										<Badge variant="secondary" className="rounded-full text-[11px] px-2 font-mono">
+											{task.type}
+										</Badge>
+									</>
+								)}
 							</div>
 						</div>
 
 						<div className="border-t border-[var(--border)] pt-4">
-							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Projects</h3>
-							<div className="text-[12px] font-medium text-[var(--text-main)] hover:text-[var(--color-primary)] cursor-pointer truncate">
-								{activeProject?.name || "No project"}
+							<div className="flex items-center justify-between mb-2">
+								<h3 className="text-[12px] font-semibold text-[var(--text-muted)]">Related Tasks</h3>
+								<button 
+									onClick={() => setIsTaskFormModalOpen(true)}
+									className="text-[10px] text-[var(--color-primary)] hover:underline font-bold"
+								>
+									Add Tasks
+								</button>
+							</div>
+							<div className="space-y-2">
+								{task.subTasks && task.subTasks.length > 0 ? (
+									task.subTasks.map(st => (
+										<div 
+											key={st.id} 
+											onClick={() => onSelectTask?.(st)}
+											className="text-[11px] flex items-center gap-2 group cursor-pointer hover:bg-[var(--surface-hover)] p-1 rounded transition-all"
+										>
+											<span className="text-[var(--text-muted)] font-mono">[{st.taskKey}]</span>
+											<span className="text-[var(--text-main)] truncate flex-1">{st.title}</span>
+											<Badge variant={st.status === "Closed" ? "success" : "secondary"} className="scale-75 origin-right">
+												{st.status}
+											</Badge>
+										</div>
+									))
+								) : (
+									<p className="text-[11px] text-[var(--text-muted)] italic py-1 px-1">No subtasks found</p>
+								)}
 							</div>
 						</div>
 
 						<div className="border-t border-[var(--border)] pt-4">
 							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Hierarchy</h3>
+							
+							{task.parentTask && (
+								<div className="mb-3">
+									<p className="text-[10px] text-[var(--text-muted)] uppercase font-bold mb-1 ml-0.5">Parent Task</p>
+									<div 
+										onClick={() => onSelectTask?.(task.parentTask!)}
+										className="text-[11px] flex items-center gap-2 group cursor-pointer hover:bg-[var(--surface-hover)] p-1.5 rounded-github border border-[var(--border-subtle)] transition-all bg-[var(--surface-subtle)]"
+									>
+										<span className="text-[var(--text-muted)] font-mono">[{task.parentTask.taskKey}]</span>
+										<span className="text-[var(--text-main)] truncate flex-1 font-medium">{task.parentTask.title}</span>
+										<Badge variant={task.parentTask.status === "Closed" ? "success" : "secondary"} className="scale-75 origin-right">
+											{task.parentTask.status}
+										</Badge>
+									</div>
+								</div>
+							)}
+
 							<div className="relative">
-								<LinkIcon size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-								<select 
-									className="w-full bg-[var(--surface-hover)] border border-[var(--border-subtle)] rounded-github py-1.5 pl-7 pr-4 text-[11px] text-[var(--text-main)] outline-none focus:border-[var(--color-primary)] appearance-none cursor-pointer transition-all"
-									value={task.parentTaskId || ""}
-									onChange={async (e) => {
-										if (!user) return;
-										try {
-											await projectService.updateTaskParent(task.id, user.id, e.target.value || undefined);
-											success("Hierarchy Updated", "Parent task connection changed.");
-											onRefresh?.();
-										} catch {
-											toastError("Update Failed", "Could not change parent task.");
-										}
-									}}
-								>
-									<option value="">Independent (Root)</option>
-									{activeProject && (
-										<option value="loading" disabled>Syncing...</option>
-									)}
-								</select>
+								<p className="text-[10px] text-[var(--text-muted)] uppercase font-bold mb-1 ml-0.5">{task.parentTask ? "Change Parent" : "Connect Parent"}</p>
+								<div className="relative">
+									<LinkIcon size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+									<select 
+										className="w-full bg-[var(--surface-hover)] border border-[var(--border-subtle)] rounded-github py-1.5 pl-7 pr-4 text-[11px] text-[var(--text-main)] outline-none focus:border-[var(--color-primary)] appearance-none cursor-pointer transition-all"
+										value={task.parentTaskId || ""}
+										onChange={async (e) => {
+											if (!user) return;
+											try {
+												await projectService.updateTaskParent(task.id, user.id, e.target.value || undefined);
+												success("Hierarchy Updated", "Parent task connection changed.");
+												onRefresh?.();
+											} catch {
+												toastError("Update Failed", "Could not change parent task.");
+											}
+										}}
+									>
+										<option value="">Independent (Root)</option>
+										{activeProject && (
+											<option value="loading" disabled>Syncing...</option>
+										)}
+									</select>
+								</div>
 							</div>
 						</div>
 
@@ -549,6 +628,30 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 					</div>
 				</div>
 			</div>
+
+			{isTaskFormModalOpen && (
+				<TaskFormModal
+					isOpen={isTaskFormModalOpen}
+					onClose={() => setIsTaskFormModalOpen(false)}
+					onSave={async (subTaskData) => {
+						try {
+							await projectService.createTask({
+								...subTaskData,
+								parentTaskId: task.id,
+								projectId: task.projectId
+							});
+							success("Subtask Created", "Task has been added as a dependency.");
+							setIsTaskFormModalOpen(false);
+							onRefresh?.();
+						} catch {
+							toastError("Creation Failed", "Could not create subtask.");
+						}
+					}}
+					defaultProjectId={task.projectId}
+					defaultParentTaskId={task.id}
+					projects={projects}
+				/>
+			)}
 		</BaseModal>
 	);
 };

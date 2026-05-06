@@ -106,7 +106,7 @@ const MainLayout: React.FC = () => {
 								className="text-[var(--text-muted)] group-hover:text-[var(--text-main)]"
 							/>
 							{unreadCount > 0 && (
-								<span className="absolute top-1.5 right-1.5 w-4 h-4 flex items-center justify-center bg-[var(--color-primary)] text-white text-[9px] font-bold rounded-full border-2 border-[var(--surface)]">
+								<span className="absolute top-1.5 right-1.5 w-4 h-4 flex items-center justify-center bg-[var(--color-primary)] text-[var(--text-primary)] text-[9px] font-bold rounded-full border-2 border-[var(--surface)]">
 									{unreadCount > 9 ? "9+" : unreadCount}
 								</span>
 							)}
@@ -154,7 +154,7 @@ const MainLayout: React.FC = () => {
 												setIsAccountModalOpen(true);
 												setIsProfileDropdownOpen(false);
 											}}
-											className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-muted hover:text-text-main hover:bg-white/5 transition-colors"
+											className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-muted hover:text-text-main hover:bg-[var(--card-bg)] transition-colors"
 										>
 											<UserIcon size={16} />
 											<span>Your Profile</span>
@@ -165,7 +165,7 @@ const MainLayout: React.FC = () => {
 												setIsAccountModalOpen(true);
 												setIsProfileDropdownOpen(false);
 											}}
-											className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-muted hover:text-text-main hover:bg-white/5 transition-colors"
+											className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-muted hover:text-text-main hover:bg-[var(--card-bg)] transition-colors"
 										>
 											<Settings size={16} />
 											<span>Settings</span>

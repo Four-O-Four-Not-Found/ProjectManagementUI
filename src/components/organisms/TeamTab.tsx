@@ -83,7 +83,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 											onChange={(e) =>
 												onRoleChange(member.userId, e.target.value)
 											}
-											className={`bg-surface-hover border border-border rounded px-2 py-1 text-xs font-medium focus:outline-none focus:border-primary transition-colors cursor-pointer mt-1 ${
+											className={`bg-[var(--accent-primary)]/10 border border-border rounded px-2 py-1 text-xs font-medium focus:outline-none focus:border-primary transition-colors cursor-pointer mt-1 ${
 												["Project Manager", "Product Owner"].includes(
 													member.role,
 												)

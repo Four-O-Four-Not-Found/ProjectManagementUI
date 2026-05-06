@@ -109,7 +109,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 						</div>
 					)}
 					{task.taskAssignees && task.taskAssignees.length > 3 && (
-						<div className="w-6 h-6 rounded-full bg-surface-hover border-2 border-background flex items-center justify-center text-[8px] font-bold text-text-muted">
+						<div className="w-6 h-6 rounded-full bg-[var(--accent-primary)]/10 border-2 border-background flex items-center justify-center text-[8px] font-bold text-text-muted">
 							+{task.taskAssignees.length - 3}
 						</div>
 					)}

@@ -32,7 +32,7 @@ const Avatar: React.FC<AvatarProps> = ({
 	return (
 		<div
 			className={twMerge(
-				"relative flex-shrink-0 bg-surface-hover border border-border overflow-hidden group",
+				"relative flex-shrink-0 bg-[var(--accent-primary)]/10 border border-border overflow-hidden group",
 				sizes[size],
 				isClickable && "cursor-pointer active:scale-95 transition-transform",
 				className,

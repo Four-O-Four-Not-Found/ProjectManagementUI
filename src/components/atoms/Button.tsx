@@ -34,11 +34,11 @@ const Button: React.FC<ButtonProps> = ({
 		"inline-flex items-center justify-center rounded-md font-semibold transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed tracking-tight select-none border shadow-sm cursor-pointer";
 
 	const variants = {
-		primary: "bg-[var(--color-primary)] text-white border-transparent hover:bg-[var(--color-primary-hover)] hover:shadow-md",
-		secondary: "bg-[var(--surface-hover)] text-[var(--text-main)] border-[var(--border)] hover:bg-[var(--surface)] hover:border-[var(--text-muted)]",
-		ghost: "bg-transparent text-[var(--text-muted)] border-transparent hover:text-[var(--text-main)] hover:bg-[var(--surface-hover)] shadow-none",
-		danger: "bg-[var(--background)] text-[var(--color-danger)] border-[var(--border)] hover:bg-[var(--color-danger)] hover:text-white hover:border-[var(--color-danger)]",
-		success: "bg-[var(--color-success)] text-white border-transparent hover:opacity-90",
+		primary: "bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] text-[var(--text-primary)] border-[rgba(255,255,255,0.1)] hover:shadow-[0_4px_12px_rgba(0,132,255,0.25)] hover:-translate-y-px active:translate-y-0",
+		secondary: "bg-[var(--card-bg)] backdrop-blur-md text-[var(--text-primary)] border-[var(--card-border)] hover:bg-[var(--accent-primary)]/5 hover:border-[var(--accent-primary)]",
+		ghost: "bg-transparent text-[var(--text-secondary)] border-transparent hover:text-[var(--text-primary)] hover:bg-[var(--accent-primary)]/5 shadow-none",
+		danger: "bg-[var(--bg-color)] text-[var(--color-danger)] border-[var(--card-border)] hover:bg-[var(--color-danger)] hover:text-[var(--text-primary)] hover:border-[var(--color-danger)]",
+		success: "bg-[var(--color-success)] text-[var(--text-primary)] border-transparent hover:opacity-90 hover:shadow-md hover:shadow-success/20",
 		warning: "bg-[var(--color-warning)]/10 text-[var(--color-warning)] border-[var(--color-warning)]/20 hover:bg-[var(--color-warning)]/20",
 		purple: "bg-[var(--color-accent-purple)]/10 text-[var(--color-accent-purple)] border-[var(--color-accent-purple)]/20 hover:bg-[var(--color-accent-purple)]/20",
 	};

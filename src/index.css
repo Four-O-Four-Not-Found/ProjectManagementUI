@@ -1,211 +1,189 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 
 :root {
-	/* GitHub Inspired Light Theme - Enhanced Softness */
-	--background: #ffffff;
-	--surface: rgba(255, 255, 255, 0.7);
-	--surface-hover: rgba(246, 248, 250, 0.85);
-	--border: rgba(208, 215, 222, 0.4);
-	--border-subtle: rgba(235, 240, 244, 0.3);
-	
-	--color-primary: #0969da;
-	--color-primary-hover: #085cc0;
-	--color-success: #1a7f37;
-	--color-danger: #cf222e;
-	--color-warning: #9a6700;
-	--color-accent-purple: #8250df;
-	
-	--text-main: #1f2328;
-	--text-muted: #656d76;
-	
-	--shadow-sm: 0 1px 2px rgba(31,35,40,0.02);
-	--shadow-md: 0 12px 32px rgba(140,149,159,0.08);
-	--glass-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.05);
-	--glass-border: rgba(255, 255, 255, 0.6);
+	/* Portfolio Theme - Light Mode (Default) */
+	--bg-color: #ffffff;
+	--text-primary: #000000;
+	--text-secondary: #4b5563; /* Slate-600 */
+	--accent-primary: #0066cc; /* Vibrant Blue */
+	--accent-secondary: #003366;
+	--card-bg: rgba(255, 255, 255, 0.7);
+	--card-border: rgba(0, 102, 204, 0.2);
+	--glass-blur: 12px;
+	--neon-shadow: 0 0 10px rgba(0, 102, 204, 0.1);
+	--circuit-color: rgba(0, 102, 204, 0.03);
 
-	/* Roundness Tokens - Extreme Premium */
-	--radius-sm: 10px;
-	--radius-md: 20px;
-	--radius-lg: 32px;
-	--radius-xl: 44px;
+	--font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	--font-heading: "Outfit", sans-serif;
+	--font-mono: "JetBrains Mono", monospace;
+
+	/* Compatibility Aliases for Tailwind-based code */
+	--background: var(--bg-color);
+	--surface: var(--card-bg);
+	--border: var(--card-border);
+	--text-main: var(--text-primary);
+	--text-muted: var(--text-secondary);
+	--color-primary: var(--accent-primary);
 }
 
 .dark {
-	/* GitHub Inspired Dark Theme - Premium Matte Aesthetic */
-	--background: #0d1117;
-	--surface: rgba(22, 27, 34, 0.65);
-	--surface-hover: rgba(28, 33, 40, 0.8);
-	--border: rgba(48, 54, 61, 0.4);
-	--border-subtle: rgba(51, 58, 67, 0.25);
-	
-	--color-primary: #2f81f7;
-	--color-primary-hover: #4b92f8;
-	--color-success: #238636;
-	--color-danger: #da3633;
-	--color-warning: #d29922;
-	--color-accent-purple: #a371f7;
-	
-	--text-main: #e6edf3;
-	--text-muted: #7d8590;
-	
-	--shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-	--shadow-md: 0 16px 40px rgba(1,4,9,0.3);
-	--glass-shadow: 0 24px 60px 0 rgba(0, 0, 0, 0.4);
-	--glass-border: rgba(255, 255, 255, 0.1);
+	/* Portfolio Theme - Dark Mode (Cyberpunk Electric) */
+	--bg-color: #05070a;
+	--text-primary: #ffffff;
+	--text-secondary: #cbd5e1;
+	--accent-primary: #0084ff; /* Electric Blue */
+	--accent-secondary: #001a33; /* Deep Navy */
+	--card-bg: rgba(0, 20, 40, 0.4);
+	--card-border: rgba(0, 132, 255, 0.3);
+	--neon-shadow: 0 0 15px rgba(0, 132, 255, 0.4);
+	--circuit-color: rgba(0, 132, 255, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) {
+		--bg-color: #05070a;
+		--text-primary: #ffffff;
+		--text-secondary: #94a3b8;
+		--accent-primary: #0084ff;
+		--accent-secondary: #001a33;
+		--card-bg: rgba(0, 20, 40, 0.4);
+		--card-border: rgba(0, 132, 255, 0.3);
+		--neon-shadow: 0 0 15px rgba(0, 132, 255, 0.4);
+		--circuit-color: rgba(0, 132, 255, 0.05);
+	}
 }
 
 body {
-	background-color: var(--background);
-	color: var(--text-main);
-	font-family: 'Inter', system-ui, -apple-system, sans-serif;
+	background-color: var(--bg-color);
+	color: var(--text-primary);
+	font-family: var(--font-main);
 	-webkit-font-smoothing: antialiased;
-	transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 	margin: 0;
-	padding-top: env(safe-area-inset-top);
-	padding-bottom: env(safe-area-inset-bottom);
+	position: relative;
+	min-height: 100vh;
+}
+
+/* Removed circuit grid and grain overlay to make the UI cleaner and more user-friendly for daily project management tasks, while keeping the exact portfolio colors. */
+
+h1, h2, h3, h4 {
+	font-family: var(--font-heading);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.2;
 }
 
 @layer base {
 	:root {
-		--overlay: rgba(0, 0, 0, 0.8);
+		--overlay: rgba(0, 0, 0, 0.85);
 		color-scheme: light dark;
 	}
 
 	:focus-visible {
-		outline: 2px solid var(--color-primary);
+		outline: 2px solid var(--accent-primary);
 		outline-offset: 2px;
 	}
 
 	input, textarea, select {
-		background-color: var(--surface);
-		border: 1px solid var(--border);
-		color: var(--text-main);
-		border-radius: var(--radius-sm);
-		padding: 0.5rem 0.75rem;
-		font-size: 0.875rem;
-		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		background-color: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(8px);
+		border: 1px solid var(--card-border);
+		color: var(--text-primary);
+		border-radius: 8px;
+		padding: 12px;
+		font-size: 0.95rem;
+		transition: all 0.3s ease;
 		outline: none;
 	}
 
 	input:focus, textarea:focus, select:focus {
-		border-color: var(--color-primary);
-		box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.15);
-		background-color: var(--background);
-	}
-
-	button {
-		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-		border-radius: var(--radius-sm);
-	}
-
-	button:active {
-		transform: scale(0.98);
+		border-color: var(--accent-primary);
+		box-shadow: 0 0 10px rgba(0, 132, 255, 0.2);
 	}
 }
 
 @layer components {
-	.glass-panel {
-		background: var(--surface);
-		backdrop-filter: blur(24px);
-		-webkit-backdrop-filter: blur(24px);
-		border: 1px solid var(--border-subtle);
-		box-shadow: var(--glass-shadow);
-		border-radius: var(--radius-lg);
-	}
-
 	.glass-card {
-		background: var(--surface);
-		backdrop-filter: blur(16px);
-		-webkit-backdrop-filter: blur(16px);
-		border: 1px solid var(--border-subtle);
-		box-shadow: var(--shadow-sm);
-		border-radius: var(--radius-md);
-		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	.matte-panel {
-		background: var(--surface);
-		backdrop-filter: blur(40px) saturate(200%);
-		-webkit-backdrop-filter: blur(40px) saturate(200%);
-		border: 1px solid var(--border-subtle);
-		box-shadow: var(--glass-shadow);
-		border-radius: var(--radius-xl);
-	}
-
-	.matte-card {
-		background: var(--surface);
-		backdrop-filter: blur(28px);
-		-webkit-backdrop-filter: blur(28px);
-		border: 1px solid var(--border-subtle);
-		box-shadow: var(--shadow-md);
-		border-radius: var(--radius-lg);
+		background: var(--card-bg);
+		backdrop-filter: blur(var(--glass-blur));
+		-webkit-backdrop-filter: blur(var(--glass-blur));
+		border: 1px solid var(--card-border);
+		border-radius: 12px;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 	}
 
 	.glass-card:hover {
+		border-color: var(--accent-primary);
+		box-shadow: 0 4px 20px rgba(0, 132, 255, 0.15);
 		transform: translateY(-2px);
-		background: var(--surface-hover);
-		border-color: var(--color-primary);
-		box-shadow: var(--glass-shadow);
 	}
 
-	.shimmer {
-		background: linear-gradient(
-			90deg,
-			rgba(255, 255, 255, 0) 0%,
-			rgba(255, 255, 255, 0.05) 50%,
-			rgba(255, 255, 255, 0) 100%
-		);
-		background-size: 200% 100%;
-		animation: shimmer 1.5s infinite;
+	.neon-text {
+		color: var(--accent-primary);
+		text-shadow: 0 0 8px rgba(0, 132, 255, 0.6);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
-	.scrollbar-custom::-webkit-scrollbar {
-		width: 10px;
+	.btn-primary {
+		background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+		color: #ffffff;
+		padding: 10px 24px;
+		border-radius: 6px;
+		font-weight: 600;
+		cursor: pointer;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		transition: all 0.2s ease;
+		box-shadow: 0 2px 8px rgba(0, 132, 255, 0.2);
 	}
 
-	.scrollbar-custom::-webkit-scrollbar-thumb {
-		background: var(--border);
-		border-radius: 5px;
-		border: 2px solid transparent;
-		background-clip: content-box;
+	.btn-primary:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(0, 132, 255, 0.3);
+		border-color: rgba(255, 255, 255, 0.2);
 	}
 
-	.scrollbar-custom::-webkit-scrollbar-thumb:hover {
-		background: var(--text-muted);
-		background-clip: content-box;
+	.btn-outline {
+		background: rgba(255, 255, 255, 0.03);
+		color: var(--text-primary);
+		padding: 10px 20px;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 13px;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		cursor: pointer;
+		border: 1px solid var(--card-border);
+		transition: all 0.3s ease;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.btn-outline:hover {
+		background: rgba(0, 132, 255, 0.1);
+		border-color: var(--accent-primary);
+		color: var(--accent-primary);
 	}
 }
 
-@keyframes shimmer {
-	0% { background-position: -200% 0; }
-	100% { background-position: 200% 0; }
+/* Custom Scrollbar to match Portfolio */
+::-webkit-scrollbar {
+	width: 8px;
 }
 
-@keyframes float {
-	0%, 100% { transform: translateY(0); }
-	50% { transform: translateY(-5px); }
+::-webkit-scrollbar-track {
+	background: var(--bg-color);
 }
 
-.animate-fade-in {
-	animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	border: 2px solid var(--bg-color);
 }
 
-.animate-slide-up {
-	animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+::-webkit-scrollbar-thumb:hover {
+	background: var(--accent-primary);
 }
-
-@keyframes fadeIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
-}
-
-@keyframes slideUp {
-	from { opacity: 0; transform: translateY(20px); }
-	to { opacity: 1; transform: translateY(0); }
-}
-
-/* GitHub-specific utility classes */
-.bg-github-green { background-color: var(--color-success); }
-.text-github-blue { color: var(--color-primary); }
-.border-github { border-color: var(--border); }

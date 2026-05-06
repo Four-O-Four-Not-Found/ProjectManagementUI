@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 	return (
 		<aside
 			className={clsx(
-				"h-full bg-surface border-r border-border flex flex-col transition-all duration-300 ease-in-out z-[100] relative",
+				"h-full glass-panel border-r border-border flex flex-col transition-all duration-300 ease-in-out z-[100] relative !rounded-none",
 				isCollapsed ? "w-16" : "w-64",
 			)}
 		>
@@ -40,7 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 					<img src="/favicon.svg" alt="FlowState" className="w-6 h-6 object-contain" />
 				</div>
 				{!isCollapsed && (
-					<span className="font-bold text-lg text-text-main tracking-tight">
+					<span className="font-bold text-lg neon-text tracking-tight uppercase">
 						FlowState
 					</span>
 				)}
@@ -68,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 			<div className="p-2 border-t border-border">
 				<button
 					onClick={onToggle}
-					className="w-full py-2 rounded-md hover:bg-background flex items-center justify-center text-text-muted hover:text-text-main transition-colors group"
+					className="w-full py-2.5 rounded-lg hover:bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-all group"
 				>
 					{isCollapsed ? (
 						<ChevronRight size={18} />

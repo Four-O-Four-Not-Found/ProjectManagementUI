@@ -47,7 +47,7 @@ const Alert: React.FC<AlertProps> = ({
         {icons[type]}
       </div>
       <div className="flex-1">
-        {title && <h5 className="text-sm font-bold text-white mb-1">{title}</h5>}
+        {title && <h5 className="text-sm font-bold text-[var(--text-primary)] mb-1">{title}</h5>}
         <div className="text-sm opacity-90 leading-relaxed">
           {children}
         </div>
@@ -55,7 +55,7 @@ const Alert: React.FC<AlertProps> = ({
       {onClose && (
         <button 
           onClick={onClose}
-          className="flex-shrink-0 p-1 rounded-lg hover:bg-white/[0.05] transition-all self-start"
+          className="flex-shrink-0 p-1 rounded-lg hover:bg-[var(--card-bg)] transition-all self-start"
         >
           <X size={16} />
         </button>

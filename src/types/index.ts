@@ -78,6 +78,7 @@ export interface Task {
 	createdAt: string;
 	updatedAt: string;
 	parentTaskId?: string;
+	parentTask?: Task;
 	subTasks?: Task[];
 	// UI-only or future expansion fields
 	progress?: number;

@@ -97,7 +97,7 @@ const SprintsTab: React.FC<SprintsTabProps> = ({ sprints }) => {
 
 			<div className="grid grid-cols-1 gap-8">
 				<GlassCard className="p-0 overflow-hidden">
-					<div className="p-4 border-b border-border bg-surface-hover/50 flex justify-between items-center">
+					<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center">
 						<h3 className="text-sm font-bold text-text-main flex items-center gap-2">
 							<Calendar size={16} className="text-primary" />
 							Iteration Roadmap
@@ -112,7 +112,7 @@ const SprintsTab: React.FC<SprintsTabProps> = ({ sprints }) => {
 							sprints.map((sprint, i) => (
 								<div
 									key={sprint.id}
-									className="p-4 hover:bg-surface-hover/30 transition-all flex items-center justify-between group cursor-pointer"
+									className="p-4 hover:bg-[var(--accent-primary)]/10 transition-all flex items-center justify-between group cursor-pointer"
 								>
 									<div className="flex items-center gap-4">
 										<div className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-text-muted group-hover:border-primary group-hover:text-primary transition-all">

@@ -68,7 +68,7 @@ const JoinTeam: React.FC = () => {
 					<UserPlus size={32} />
 				</div>
 				<div>
-					<h1 className="text-2xl font-bold text-white mb-2">Join Team</h1>
+					<h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Join Team</h1>
 					<p className="text-slate-400">
 						You've been invited to join <span className="text-primary font-bold">{team.name}</span>
 					</p>
@@ -77,7 +77,7 @@ const JoinTeam: React.FC = () => {
 					)}
 				</div>
 
-				<div className="bg-white/[0.03] p-4 rounded-lg border border-white/[0.05] text-left">
+				<div className="bg-[var(--card-bg)] p-4 rounded-lg border border-[var(--card-border)] text-left">
 					<h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Project Details</h3>
 					<div className="flex items-center gap-3">
 						<div className="w-8 h-8 rounded bg-accent-blue/20 flex items-center justify-center text-accent-blue">

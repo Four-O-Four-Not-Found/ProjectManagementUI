@@ -70,12 +70,12 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
         {icons[toast.type]}
       </div>
       <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-bold text-white mb-1">{toast.title}</h4>
+        <h4 className="text-sm font-bold text-[var(--text-primary)] mb-1">{toast.title}</h4>
         {toast.message && <p className="text-xs text-slate-400 leading-relaxed">{toast.message}</p>}
       </div>
       <button 
         onClick={() => onClose(toast.id)}
-        className="flex-shrink-0 p-1 rounded-lg hover:bg-white/[0.05] text-slate-500 hover:text-white transition-all"
+        className="flex-shrink-0 p-1 rounded-lg hover:bg-[var(--card-bg)] text-slate-500 hover:text-[var(--text-primary)] transition-all"
       >
         <X size={16} />
       </button>

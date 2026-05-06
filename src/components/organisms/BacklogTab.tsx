@@ -24,7 +24,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({
 			exit={{ opacity: 0, x: -20 }}
 			className="h-full bg-surface/30 border border-border rounded-md overflow-hidden flex flex-col"
 		>
-			<div className="p-4 bg-surface-hover border-b border-border flex items-center justify-between">
+			<div className="p-4 bg-[var(--accent-primary)]/10 border-b border-border flex items-center justify-between">
 				<span className="text-xs font-bold uppercase text-text-muted">
 					Filtered Issues
 				</span>

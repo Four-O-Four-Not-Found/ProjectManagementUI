@@ -77,7 +77,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
 							"flex items-center gap-2 p-2 rounded-lg text-xs font-bold transition-all",
 							activeTab === "profile"
 								? "bg-primary/10 text-primary"
-								: "text-text-muted hover:bg-surface-hover",
+								: "text-text-muted hover:bg-[var(--accent-primary)]/10",
 						)}
 					>
 						<Settings2 size={14} /> Profile
@@ -88,7 +88,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
 							"flex items-center gap-2 p-2 rounded-lg text-xs font-bold transition-all",
 							activeTab === "notifications"
 								? "bg-primary/10 text-primary"
-								: "text-text-muted hover:bg-surface-hover",
+								: "text-text-muted hover:bg-[var(--accent-primary)]/10",
 						)}
 					>
 						<Bell size={14} /> Alerts

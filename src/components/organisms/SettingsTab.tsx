@@ -121,7 +121,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 								className="flex items-center justify-between p-4 bg-background border border-border rounded-xl"
 							>
 								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-xl bg-surface-hover flex items-center justify-center border border-border shadow-inner">
+									<div className="w-12 h-12 rounded-xl bg-[var(--accent-primary)]/10 flex items-center justify-center border border-border shadow-inner">
 										<GitBranch size={24} className="text-text-main" />
 									</div>
 									<div>

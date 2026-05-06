@@ -40,7 +40,7 @@ const TeamCreateModal: React.FC<TeamCreateModalProps> = ({
 						type="text"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
-						className="w-full bg-white/[0.03] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+						className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg px-4 py-3 text-[var(--text-primary)] focus:outline-none focus:border-primary/50 transition-colors"
 						placeholder="e.g. Frontend Squad"
 						required
 					/>
@@ -53,7 +53,7 @@ const TeamCreateModal: React.FC<TeamCreateModalProps> = ({
 					<textarea
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
-						className="w-full bg-white/[0.03] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors min-h-[100px]"
+						className="w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg px-4 py-3 text-[var(--text-primary)] focus:outline-none focus:border-primary/50 transition-colors min-h-[100px]"
 						placeholder="Briefly describe the team's mission..."
 					/>
 				</div>
