@@ -69,23 +69,23 @@ const JoinTeam: React.FC = () => {
 				</div>
 				<div>
 					<h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Join Team</h1>
-					<p className="text-slate-400">
+					<p className="text-text-muted">
 						You've been invited to join <span className="text-primary font-bold">{team.name}</span>
 					</p>
 					{team.description && (
-						<p className="text-sm text-slate-500 mt-2 italic">"{team.description}"</p>
+						<p className="text-sm text-text-muted mt-2 italic">"{team.description}"</p>
 					)}
 				</div>
 
 				<div className="bg-[var(--card-bg)] p-4 rounded-lg border border-[var(--card-border)] text-left">
-					<h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Project Details</h3>
+					<h3 className="text-xs font-bold text-text-muted uppercase tracking-widest mb-3">Project Details</h3>
 					<div className="flex items-center gap-3">
 						<div className="w-8 h-8 rounded bg-accent-blue/20 flex items-center justify-center text-accent-blue">
 							<CheckCircle2 size={16} />
 						</div>
 						<div>
 							<p className="text-sm font-medium text-slate-200">Official Team</p>
-							<p className="text-[10px] text-slate-500">Verified Project</p>
+							<p className="text-[10px] text-text-muted">Verified Project</p>
 						</div>
 					</div>
 				</div>

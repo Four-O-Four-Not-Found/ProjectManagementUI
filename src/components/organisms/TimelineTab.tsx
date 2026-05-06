@@ -62,9 +62,9 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 			initial={{ opacity: 0, x: 20 }}
 			animate={{ opacity: 1, x: 0 }}
 			exit={{ opacity: 0, x: -20 }}
-			className="h-full bg-surface/30 border border-border rounded-md overflow-hidden flex flex-col"
+			className="h-full bg-surface/30 border border-primary/30 rounded-md overflow-hidden flex flex-col"
 		>
-			<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center shrink-0">
+			<div className="p-4 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex justify-between items-center shrink-0">
 				<div className="flex items-center gap-3">
 					<div className="p-2 bg-primary/10 rounded-lg text-primary">
 						<CalendarIcon size={18} />
@@ -79,7 +79,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 					</div>
 				</div>
 				<div className="flex items-center gap-2">
-					<div className="flex bg-background border border-border rounded-lg p-1 mr-4">
+					<div className="flex bg-background border border-primary/30 rounded-lg p-1 mr-4">
 						{(["Weeks", "Months"] as const).map((mode) => (
 							<button
 								key={mode}
@@ -101,8 +101,8 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 			</div>
 
 			<div className="flex-1 overflow-hidden flex flex-col">
-				<div className="flex border-b border-border bg-background/50 overflow-hidden shrink-0">
-					<div className="w-64 border-r border-border p-3 shrink-0 flex items-center justify-between">
+				<div className="flex border-b border-primary/30 bg-background/50 overflow-hidden shrink-0">
+					<div className="w-64 border-r border-primary/30 p-3 shrink-0 flex items-center justify-between">
 						<span className="text-[10px] font-black text-text-muted uppercase tracking-widest">
 							Task Definition
 						</span>
@@ -121,7 +121,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 								key={i}
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => handleDrop(e, i)}
-								className="w-20 shrink-0 border-r border-border/30 p-2 flex flex-col items-center justify-center bg-[var(--accent-primary)]/10"
+								className="w-20 shrink-0 border-r border-primary/30/30 p-2 flex flex-col items-center justify-center bg-[var(--accent-primary)]/10"
 							>
 								<span className="text-[8px] font-bold text-text-muted uppercase">
 									{day.toLocaleDateString(undefined, { weekday: "short" })}
@@ -149,11 +149,11 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 						tasks.map((task, idx) => (
 							<div
 								key={task.id}
-								className="flex border-b border-border/30 group hover:bg-[var(--accent-primary)]/10 transition-colors"
+								className="flex border-b border-primary/30/30 group hover:bg-[var(--accent-primary)]/10 transition-colors"
 							>
-								<div className="w-64 border-r border-border p-3 shrink-0 flex items-center gap-3">
+								<div className="w-64 border-r border-primary/30 p-3 shrink-0 flex items-center gap-3">
 									<div
-										className={`w-1.5 h-1.5 rounded-full ${task.priority === "Urgent" ? "bg-danger" : "bg-primary"}`}
+										className={`w-1.5 h-1.5 rounded-full ${task.priority === "Urgent" ? "bg-primary" : "bg-primary"}`}
 									/>
 									<div className="min-w-0">
 										<p className="text-[11px] font-bold text-text-main truncate">
@@ -175,9 +175,9 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 										}
 										layoutId={`gantt-${task.id}`}
 										className={twMerge(
-											"absolute h-8 rounded-lg border flex items-center px-3 cursor-grab active:cursor-grabbing shadow-lg group-hover:shadow-primary/20 transition-shadow",
+											"absolute h-8 rounded-lg border flex items-center px-3 cursor-grab active:cursor-grabbing shadow-sm group-hover:shadow-primary/20 transition-shadow",
 											task.status === "Done"
-												? "bg-success/20 border-success/40"
+												? "bg-primary/20 border-primary/40"
 												: "bg-primary/20 border-primary/40",
 											draggingTaskId === task.id && "opacity-50 scale-95",
 										)}
@@ -194,7 +194,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 											{task.status}
 										</span>
 										<div className="ml-auto flex -space-x-1">
-											<div className="w-4 h-4 rounded-full bg-background border border-border" />
+											<div className="w-4 h-4 rounded-full bg-background border border-primary/30" />
 										</div>
 									</motion.div>
 								</div>
@@ -204,7 +204,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 				</div>
 			</div>
 
-			<div className="p-4 bg-[var(--accent-primary)]/10 border-t border-border flex items-center justify-between shrink-0">
+			<div className="p-4 bg-[var(--accent-primary)]/10 border-t border-primary/30 flex items-center justify-between shrink-0">
 				<div className="flex items-center gap-6">
 					<div className="flex items-center gap-2">
 						<div className="w-3 h-3 rounded-sm bg-primary/20 border border-primary/40" />
@@ -213,7 +213,7 @@ const TimelineTab: React.FC<TimelineTabProps> = ({
 						</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<div className="w-3 h-3 rounded-sm bg-success/20 border border-success/40" />
+						<div className="w-3 h-3 rounded-sm bg-primary/20 border border-primary/40" />
 						<span className="text-[10px] text-text-muted uppercase font-bold">
 							Completed
 						</span>

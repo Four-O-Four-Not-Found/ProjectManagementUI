@@ -81,7 +81,7 @@ const TimelineView: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-background border border-border rounded-md overflow-hidden select-none shadow-sm">
+    <div className="flex flex-col h-full bg-background border border-primary/30 rounded-md overflow-hidden select-none shadow-sm">
       <ActivityDetailModal 
         isOpen={!!selectedActivity}
         onClose={() => setSelectedActivity(null)}
@@ -100,9 +100,9 @@ const TimelineView: React.FC = () => {
       )}
 
       {/* Gantt Controls */}
-      <div className="p-3 border-b border-border bg-surface flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-3 border-b border-primary/30 bg-surface flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6">
-          <div className="flex items-center gap-1 bg-background border border-border rounded-md p-1">
+          <div className="flex items-center gap-1 bg-background border border-primary/30 rounded-md p-1">
             <button 
               onClick={() => setViewMode('Week')}
               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${viewMode === 'Week' ? 'bg-primary text-[var(--text-primary)]' : 'text-text-muted hover:text-text-main'}`}
@@ -117,7 +117,7 @@ const TimelineView: React.FC = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-1 bg-background border border-border rounded-md p-1">
+          <div className="flex items-center gap-1 bg-background border border-primary/30 rounded-md p-1">
             <button 
               onClick={() => setDataMode('Tasks')}
               className={`flex items-center gap-2 px-3 py-1 text-[10px] font-bold rounded transition-all ${dataMode === 'Tasks' ? 'bg-merged text-[var(--text-primary)]' : 'text-text-muted hover:text-text-main'}`}
@@ -135,7 +135,7 @@ const TimelineView: React.FC = () => {
           </div>
 
           {dataMode === 'Tasks' && (
-            <div className="flex items-center gap-2 px-2 py-1 bg-background border border-border rounded-md">
+            <div className="flex items-center gap-2 px-2 py-1 bg-background border border-primary/30 rounded-md">
               <span className="text-[10px] font-bold text-text-muted uppercase tracking-tighter">View:</span>
               <select 
                 value={selectedProjectId}
@@ -157,8 +157,8 @@ const TimelineView: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <Button size="xs" variant="secondary" onClick={() => setTimelineStart(subDays(today, 5))}>Today</Button>
-          <div className="flex items-center border border-border rounded-md overflow-hidden bg-background">
-             <button onClick={() => navigateTimeline('prev')} className="p-1.5 hover:bg-[var(--accent-primary)]/10 text-text-muted border-r border-border"><ChevronLeft size={14} /></button>
+          <div className="flex items-center border border-primary/30 rounded-md overflow-hidden bg-background">
+             <button onClick={() => navigateTimeline('prev')} className="p-1.5 hover:bg-[var(--accent-primary)]/10 text-text-muted border-r border-primary/30"><ChevronLeft size={14} /></button>
              <button onClick={() => navigateTimeline('next')} className="p-1.5 hover:bg-[var(--accent-primary)]/10 text-text-muted"><ChevronRight size={14} /></button>
           </div>
         </div>
@@ -166,8 +166,8 @@ const TimelineView: React.FC = () => {
 
       <div className="flex-1 flex flex-col overflow-hidden relative" ref={containerRef}>
         {/* Dates Header */}
-        <div className="flex bg-[var(--accent-primary)]/10 border-b border-border z-20">
-          <div className="w-32 md:w-64 border-r border-border p-4 shrink-0 flex items-center gap-2 bg-surface">
+        <div className="flex bg-[var(--accent-primary)]/10 border-b border-primary/30 z-20">
+          <div className="w-32 md:w-64 border-r border-primary/30 p-4 shrink-0 flex items-center gap-2 bg-surface">
             <CalendarIcon size={16} className="text-primary" />
             <span className="text-xs font-bold text-text-main uppercase tracking-wider">{dataMode === 'Tasks' ? 'Schedule' : 'Roadmap'}</span>
           </div>
@@ -175,7 +175,7 @@ const TimelineView: React.FC = () => {
             {timelineDays.map((day, i) => (
               <div 
                 key={i} 
-                className={`flex-1 min-w-[60px] p-2 text-center border-r border-border/20 last:border-r-0 relative transition-colors ${isSameDay(day, today) ? 'bg-primary/5' : ''}`}
+                className={`flex-1 min-w-[60px] p-2 text-center border-r border-primary/30/20 last:border-r-0 relative transition-colors ${isSameDay(day, today) ? 'bg-primary/5' : ''}`}
               >
                 <p className="text-[9px] font-bold text-text-muted uppercase tracking-tighter">{format(day, 'EEE')}</p>
                 <p className={`text-xs font-bold ${isSameDay(day, today) ? 'text-primary underline decoration-2 underline-offset-4' : 'text-text-main'}`}>{format(day, 'd')}</p>
@@ -203,11 +203,11 @@ const TimelineView: React.FC = () => {
             const pos = getPosition(start, end);
             const isProject = 'key' in item;
             const progress = (item as Task).progress || 0;
-            const color = !isProject && (item as Task).type === 'Bug' ? 'bg-danger' : (!isProject && (item as Task).type === 'Issue' ? 'bg-warning' : 'bg-success');
+            const color = !isProject && (item as Task).type === 'Bug' ? 'bg-primary' : (!isProject && (item as Task).type === 'Issue' ? 'bg-primary' : 'bg-primary');
             
             return (
-              <div key={item.id} className="flex border-b border-border/50 hover:bg-[var(--accent-primary)]/10 transition-colors group relative">
-                <div className="w-32 md:w-64 border-r border-border p-3 shrink-0 flex items-center gap-3 bg-surface/20 z-10 sticky left-0">
+              <div key={item.id} className="flex border-b border-primary/30/50 hover:bg-[var(--accent-primary)]/10 transition-colors group relative">
+                <div className="w-32 md:w-64 border-r border-primary/30 p-3 shrink-0 flex items-center gap-3 bg-surface/20 z-10 sticky left-0">
                   {isProject ? (
                     <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                       <Target size={16} />
@@ -228,7 +228,7 @@ const TimelineView: React.FC = () => {
                   {/* Grid Lines */}
                   <div className="absolute inset-0 flex pointer-events-none">
                     {timelineDays.map((day, i) => (
-                      <div key={i} className={`flex-1 border-r border-border/10 last:border-r-0 ${isSameDay(day, today) ? 'bg-primary/[0.02]' : ''}`} />
+                      <div key={i} className={`flex-1 border-r border-primary/30/10 last:border-r-0 ${isSameDay(day, today) ? 'bg-primary/[0.02]' : ''}`} />
                     ))}
                   </div>
 
@@ -240,11 +240,11 @@ const TimelineView: React.FC = () => {
                     >
                       {pos.isMilestone ? (
                         /* Milestone Diamond */
-                        <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-accent-purple border-2 border-surface rotate-45 shadow-lg cursor-help">
-                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/bar:opacity-100 bg-surface border border-border p-1.5 rounded text-[10px] font-bold whitespace-nowrap pointer-events-none transition-opacity">Milestone: {isProject ? (item as Project).name : (item as Task).title}</div>
+                        <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-accent-primary border-2 border-surface rotate-45 shadow-sm cursor-help">
+                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/bar:opacity-100 bg-surface border border-primary/30 p-1.5 rounded text-[10px] font-bold whitespace-nowrap pointer-events-none transition-opacity">Milestone: {isProject ? (item as Project).name : (item as Task).title}</div>
                         </div>
                       ) : (
-                        <div className={`w-full h-5 rounded-sm border border-border/50 ${isProject ? 'bg-primary/5' : 'bg-surface'} relative flex items-center shadow-sm overflow-hidden group-hover/bar:h-6 transition-all`}>
+                        <div className={`w-full h-5 rounded-sm border border-primary/30/50 ${isProject ? 'bg-primary/5' : 'bg-surface'} relative flex items-center shadow-sm overflow-hidden group-hover/bar:h-6 transition-all`}>
                           {/* Background Color */}
                           <div className={`absolute inset-0 ${isProject ? 'bg-primary/10' : color + '/5'}`} />
                           
@@ -280,25 +280,25 @@ const TimelineView: React.FC = () => {
       </div>
 
       {/* Gantt Legend */}
-      <div className="p-3 border-t border-border bg-[var(--accent-primary)]/10 flex items-center gap-6 overflow-x-auto scrollbar-hide">
+      <div className="p-3 border-t border-primary/30 bg-[var(--accent-primary)]/10 flex items-center gap-6 overflow-x-auto scrollbar-hide">
         <div className="flex items-center gap-2">
            <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Legend:</span>
         </div>
         <div className="flex items-center gap-4">
            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-success/20 border border-success/40" />
+              <div className="w-3 h-3 rounded-sm bg-primary/20 border border-primary/40" />
               <span className="text-[10px] text-text-main">Feature / Task</span>
            </div>
            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-danger/20 border border-danger/40" />
+              <div className="w-3 h-3 rounded-sm bg-primary/20 border border-primary/40" />
               <span className="text-[10px] text-text-main">Bug / Fix</span>
            </div>
            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-warning/20 border border-warning/40" />
+              <div className="w-3 h-3 rounded-sm bg-primary/20 border border-primary/40" />
               <span className="text-[10px] text-text-main">Issue / Risk</span>
            </div>
            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-accent-purple rotate-45 border border-surface shadow-sm" />
+              <div className="w-3 h-3 bg-accent-primary rotate-45 border border-surface shadow-sm" />
               <span className="text-[10px] text-text-main">Milestone</span>
            </div>
            <div className="flex items-center gap-2">

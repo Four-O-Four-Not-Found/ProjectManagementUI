@@ -24,16 +24,16 @@ const Input: React.FC<InputProps> = ({ label, icon, error, helperText, className
         )}
         <input
           className={twMerge(
-            "w-full bg-background border border-border rounded-md py-1.5 text-sm text-text-main placeholder:text-text-muted outline-none transition-all",
+            "w-full bg-background border border-primary/30 rounded-md py-1.5 text-sm text-text-main placeholder:text-text-muted outline-none transition-all",
             "focus:border-primary focus:ring-1 focus:ring-primary shadow-sm",
             icon ? "pl-10 pr-4" : "px-3",
-            error && "border-danger focus:border-danger focus:ring-danger",
+            error && "border-primary focus:border-primary focus:ring-danger",
             className
           )}
           {...props}
         />
       </div>
-      {error && <p className="text-[10px] font-bold text-danger ml-1">{error}</p>}
+      {error && <p className="text-[10px] font-bold text-primary ml-1">{error}</p>}
       {helperText && !error && (
         <p className="text-[10px] text-text-muted ml-1 opacity-70 italic">{helperText}</p>
       )}

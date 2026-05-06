@@ -299,7 +299,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
 							/>
 							<select
-								className={`w-full bg-background border ${errors.projectId ? "border-danger" : "border-border"} rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all`}
+								className={`w-full bg-background border ${errors.projectId ? "border-primary" : "border-primary/30"} rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all`}
 								value={formData.projectId}
 								onChange={(e) => handleProjectChange(e.target.value)}
 							>
@@ -314,7 +314,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							</select>
 						</div>
 						{errors.projectId && (
-							<p className="text-[10px] font-bold text-danger ml-1">
+							<p className="text-[10px] font-bold text-primary ml-1">
 								{errors.projectId}
 							</p>
 						)}
@@ -330,7 +330,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
 							/>
 							<select
-								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+								className="w-full bg-background border border-primary/30 rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
 								value={formData.assigneeId || ""}
 								onChange={(e) =>
 									setFormData({ ...formData, assigneeId: e.target.value })
@@ -359,7 +359,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 							/>
 							<input
 								type="date"
-								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+								className="w-full bg-background border border-primary/30 rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
 								value={formData.dueDate && typeof formData.dueDate === 'string' ? formData.dueDate.split("T")[0] : ""}
 								onChange={(e) =>
 									setFormData({ ...formData, dueDate: e.target.value })
@@ -378,7 +378,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
 							/>
 							<select
-								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+								className="w-full bg-background border border-primary/30 rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
 								value={formData.parentTaskId || ""}
 								onChange={(e) =>
 									setFormData({ ...formData, parentTaskId: e.target.value || undefined })
@@ -407,7 +407,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								className={`flex-1 py-2 px-3 rounded-md border text-[10px] font-bold uppercase tracking-wider transition-all ${
 									formData.type === type
 										? "bg-primary/10 border-primary text-primary shadow-sm"
-										: "border-border text-text-muted hover:border-text-muted bg-surface"
+										: "border-primary/30 text-text-muted hover:border-text-muted bg-surface"
 								}`}
 							>
 								{type}
@@ -422,7 +422,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 					</label>
 					<div className="flex items-center gap-4">
 						{imagePreview ? (
-							<div className="relative w-20 h-20 rounded-xl overflow-hidden border border-border group">
+							<div className="relative w-20 h-20 rounded-xl overflow-hidden border border-primary/30 group">
 								<img
 									src={imagePreview}
 									alt="Preview"
@@ -436,7 +436,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								</button>
 							</div>
 						) : (
-							<label className="w-20 h-20 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 cursor-pointer group">
+							<label className="w-20 h-20 rounded-xl border-2 border-dashed border-primary/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 cursor-pointer group">
 								<ImageIcon
 									size={20}
 									className="text-text-muted group-hover:text-primary transition-colors"
@@ -474,7 +474,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 									className={`flex-1 py-2 px-2 rounded-md border text-[9px] font-bold uppercase tracking-tight transition-all ${
 										formData.priority === priority
 											? "bg-merged/10 border-merged text-merged shadow-sm"
-											: "border-border text-text-muted hover:border-text-muted bg-surface"
+											: "border-primary/30 text-text-muted hover:border-text-muted bg-surface"
 									}`}
 								>
 									{priority}
@@ -489,7 +489,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 						Description
 					</label>
 					<textarea
-						className="w-full bg-background border border-border rounded-md p-3 text-sm text-text-main placeholder:text-text-muted outline-none focus:border-primary focus:ring-1 focus:ring-primary min-h-[100px] transition-all"
+						className="w-full bg-background border border-primary/30 rounded-md p-3 text-sm text-text-main placeholder:text-text-muted outline-none focus:border-primary focus:ring-1 focus:ring-primary min-h-[100px] transition-all"
 						placeholder="Describe the context or acceptance criteria..."
 						value={formData.description}
 						onChange={(e) =>
@@ -509,7 +509,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 								className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
 							/>
 							<select
-								className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+								className="w-full bg-background border border-primary/30 rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
 								value={formData.repositoryId || ""}
 								onChange={(e) => handleRepositoryChange(e.target.value)}
 							>
@@ -558,7 +558,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 									/>
 									<input
 										type="text"
-										className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+										className="w-full bg-background border border-primary/30 rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
 										placeholder="e.g. feature/new-login"
 										value={newBranchName}
 										onChange={(e) => setNewBranchName(e.target.value)}
@@ -570,7 +570,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 										className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted opacity-50"
 									/>
 									<select
-										className="w-full bg-background/50 border border-border rounded-md py-1.5 pl-10 pr-4 text-xs text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+										className="w-full bg-background/50 border border-primary/30 rounded-md py-1.5 pl-10 pr-4 text-xs text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
 										value={baseBranch}
 										onChange={(e) => setBaseBranch(e.target.value)}
 									>
@@ -589,7 +589,7 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({
 									className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
 								/>
 								<select
-									className="w-full bg-background border border-border rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
+									className="w-full bg-background border border-primary/30 rounded-md py-2 pl-10 pr-4 text-sm text-text-main outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer transition-all"
 									value={formData.branchName || ""}
 									onChange={(e) =>
 										setFormData({ ...formData, branchName: e.target.value })

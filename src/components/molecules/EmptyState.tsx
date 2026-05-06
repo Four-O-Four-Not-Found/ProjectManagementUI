@@ -24,7 +24,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
 		<motion.div
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
-			className={`flex flex-col items-center justify-center p-12 text-center bg-surface/20 border border-dashed border-border rounded-[32px] ${className}`}
+			className={`flex flex-col items-center justify-center p-12 text-center bg-surface/20 border border-dashed border-primary/30 rounded-[32px] ${className}`}
 		>
 			<div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 shadow-inner">
 				<Icon size={32} />

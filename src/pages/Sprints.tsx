@@ -97,7 +97,7 @@ const Sprints: React.FC = () => {
 					</div>
 					{activeSprint ? (
 						<div className="space-y-4">
-							<div className="p-3 bg-surface border border-border rounded-xl">
+							<div className="p-3 bg-surface border border-primary/30 rounded-xl">
 								<p className="text-xs font-bold text-text-main mb-1">
 									{activeSprint.name}
 								</p>
@@ -110,7 +110,7 @@ const Sprints: React.FC = () => {
 							</div>
 						</div>
 					) : (
-						<div className="p-4 text-center border border-dashed border-border rounded-xl">
+						<div className="p-4 text-center border border-dashed border-primary/30 rounded-xl">
 							<p className="text-[10px] text-text-muted italic">
 								No active sprint
 							</p>
@@ -137,7 +137,7 @@ const Sprints: React.FC = () => {
 						</p>
 					</GlassCard>
 					<GlassCard className="p-6 flex flex-col justify-center">
-						<CheckCircle2 size={24} className="text-success mb-3" />
+						<CheckCircle2 size={24} className="text-primary mb-3" />
 						<h4 className="text-2xl font-bold text-text-main">
 							{sprints.filter((s) => s.status === "Completed").length}
 						</h4>
@@ -146,7 +146,7 @@ const Sprints: React.FC = () => {
 						</p>
 					</GlassCard>
 					<GlassCard className="p-6 flex flex-col justify-center">
-						<AlertCircle size={24} className="text-warning mb-3" />
+						<AlertCircle size={24} className="text-primary mb-3" />
 						<h4 className="text-2xl font-bold text-text-main">0</h4>
 						<p className="text-[10px] text-text-muted uppercase font-bold">
 							Blocked Items
@@ -157,7 +157,7 @@ const Sprints: React.FC = () => {
 
 			<div className="grid grid-cols-1 gap-8">
 				<GlassCard className="p-0 overflow-hidden">
-					<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center">
+					<div className="p-4 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex justify-between items-center">
 						<h3 className="text-sm font-bold text-text-main flex items-center gap-2">
 							<Calendar size={16} className="text-primary" />
 							Iteration Roadmap
@@ -175,7 +175,7 @@ const Sprints: React.FC = () => {
 									className="p-4 hover:bg-[var(--accent-primary)]/10 transition-all flex items-center justify-between group cursor-pointer"
 								>
 									<div className="flex items-center gap-4">
-										<div className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-text-muted group-hover:border-primary group-hover:text-primary transition-all">
+										<div className="w-10 h-10 rounded-full border border-primary/30 flex items-center justify-center text-text-muted group-hover:border-primary group-hover:text-primary transition-all">
 											<span className="text-xs font-bold">{i + 1}</span>
 										</div>
 										<div>
@@ -198,7 +198,7 @@ const Sprints: React.FC = () => {
 											</span>
 										</div>
 										<div
-											className={`px-2 py-1 rounded text-[9px] font-bold uppercase ${sprint.status === "Active" ? "bg-primary/10 text-primary border border-primary/20" : "bg-surface border border-border text-text-muted"}`}
+											className={`px-2 py-1 rounded text-[9px] font-bold uppercase ${sprint.status === "Active" ? "bg-primary/10 text-primary border border-primary/20" : "bg-surface border border-primary/30 text-text-muted"}`}
 										>
 											{sprint.status}
 										</div>

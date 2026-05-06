@@ -15,7 +15,7 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({ activeSprint }) => {
   const progress = (completed / total) * 100;
 
   return (
-    <div className="flex items-center gap-4 bg-surface border border-border rounded-md px-3 py-2 hover:bg-[var(--accent-primary)]/10 transition-colors cursor-pointer group">
+    <div className="flex items-center gap-4 bg-surface border border-primary/30 rounded-md px-3 py-2 hover:bg-[var(--accent-primary)]/10 transition-colors cursor-pointer group">
       <div className="w-8 h-8 rounded bg-merged/10 flex items-center justify-center text-merged">
         <Zap size={16} />
       </div>
@@ -25,7 +25,7 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({ activeSprint }) => {
           <h4 className="text-xs font-bold text-text-main leading-none">
             {activeSprint.name}
           </h4>
-          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-success/10 text-success border border-success/20 font-bold uppercase tracking-wider">
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-bold uppercase tracking-wider">
             {activeSprint.status}
           </span>
         </div>
@@ -36,9 +36,9 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({ activeSprint }) => {
             <span>Oct 14</span>
           </div>
           <div className="flex items-center gap-2 flex-1">
-            <div className="h-1 bg-background border border-border rounded-full flex-1 overflow-hidden">
+            <div className="h-1 bg-background border border-primary/30 rounded-full flex-1 overflow-hidden">
               <div 
-                className="h-full bg-success" 
+                className="h-full bg-primary" 
                 style={{ width: `${progress}%` }} 
               />
             </div>

@@ -115,7 +115,7 @@ const Settings: React.FC = () => {
 												type="text"
 												value={displayName}
 												onChange={(e) => setDisplayName(e.target.value)}
-												className="w-full bg-background border border-border rounded-lg pl-10 p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
+												className="w-full bg-background border border-primary/30 rounded-lg pl-10 p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
 											/>
 										</div>
 									</div>
@@ -132,7 +132,7 @@ const Settings: React.FC = () => {
 												type="email"
 												value={email}
 												onChange={(e) => setEmail(e.target.value)}
-												className="w-full bg-background border border-border rounded-lg pl-10 p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
+												className="w-full bg-background border border-primary/30 rounded-lg pl-10 p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
 											/>
 										</div>
 									</div>
@@ -144,7 +144,7 @@ const Settings: React.FC = () => {
 									<textarea
 										rows={3}
 										placeholder="Tell us about yourself..."
-										className="w-full bg-background border border-border rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors resize-none"
+										className="w-full bg-background border border-primary/30 rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors resize-none"
 									/>
 								</div>
 							</div>
@@ -187,7 +187,7 @@ const Settings: React.FC = () => {
 								].map((pref) => (
 									<div
 										key={pref.label}
-										className="flex items-center justify-between p-4 bg-background/50 border border-border rounded-xl"
+										className="flex items-center justify-between p-4 bg-background/50 border border-primary/30 rounded-xl"
 									>
 										<div>
 											<p className="text-xs font-bold text-text-main">
@@ -199,7 +199,7 @@ const Settings: React.FC = () => {
 											className={twMerge(
 												"w-10 h-5 rounded-full relative transition-all",
 												pref.enabled
-													? "bg-success shadow-[0_0_10px_rgba(34,197,94,0.3)]"
+													? "bg-primary shadow-[0_0_10px_rgba(34,197,94,0.3)]"
 													: "bg-border",
 											)}
 										>
@@ -241,7 +241,7 @@ const Settings: React.FC = () => {
 											<input
 												type="password"
 												placeholder="••••••••"
-												className="w-full bg-background border border-border rounded-lg pl-10 p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
+												className="w-full bg-background border border-primary/30 rounded-lg pl-10 p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
 											/>
 										</div>
 									</div>
@@ -253,7 +253,7 @@ const Settings: React.FC = () => {
 											<input
 												type="password"
 												placeholder="Min 8 characters"
-												className="w-full bg-background border border-border rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
+												className="w-full bg-background border border-primary/30 rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
 											/>
 										</div>
 										<div className="space-y-2">
@@ -263,13 +263,13 @@ const Settings: React.FC = () => {
 											<input
 												type="password"
 												placeholder="Confirm"
-												className="w-full bg-background border border-border rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
+												className="w-full bg-background border border-primary/30 rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
 											/>
 										</div>
 									</div>
 								</div>
 
-								<div className="pt-6 border-t border-border flex items-center justify-between">
+								<div className="pt-6 border-t border-primary/30 flex items-center justify-between">
 									<div className="flex items-center gap-3">
 										<div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
 											<ShieldCheck size={20} />
@@ -314,8 +314,8 @@ const Settings: React.FC = () => {
 										className={twMerge(
 											"flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all group",
 											currentTheme === t.id
-												? "bg-primary/10 border-primary shadow-lg shadow-primary/10"
-												: "bg-background border-border hover:border-border-hover",
+												? "bg-primary/10 border-primary shadow-sm shadow-primary/10"
+												: "bg-background border-primary/30 hover:border-primary/30-hover",
 										)}
 									>
 										<t.icon
@@ -352,13 +352,13 @@ const Settings: React.FC = () => {
 							<div className="space-y-3">
 								<button
 									onClick={() => setIsCompact(!isCompact)}
-									className="w-full flex items-center justify-between p-3 bg-background border border-border rounded-lg hover:border-primary transition-colors"
+									className="w-full flex items-center justify-between p-3 bg-background border border-primary/30 rounded-lg hover:border-primary transition-colors"
 								>
 									<span className="text-xs text-text-main">Compact Mode</span>
 									<div
 										className={twMerge(
 											"w-10 h-5 rounded-full relative transition-all",
-											isCompact ? "bg-success" : "bg-border",
+											isCompact ? "bg-primary" : "bg-border",
 										)}
 									>
 										<div
@@ -369,7 +369,7 @@ const Settings: React.FC = () => {
 										/>
 									</div>
 								</button>
-								<div className="flex items-center justify-between p-3 bg-background border border-border rounded-lg">
+								<div className="flex items-center justify-between p-3 bg-background border border-primary/30 rounded-lg">
 									<span className="text-xs text-text-main">
 										Glassmorphism Intensity
 									</span>
@@ -382,7 +382,7 @@ const Settings: React.FC = () => {
 													"px-2 py-1 rounded text-[10px] font-bold transition-all",
 													glassIntensity === level
 														? "bg-primary text-[var(--text-primary)]"
-														: "bg-surface border border-border text-text-muted hover:text-text-main",
+														: "bg-surface border border-primary/30 text-text-muted hover:text-text-main",
 												)}
 											>
 												{level}
@@ -420,7 +420,7 @@ const Settings: React.FC = () => {
 								"w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-bold border-2",
 								activeTab === item.id
 									? "bg-primary text-[var(--text-primary)] border-primary shadow-xl shadow-primary/20"
-									: "text-text-muted bg-surface/30 border-transparent hover:bg-surface hover:border-border",
+									: "text-text-muted bg-surface/30 border-transparent hover:bg-surface hover:border-primary/30",
 							)}
 						>
 							<item.icon size={18} />
@@ -428,10 +428,10 @@ const Settings: React.FC = () => {
 						</button>
 					))}
 
-					<div className="pt-8 mt-8 border-t border-border">
+					<div className="pt-8 mt-8 border-t border-primary/30">
 						<button
 							onClick={logout}
-							className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-bold text-danger hover:bg-danger/10 group"
+							className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-bold text-primary hover:bg-primary/10 group"
 						>
 							<LogOut
 								size={18}

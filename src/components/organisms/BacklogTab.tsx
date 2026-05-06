@@ -22,9 +22,9 @@ const BacklogTab: React.FC<BacklogTabProps> = ({
 			initial={{ opacity: 0, x: 20 }}
 			animate={{ opacity: 1, x: 0 }}
 			exit={{ opacity: 0, x: -20 }}
-			className="h-full bg-surface/30 border border-border rounded-md overflow-hidden flex flex-col"
+			className="h-full bg-surface/30 border border-primary/30 rounded-md overflow-hidden flex flex-col"
 		>
-			<div className="p-4 bg-[var(--accent-primary)]/10 border-b border-border flex items-center justify-between">
+			<div className="p-4 bg-[var(--accent-primary)]/10 border-b border-primary/30 flex items-center justify-between">
 				<span className="text-xs font-bold uppercase text-text-muted">
 					Filtered Issues
 				</span>
@@ -37,7 +37,7 @@ const BacklogTab: React.FC<BacklogTabProps> = ({
 						<input
 							type="text"
 							placeholder="Filter tasks..."
-							className="bg-background border border-border rounded pl-9 pr-3 py-1.5 text-xs text-text-main outline-none focus:border-primary w-64"
+							className="bg-background border border-primary/30 rounded pl-9 pr-3 py-1.5 text-xs text-text-main outline-none focus:border-primary w-64"
 						/>
 					</div>
 					<Button
@@ -55,11 +55,11 @@ const BacklogTab: React.FC<BacklogTabProps> = ({
 					<div
 						key={task.id}
 						onClick={() => onSelectTask(task)}
-						className="p-3 bg-surface border border-border rounded hover:border-text-muted transition-colors flex items-center justify-between group cursor-pointer"
+						className="p-3 bg-surface border border-primary/30 rounded hover:border-text-muted transition-colors flex items-center justify-between group cursor-pointer"
 					>
 						<div className="flex items-center gap-3">
 							<div
-								className={`w-2 h-2 rounded-full ${task.type === "Bug" ? "bg-danger" : task.type === "Issue" ? "bg-warning" : "bg-success"}`}
+								className={`w-2 h-2 rounded-full ${task.type === "Bug" ? "bg-primary" : task.type === "Issue" ? "bg-primary" : "bg-primary"}`}
 							/>
 							<span className="text-sm font-medium text-text-main">
 								{task.title}

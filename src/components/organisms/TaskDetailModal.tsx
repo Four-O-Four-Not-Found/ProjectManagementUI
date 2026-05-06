@@ -40,15 +40,15 @@ interface TaskDetailModalProps {
 const TypeIcon = ({ type }: { type: Task["type"] }) => {
 	switch (type) {
 		case "Issue":
-			return <AlertCircle size={12} className="text-gray-500" />;
+			return <AlertCircle size={12} className="text-text-muted" />;
 		case "Suggestion":
-			return <Lightbulb size={12} className="text-gray-400" />;
+			return <Lightbulb size={12} className="text-text-muted" />;
 		case "Bug":
 			return <AlertCircle size={12} className="text-[#da3633]" />;
 		case "Feature":
 			return <CheckCircle2 size={12} className="text-[#238636]" />;
 		default:
-			return <Bookmark size={12} className="text-gray-500" />;
+			return <Bookmark size={12} className="text-text-muted" />;
 	}
 };
 
@@ -198,7 +198,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 							<Button 
 								size="sm" 
 								variant="secondary" 
-								className="text-red-500 hover:text-red-600 hover:bg-red-50"
+								className="text-primary hover:text-red-600 hover:bg-red-50"
 								onClick={handleDeleteTask} 
 								loading={isSaving}
 							>
@@ -288,18 +288,18 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						{activeTab === "details" && (
 							<div className="space-y-10">
 								<div>
-									<h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">
+									<h3 className="text-[11px] font-bold text-text-muted uppercase tracking-widest mb-4">
 										Description
 									</h3>
 									{isEditing ? (
 										<textarea
 											value={editedDescription}
 											onChange={(e) => setEditedDescription(e.target.value)}
-											className="w-full bg-gray-50 dark:bg-[var(--card-bg)] border border-gray-200 dark:border-[var(--card-border)] rounded-xl p-6 text-sm text-gray-900 dark:text-[var(--text-primary)] placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[250px] resize-none"
+											className="w-full bg-surface border border-primary/30 rounded-xl p-6 text-sm text-text-main dark:text-[var(--text-primary)] placeholder:text-text-muted outline-none focus:border-primary/30 dark:focus:border-primary/30 transition-all min-h-[250px] resize-none"
 											placeholder="Write a detailed task description..."
 										/>
 									) : (
-										<div className="text-[15px] text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap font-medium">
+										<div className="text-[15px] text-text-muted dark:text-text-muted leading-relaxed whitespace-pre-wrap font-medium">
 											{task.description || "No description provided for this task."}
 										</div>
 									)}
@@ -307,7 +307,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
  
 								{task.subTasks && task.subTasks.length > 0 && (
 									<div className="space-y-4">
-										<h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+										<h3 className="text-[11px] font-bold text-text-muted uppercase tracking-widest flex items-center gap-2">
 											<Wand2 size={12} />
 											Sub-tasks
 										</h3>
@@ -315,11 +315,11 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											{task.subTasks.map((sub) => (
 												<div
 													key={sub.id}
-													className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[var(--card-bg)] border border-gray-100 dark:border-[var(--card-border)] rounded-xl hover:border-gray-200 dark:hover:border-[var(--card-border)] transition-colors"
+													className="flex items-center justify-between p-4 bg-surface border border-primary/30 rounded-xl hover:border-primary/30 dark:hover:border-[var(--card-border)] transition-colors"
 												>
 													<div className="flex items-center gap-3">
 														<div className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
-														<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+														<span className="text-sm font-medium text-text-muted dark:text-text-muted">
 															{sub.title}
 														</span>
 													</div>
@@ -347,28 +347,28 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 												/>
 												<div className="flex-1 space-y-1.5">
 													<div className="flex items-center justify-between">
-														<span className="text-xs font-bold text-gray-900 dark:text-[var(--text-primary)]">
+														<span className="text-xs font-bold text-text-main dark:text-[var(--text-primary)]">
 															{comment.user?.displayName}
 														</span>
-														<span className="text-[10px] text-gray-400 font-medium">
+														<span className="text-[10px] text-text-muted font-medium">
 															{new Date(comment.createdAt).toLocaleDateString()}
 														</span>
 													</div>
-													<div className="bg-gray-50 dark:bg-[var(--card-bg)] rounded-2xl rounded-tl-none p-4 border border-gray-100 dark:border-[var(--card-border)] text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+													<div className="bg-surface rounded-2xl rounded-tl-none p-4 border border-primary/30 text-sm text-text-muted dark:text-text-muted leading-relaxed">
 														{comment.content}
 													</div>
 												</div>
 											</div>
 										))
 									) : (
-										<div className="flex flex-col items-center justify-center py-20 text-gray-400 opacity-50">
+										<div className="flex flex-col items-center justify-center py-20 text-text-muted opacity-50">
 											<MessageSquare size={40} strokeWidth={1} />
 											<p className="mt-4 text-sm font-medium italic">No discussions yet.</p>
 										</div>
 									)}
 								</div>
  
-								<div className="flex gap-4 pt-6 border-t border-gray-100 dark:border-[var(--card-border)]">
+								<div className="flex gap-4 pt-6 border-t border-primary/30">
 									<Avatar
 										name={user?.displayName || "You"}
 										src={user?.avatarUrl}
@@ -379,12 +379,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 											value={comment}
 											onChange={(e) => setComment(e.target.value)}
 											placeholder="Write a comment..."
-											className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-[var(--card-border)] rounded-2xl p-4 text-sm text-gray-900 dark:text-[var(--text-primary)] placeholder:text-gray-400 outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all min-h-[100px] resize-none shadow-sm"
+											className="w-full bg-white dark:bg-gray-950 border border-primary/30 rounded-2xl p-4 text-sm text-text-main dark:text-[var(--text-primary)] placeholder:text-text-muted outline-none focus:border-primary/30 dark:focus:border-primary/30 transition-all min-h-[100px] resize-none shadow-sm"
 										/>
 										<div className="absolute bottom-3 right-3">
 											<Button
 												size="sm"
-												className="h-9 px-5 rounded-xl shadow-lg"
+												className="h-9 px-5 rounded-xl shadow-sm"
 												rightIcon={<Send size={14} />}
 												onClick={handlePostComment}
 												loading={isPostingComment}
@@ -404,7 +404,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									{task.attachments?.map((img) => (
 										<div
 											key={img.id}
-											className="aspect-[4/3] rounded-2xl overflow-hidden border border-gray-200 dark:border-[var(--card-border)] group relative cursor-pointer shadow-sm hover:shadow-md transition-all"
+											className="aspect-[4/3] rounded-2xl overflow-hidden border border-primary/30 group relative cursor-pointer shadow-sm hover:shadow-sm transition-all"
 										>
 											<img
 												src={img.fileUrl}
@@ -426,12 +426,12 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 									/>
 									<button
 										onClick={() => fileInputRef.current?.click()}
-										className="aspect-[4/3] rounded-2xl border-2 border-dashed border-gray-200 dark:border-[var(--card-border)] hover:border-gray-400 dark:hover:border-[var(--card-border)] hover:bg-gray-50 dark:hover:bg-[var(--card-bg)] transition-all flex flex-col items-center justify-center gap-3 group"
+										className="aspect-[4/3] rounded-2xl border-2 border-dashed border-primary/30 hover:border-primary/30 dark:hover:border-[var(--card-border)] hover:bg-gray-50 dark:hover:bg-[var(--card-bg)] transition-all flex flex-col items-center justify-center gap-3 group"
 									>
-										<div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[var(--card-bg)] flex items-center justify-center text-gray-400 group-hover:text-gray-600 dark:group-hover:text-[var(--text-primary)] transition-colors">
+										<div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center text-text-muted group-hover:text-text-muted dark:group-hover:text-[var(--text-primary)] transition-colors">
 											<Plus size={20} />
 										</div>
-										<span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+										<span className="text-[11px] font-bold text-text-muted uppercase tracking-widest">
 											Add Attachment
 										</span>
 									</button>
@@ -480,7 +480,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										<select 
 											value={editedPriority}
 											onChange={(e) => setEditedPriority(e.target.value as any)}
-											className="bg-slate-900 border border-[var(--card-border)] rounded px-2 py-1 text-[11px] text-[var(--text-primary)] outline-none focus:border-primary/50"
+											className="bg-surface border border-[var(--card-border)] rounded px-2 py-1 text-[11px] text-[var(--text-primary)] outline-none focus:border-primary/50"
 										>
 											<option value="Low">Low</option>
 											<option value="Medium">Medium</option>
@@ -490,7 +490,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 										<select 
 											value={editedType}
 											onChange={(e) => setEditedType(e.target.value as any)}
-											className="bg-slate-900 border border-[var(--card-border)] rounded px-2 py-1 text-[11px] text-[var(--text-primary)] outline-none focus:border-primary/50 font-mono"
+											className="bg-surface border border-[var(--card-border)] rounded px-2 py-1 text-[11px] text-[var(--text-primary)] outline-none focus:border-primary/50 font-mono"
 										>
 											<option value="Feature">Feature</option>
 											<option value="Bug">Bug</option>
@@ -620,7 +620,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 								className="w-full text-xs font-semibold py-1.5"
 								onClick={handleDecompose}
 								disabled={isDecomposing}
-								leftIcon={isDecomposing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} className="text-amber-500" />}
+								leftIcon={isDecomposing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} className="text-primary" />}
 							>
 								{isDecomposing ? "Running AI..." : "Decompose Task"}
 							</Button>

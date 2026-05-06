@@ -70,7 +70,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
 		>
 			<div className="flex gap-6 min-h-[400px]">
 				{/* Sidebar Tabs */}
-				<div className="w-32 flex flex-col gap-2 border-r border-border pr-4">
+				<div className="w-32 flex flex-col gap-2 border-r border-primary/30 pr-4">
 					<button
 						onClick={() => setActiveTab("profile")}
 						className={twMerge(
@@ -104,7 +104,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
 									src={user.avatarUrl}
 									name={user.displayName}
 									size="xl"
-									className="w-24 h-24 border-4 border-border"
+									className="w-24 h-24 border-4 border-primary/30"
 								/>
 								<div className="text-center">
 									<h4 className="text-xl font-bold text-text-main">
@@ -115,7 +115,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
 							</div>
 
 							<div className="space-y-3">
-								<div className="flex items-center gap-3 p-3 bg-background border border-border rounded-xl">
+								<div className="flex items-center gap-3 p-3 bg-background border border-primary/30 rounded-xl">
 									<Mail size={16} className="text-text-muted" />
 									<div className="flex-1">
 										<p className="text-[10px] font-bold text-text-muted uppercase">
@@ -125,7 +125,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
 									</div>
 								</div>
 
-								<div className="flex items-center gap-3 p-3 bg-background border border-border rounded-xl">
+								<div className="flex items-center gap-3 p-3 bg-background border border-primary/30 rounded-xl">
 									<GitBranch size={16} className="text-text-muted" />
 									<div className="flex-1">
 										<p className="text-[10px] font-bold text-text-muted uppercase">

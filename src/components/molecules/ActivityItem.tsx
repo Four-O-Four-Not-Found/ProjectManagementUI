@@ -45,7 +45,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({
 						{new Date(activity.createdAt).toLocaleDateString()}
 					</span>
 				</div>
-				<div className="bg-background p-3 rounded-md border border-border text-xs text-text-muted mt-2 group-hover:border-text-muted transition-colors">
+				<div className="bg-background p-3 rounded-md border border-primary/30 text-xs text-text-muted mt-2 group-hover:border-text-muted transition-colors">
 					Activity trace captured via global project ledger.
 				</div>
 			</div>

@@ -219,7 +219,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 			)}
 
 			{/* Repo Header & Stats */}
-			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface border border-border p-4 rounded-lg shadow-sm">
+			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface border border-primary/30 p-4 rounded-lg shadow-sm">
 				<div className="flex items-center gap-4">
 					<div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-inner">
 						<Layers size={24} />
@@ -255,7 +255,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 					>
 						Initialize New Repo
 					</Button>
-					<div className="flex items-center gap-4 md:gap-8 bg-background/40 p-2 md:p-3 rounded-xl border border-border/50">
+					<div className="flex items-center gap-4 md:gap-8 bg-background/40 p-2 md:p-3 rounded-xl border border-primary/30/50">
 						<div className="flex flex-col items-center">
 							<span className="text-text-muted text-[9px] font-bold uppercase tracking-tighter mb-0.5">
 								Branches
@@ -269,7 +269,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 							<span className="text-text-muted text-[9px] font-bold uppercase tracking-tighter mb-0.5">
 								Open PRs
 							</span>
-							<span className="text-accent-purple font-black text-base leading-none">
+							<span className="text-accent-primary font-black text-base leading-none">
 								{pullRequests.length}
 							</span>
 						</div>
@@ -279,8 +279,8 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				{/* Architecture Diagram (File Tree) */}
-				<div className="md:col-span-2 bg-surface border border-border rounded-xl overflow-hidden flex flex-col shadow-lg shadow-black/20">
-					<div className="px-5 py-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center">
+				<div className="md:col-span-2 bg-surface border border-primary/30 rounded-xl overflow-hidden flex flex-col shadow-sm shadow-black/20">
+					<div className="px-5 py-4 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex justify-between items-center">
 						<div className="flex items-center gap-2">
 							<Layers size={16} className="text-primary" />
 							<h3 className="font-extrabold text-text-main text-xs uppercase tracking-wider">
@@ -291,7 +291,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 							<span className="text-[10px] text-text-muted italic">
 								Click to edit code
 							</span>
-							<span className="text-[10px] font-bold text-text-muted bg-background px-2 py-0.5 rounded border border-border">
+							<span className="text-[10px] font-bold text-text-muted bg-background px-2 py-0.5 rounded border border-primary/30">
 								{repoDetails?.tree.length || 0} Objects Detected
 							</span>
 						</div>
@@ -318,8 +318,8 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 
 				<div className="space-y-6">
 					{/* Branches */}
-					<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col h-[215px]">
-						<div className="p-3 border-b border-border bg-[var(--accent-primary)]/10 flex items-center gap-2">
+					<div className="bg-surface border border-primary/30 rounded-lg overflow-hidden flex flex-col h-[215px]">
+						<div className="p-3 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex items-center gap-2">
 							<GitBranch size={14} className="text-primary" />
 							<h3 className="font-bold text-text-main text-xs">Branches</h3>
 						</div>
@@ -327,7 +327,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 							{branches.map((b) => (
 								<div
 									key={b.name}
-									className="group flex items-center justify-between p-2 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border"
+									className="group flex items-center justify-between p-2 rounded-md hover:bg-background transition-colors border border-transparent hover:border-primary/30"
 								>
 									<div className="flex flex-col min-w-0">
 										<span className="font-bold text-[11px] text-text-main truncate">
@@ -339,7 +339,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 									</div>
 									<button
 										onClick={() => handleDeleteBranch(b.name)}
-										className="p-1.5 text-text-muted hover:text-danger opacity-0 group-hover:opacity-100 transition-all"
+										className="p-1.5 text-text-muted hover:text-primary opacity-0 group-hover:opacity-100 transition-all"
 									>
 										<Trash2 size={12} />
 									</button>
@@ -349,9 +349,9 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 					</div>
 
 					{/* Pull Requests */}
-					<div className="bg-surface border border-border rounded-lg overflow-hidden flex flex-col h-[215px]">
-						<div className="p-3 border-b border-border bg-[var(--accent-primary)]/10 flex items-center gap-2">
-							<GitPullRequest size={14} className="text-accent-purple" />
+					<div className="bg-surface border border-primary/30 rounded-lg overflow-hidden flex flex-col h-[215px]">
+						<div className="p-3 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex items-center gap-2">
+							<GitPullRequest size={14} className="text-accent-primary" />
 							<h3 className="font-bold text-text-main text-xs">PRs</h3>
 						</div>
 						<div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom">
@@ -363,7 +363,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 								pullRequests.map((pr) => (
 									<div
 										key={pr.number}
-										className="group flex items-center justify-between p-2 rounded-md hover:bg-background transition-colors border border-transparent hover:border-border"
+										className="group flex items-center justify-between p-2 rounded-md hover:bg-background transition-colors border border-transparent hover:border-primary/30"
 									>
 										<div className="flex flex-col min-w-0 flex-1">
 											<span className="font-bold text-[11px] text-text-main group-hover:text-primary truncate">
@@ -375,7 +375,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 										</div>
 										<button
 											onClick={() => handleDeletePR(pr.number)}
-											className="p-1.5 text-text-muted hover:text-danger opacity-0 group-hover:opacity-100 transition-all"
+											className="p-1.5 text-text-muted hover:text-primary opacity-0 group-hover:opacity-100 transition-all"
 										>
 											<Trash2 size={12} />
 										</button>
@@ -388,9 +388,9 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 			</div>
 
 			{/* Commits Section */}
-			<div className="bg-surface border border-border rounded-xl overflow-hidden shadow-lg shadow-black/20">
-				<div className="px-5 py-3 border-b border-border bg-[var(--accent-primary)]/10 flex items-center gap-2">
-					<GitCommit size={14} className="text-success" />
+			<div className="bg-surface border border-primary/30 rounded-xl overflow-hidden shadow-sm shadow-black/20">
+				<div className="px-5 py-3 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex items-center gap-2">
+					<GitCommit size={14} className="text-primary" />
 					<h3 className="font-extrabold text-text-main text-[10px] uppercase tracking-wider">
 						Recent Deployment Stream
 					</h3>
@@ -400,7 +400,7 @@ const RepositoryTab: React.FC<RepositoryTabProps> = ({ gitHubRepo }) => {
 						<button
 							key={c.sha}
 							onClick={() => setSelectedCommitSha(c.sha)}
-							className="flex flex-col p-3 rounded-xl hover:bg-background transition-all border border-transparent hover:border-border group text-left"
+							className="flex flex-col p-3 rounded-xl hover:bg-background transition-all border border-transparent hover:border-primary/30 group text-left"
 						>
 							<span className="font-bold text-[11px] text-text-main group-hover:text-primary transition-colors line-clamp-1">
 								{c.message}

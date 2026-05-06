@@ -31,11 +31,11 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   const getIcon = () => {
     switch (type) {
       case 'danger':
-        return <AlertCircle className="text-rose-500" size={24} />;
+        return <AlertCircle className="text-primary" size={24} />;
       case 'warning':
-        return <AlertTriangle className="text-amber-500" size={24} />;
+        return <AlertTriangle className="text-primary" size={24} />;
       case 'success':
-        return <CheckCircle2 className="text-emerald-500" size={24} />;
+        return <CheckCircle2 className="text-primary" size={24} />;
       case 'info':
       default:
         return <Info className="text-primary" size={24} />;
@@ -58,7 +58,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   const getConfirmButtonClass = () => {
      if (type === 'danger') return 'bg-rose-600 hover:bg-rose-700 border-rose-500/30 text-[var(--text-primary)]';
-     if (type === 'warning') return 'bg-amber-600 hover:bg-amber-700 border-amber-500/30 text-[var(--text-primary)]';
+     if (type === 'warning') return 'bg-amber-600 hover:bg-amber-700 border-primary/30 text-[var(--text-primary)]';
      if (type === 'success') return 'bg-emerald-600 hover:bg-emerald-700 border-emerald-500/30 text-[var(--text-primary)]';
      return '';
   };
@@ -92,7 +92,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       }
     >
       <div className="flex items-start gap-4">
-        <div className={`p-3 rounded-2xl bg-surface border border-border shadow-inner flex-shrink-0`}>
+        <div className={`p-3 rounded-2xl bg-surface border border-primary/30 shadow-inner flex-shrink-0`}>
           {getIcon()}
         </div>
         <div className="flex-1">

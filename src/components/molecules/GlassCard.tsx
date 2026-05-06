@@ -26,7 +26,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
 			style={style}
 			className={twMerge(
 				"glass-card animate-slide-up relative overflow-hidden",
-				isHoverable && "hover:translate-y-[-2px] hover:shadow-lg",
+				isHoverable && "hover:translate-y-[-2px] hover:shadow-sm",
 				isInteractive && "cursor-pointer active:scale-[0.99]",
 				noPadding ? "p-0" : "p-4 md:p-6",
 				className,

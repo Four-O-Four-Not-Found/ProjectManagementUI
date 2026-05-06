@@ -157,7 +157,7 @@ const Team: React.FC = () => {
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				{/* Team Sidebar */}
 				<GlassCard className="lg:col-span-1 p-4 space-y-4">
-					<h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest px-2">
+					<h3 className="text-xs font-bold text-text-muted uppercase tracking-widest px-2">
 						Teams
 					</h3>
 					<div className="space-y-1">
@@ -168,7 +168,7 @@ const Team: React.FC = () => {
 								className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all ${
 									selectedTeam?.id === team.id
 										? "bg-primary/10 border border-primary/20 text-primary"
-										: "hover:bg-[var(--card-bg)] text-slate-400"
+										: "hover:bg-[var(--card-bg)] text-text-muted"
 								}`}
 							>
 								<Users size={18} />
@@ -177,7 +177,7 @@ const Team: React.FC = () => {
 						))}
 						{teams.length === 0 && !loading && (
 							<div className="py-8 px-2">
-								<p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-center mb-4">
+								<p className="text-[10px] text-text-muted uppercase tracking-widest font-bold text-center mb-4">
 									No teams active
 								</p>
 								<Button
@@ -198,7 +198,7 @@ const Team: React.FC = () => {
 					{loading ? (
 						<div className="flex flex-col items-center justify-center py-20 space-y-4">
 							<Loader2 className="animate-spin text-primary" size={32} />
-							<p className="text-sm text-slate-500 font-mono">
+							<p className="text-sm text-text-muted font-mono">
 								Synchronizing member data...
 							</p>
 						</div>
@@ -209,7 +209,7 @@ const Team: React.FC = () => {
 									<h2 className="text-lg font-bold text-[var(--text-primary)]">
 										{selectedTeam.name}
 									</h2>
-									<p className="text-xs text-slate-500">
+									<p className="text-xs text-text-muted">
 										{selectedTeam.description || "No description provided."}
 									</p>
 								</div>
@@ -243,16 +243,16 @@ const Team: React.FC = () => {
 							<table className="hidden md:table w-full text-left border-collapse min-w-[800px] md:min-w-0">
 								<thead>
 									<tr className="border-b border-[var(--card-border)] bg-[var(--card-bg)]">
-										<th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
+										<th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-widest">
 											Member
 										</th>
-										<th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
+										<th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-widest">
 											Role
 										</th>
-										<th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
+										<th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-widest">
 											Status
 										</th>
-										<th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest"></th>
+										<th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-widest"></th>
 									</tr>
 								</thead>
 								<tbody className="divide-y divide-white/[0.05]">
@@ -268,7 +268,7 @@ const Team: React.FC = () => {
 														<p className="text-sm font-bold text-[var(--text-primary)]">
 															{member.name}
 														</p>
-														<p className="text-xs text-slate-500">
+														<p className="text-xs text-text-muted">
 															{member.email}
 														</p>
 													</div>
@@ -288,16 +288,16 @@ const Team: React.FC = () => {
 																		"Architect",
 																		"Lead",
 																  ].includes(member.role)
-																? "text-emerald-400"
+																? "text-primary"
 																: [
 																			"UI/UX Designer",
 																			"QA Engineer",
 																			"Designer",
 																			"Member",
 																	  ].includes(member.role)
-																	? "text-amber-400"
+																	? "text-primary"
 																	: member.role === "Stakeholder"
-																		? "text-slate-400"
+																		? "text-text-muted"
 																		: "text-primary"
 													}`}
 												>
@@ -306,7 +306,7 @@ const Team: React.FC = () => {
 											</td>
 											<td className="px-6 py-4">
 												<div className="flex items-center gap-2">
-													<div className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+													<div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
 													<span className="text-xs text-slate-300">Active</span>
 												</div>
 											</td>
@@ -333,7 +333,7 @@ const Team: React.FC = () => {
 													<p className="text-sm font-bold text-[var(--text-primary)]">
 														{member.name}
 													</p>
-													<p className="text-[10px] text-slate-500">
+													<p className="text-[10px] text-text-muted">
 														{member.email}
 													</p>
 												</div>
@@ -356,24 +356,24 @@ const Team: React.FC = () => {
 																	"Architect",
 																	"Lead",
 															  ].includes(member.role)
-															? "text-emerald-400"
+															? "text-primary"
 															: [
 																		"UI/UX Designer",
 																		"QA Engineer",
 																		"Designer",
 																		"Member",
 																  ].includes(member.role)
-																? "text-amber-400"
+																? "text-primary"
 																: member.role === "Stakeholder"
-																	? "text-slate-400"
+																	? "text-text-muted"
 																	: "text-primary"
 												}`}
 											>
 												{member.role}
 											</span>
 											<div className="flex items-center gap-1.5">
-												<div className="w-1 h-1 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-												<span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+												<div className="w-1 h-1 rounded-full bg-primary shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+												<span className="text-[10px] font-bold text-text-muted uppercase tracking-tighter">
 													Active
 												</span>
 											</div>
@@ -383,15 +383,15 @@ const Team: React.FC = () => {
 							</div>
 
 							{(!selectedTeam.members || selectedTeam.members.length === 0) && (
-								<div className="px-6 py-10 text-center text-slate-500 italic text-sm">
+								<div className="px-6 py-10 text-center text-text-muted italic text-sm">
 									No members in this team yet. Invite someone!
 								</div>
 							)}
 						</div>
 					) : (
 						<div className="flex flex-col items-center justify-center py-20 space-y-4 opacity-50">
-							<Users size={48} className="text-slate-600" />
-							<p className="text-sm text-slate-500">
+							<Users size={48} className="text-text-muted" />
+							<p className="text-sm text-text-muted">
 								Select a team to view its members.
 							</p>
 						</div>

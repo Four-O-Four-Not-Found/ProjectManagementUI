@@ -74,14 +74,14 @@ const TeamInviteModal: React.FC<TeamInviteModalProps> = ({
 						/>
 					</div>
 					<div className="text-center">
-						<p className="text-sm text-slate-400">Scan this QR code to join the team</p>
+						<p className="text-sm text-text-muted">Scan this QR code to join the team</p>
 						<p className="text-[10px] font-mono text-primary mt-1 uppercase tracking-widest">{inviteCode}</p>
 					</div>
 				</div>
 
 				<div className="space-y-4">
 					<div className="space-y-2">
-						<label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Invitation Link</label>
+						<label className="text-xs font-bold text-text-muted uppercase tracking-widest">Invitation Link</label>
 						<div className="flex gap-2">
 							<div className="flex-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg px-4 py-2.5 text-sm text-slate-300 font-mono truncate">
 								{joinUrl}

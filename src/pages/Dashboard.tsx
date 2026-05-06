@@ -252,7 +252,7 @@ const Dashboard: React.FC = () => {
 					label="PRs Open"
 					value={stats.openPullRequests.toString()}
 					icon={GitBranch}
-					colorClass="bg-danger"
+					colorClass="bg-primary"
 					trend="+4"
 				/>
 			</div>
@@ -265,16 +265,16 @@ const Dashboard: React.FC = () => {
 							<motion.div
 								initial={{ height: 0, opacity: 0 }}
 								animate={{ height: "auto", opacity: 1 }}
-								className="bg-danger/10 border border-danger/20 rounded-2xl p-4 flex items-center gap-4 overflow-hidden"
+								className="bg-primary/10 border border-primary/20 rounded-2xl p-4 flex items-center gap-4 overflow-hidden"
 							>
-								<div className="w-10 h-10 rounded-full bg-danger/20 flex items-center justify-center text-danger shrink-0">
+								<div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0">
 									<AlertTriangle size={20} />
 								</div>
 								<div className="flex-1 min-w-0">
-									<h4 className="text-sm font-bold text-danger">
+									<h4 className="text-sm font-bold text-primary">
 										Priority Alerts
 									</h4>
-									<p className="text-xs text-danger/70 truncate">
+									<p className="text-xs text-primary/70 truncate">
 										You have {urgentTasks.length} urgent tasks requiring
 										immediate attention.
 									</p>
@@ -282,7 +282,7 @@ const Dashboard: React.FC = () => {
 								<Button
 									size="xs"
 									variant="danger"
-									className="shadow-lg shadow-danger/20"
+									className="shadow-sm shadow-danger/20"
 								>
 									Review All
 								</Button>
@@ -291,14 +291,14 @@ const Dashboard: React.FC = () => {
 					</AnimatePresence>
 
 					<GlassCard className="p-0 flex flex-col overflow-hidden">
-						<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10 flex justify-between items-center">
+						<div className="p-4 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex justify-between items-center">
 							<div className="flex items-center gap-2">
 								<Bookmark size={16} className="text-primary" />
 								<h3 className="font-bold text-text-main text-sm">
 									Assigned to Me
 								</h3>
 							</div>
-							<span className="text-[10px] font-bold text-text-muted bg-surface px-2 py-0.5 rounded-full border border-border">
+							<span className="text-[10px] font-bold text-text-muted bg-surface px-2 py-0.5 rounded-full border border-primary/30">
 								{(stats?.assignedTasks || []).length} Pending
 							</span>
 						</div>
@@ -313,7 +313,7 @@ const Dashboard: React.FC = () => {
 										<div
 											key={task.id}
 											onClick={() => navigate(`/project/${task.projectId}`)}
-											className="p-2 md:p-3 bg-surface border border-border rounded-lg md:rounded-xl hover:border-primary transition-all cursor-pointer group"
+											className="p-2 md:p-3 bg-surface border border-primary/30 rounded-lg md:rounded-xl hover:border-primary transition-all cursor-pointer group"
 										>
 											<div className="flex justify-between items-start mb-1 md:mb-2">
 												<span className="text-[8px] md:text-[9px] font-mono text-text-muted">
@@ -322,9 +322,9 @@ const Dashboard: React.FC = () => {
 												<div
 													className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${
 														task.priority === "Urgent"
-															? "bg-danger shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+															? "bg-primary shadow-[0_0_8px_rgba(239,68,68,0.5)]"
 															: task.priority === "High"
-																? "bg-warning"
+																? "bg-primary"
 																: "bg-primary"
 													}`}
 												/>
@@ -333,7 +333,7 @@ const Dashboard: React.FC = () => {
 												{task.title}
 											</h4>
 											<div className="flex items-center gap-2 mt-1.5 md:mt-2">
-												<div className="px-1 py-0.5 rounded bg-background border border-border text-[7px] md:text-[8px] font-bold text-text-muted uppercase">
+												<div className="px-1 py-0.5 rounded bg-background border border-primary/30 text-[7px] md:text-[8px] font-bold text-text-muted uppercase">
 													{task.status}
 												</div>
 											</div>
@@ -378,7 +378,7 @@ const Dashboard: React.FC = () => {
 				{/* Right Column: Activity Feed & Projects */}
 				<div className="space-y-8">
 					<GlassCard className="p-0 flex flex-col h-[500px]">
-						<div className="p-4 border-b border-border bg-[var(--accent-primary)]/10">
+						<div className="p-4 border-b border-primary/30 bg-[var(--accent-primary)]/10">
 							<h3 className="font-bold text-text-main text-sm">
 								Movement Feed
 							</h3>
@@ -419,7 +419,7 @@ const Dashboard: React.FC = () => {
 								))
 							)}
 						</div>
-						<button className="w-full py-3 border-t border-border bg-[var(--accent-primary)]/10 text-[10px] font-bold text-text-muted hover:text-text-main transition-all uppercase tracking-widest">
+						<button className="w-full py-3 border-t border-primary/30 bg-[var(--accent-primary)]/10 text-[10px] font-bold text-text-muted hover:text-text-main transition-all uppercase tracking-widest">
 							Full Audit Log
 						</button>
 					</GlassCard>
@@ -447,7 +447,7 @@ const Dashboard: React.FC = () => {
 									<div
 										key={project.id}
 										onClick={() => navigate(`/project/${project.id}`)}
-										className="p-4 bg-surface border border-border rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer group relative overflow-hidden"
+										className="p-4 bg-surface border border-primary/30 rounded-2xl hover:border-primary/50 hover:shadow-sm hover:shadow-primary/5 transition-all cursor-pointer group relative overflow-hidden"
 									>
 										<div className="flex justify-between items-start mb-3">
 											<div className="min-w-0">
@@ -480,26 +480,26 @@ const Dashboard: React.FC = () => {
 
 					<div className="space-y-4">
 						<div className="flex items-center justify-between">
-							<h3 className="text-xs font-extrabold text-accent-purple uppercase tracking-widest">
+							<h3 className="text-xs font-extrabold text-accent-primary uppercase tracking-widest">
 								Joined Teams
 							</h3>
-							<span className="text-[10px] font-bold text-text-muted hover:text-accent-purple cursor-pointer transition-colors" onClick={() => navigate('/team')}>
+							<span className="text-[10px] font-bold text-text-muted hover:text-accent-primary cursor-pointer transition-colors" onClick={() => navigate('/team')}>
 								Manage
 							</span>
 						</div>
 						<div className="space-y-3">
 							{teams.length === 0 ? (
-								<div className="p-4 border border-dashed border-border rounded-xl text-center bg-surface/10">
+								<div className="p-4 border border-dashed border-primary/30 rounded-xl text-center bg-surface/10">
 									<p className="text-[10px] text-text-muted italic font-medium uppercase tracking-tighter">Not part of any teams yet.</p>
 								</div>
 							) : (
 								teams.slice(0, 3).map((team) => (
 									<div
 										key={team.id}
-										className="p-3 bg-surface border border-border rounded-xl hover:border-accent-purple/50 transition-all flex items-center gap-3 group cursor-pointer"
+										className="p-3 bg-surface border border-primary/30 rounded-xl hover:border-accent-primary/50 transition-all flex items-center gap-3 group cursor-pointer"
 										onClick={() => navigate('/team')}
 									>
-										<div className="w-10 h-10 rounded-lg bg-accent-purple/10 border border-accent-purple/20 flex items-center justify-center text-accent-purple shrink-0 group-hover:scale-105 transition-transform">
+										<div className="w-10 h-10 rounded-lg bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary shrink-0 group-hover:scale-105 transition-transform">
 											<Users size={18} />
 										</div>
 										<div className="flex-1 min-w-0">
@@ -510,7 +510,7 @@ const Dashboard: React.FC = () => {
 												{team.members?.length || 0} members
 											</p>
 										</div>
-										<ChevronRight size={14} className="text-text-muted group-hover:text-accent-purple transition-colors" />
+										<ChevronRight size={14} className="text-text-muted group-hover:text-accent-primary transition-colors" />
 									</div>
 								))
 							)}

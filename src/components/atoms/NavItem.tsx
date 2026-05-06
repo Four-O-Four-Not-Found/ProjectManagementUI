@@ -41,7 +41,7 @@ const NavItem: React.FC<NavItemProps> = ({
 			{!isCollapsed && <span className="truncate">{label}</span>}
 			
 			{isCollapsed && (
-				<div className="absolute left-full ml-4 px-2 py-1 bg-surface border border-border rounded text-[10px] font-bold text-text-main whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
+				<div className="absolute left-full ml-4 px-2 py-1 bg-surface border border-primary/30 rounded text-[10px] font-bold text-text-main whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
 					{label}
 				</div>
 			)}

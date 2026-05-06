@@ -30,12 +30,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 	return (
 		<aside
 			className={clsx(
-				"h-full glass-panel border-r border-border flex flex-col transition-all duration-300 ease-in-out z-[100] relative !rounded-none",
+				"h-full glass-panel border-r border-primary/30 flex flex-col transition-all duration-300 ease-in-out z-[100] relative !rounded-none",
 				isCollapsed ? "w-16" : "w-64",
 			)}
 		>
 			{/* Brand */}
-			<div className="p-4 flex items-center gap-3 border-b border-border h-16">
+			<div className="p-4 flex items-center gap-3 border-b border-primary/30 h-16">
 				<div className="w-8 h-8 rounded-md flex items-center justify-center overflow-hidden">
 					<img src="/favicon.svg" alt="FlowState" className="w-6 h-6 object-contain" />
 				</div>
@@ -65,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 			</nav>
 
 			{/* Footer Actions */}
-			<div className="p-2 border-t border-border">
+			<div className="p-2 border-t border-primary/30">
 				<button
 					onClick={onToggle}
 					className="w-full py-2.5 rounded-lg hover:bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-all group"

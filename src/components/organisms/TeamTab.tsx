@@ -24,7 +24,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 			initial={{ opacity: 0, x: 20 }}
 			animate={{ opacity: 1, x: 0 }}
 			exit={{ opacity: 0, x: -20 }}
-			className="h-full bg-surface/30 border border-border rounded-md p-8 overflow-y-auto"
+			className="h-full bg-surface/30 border border-primary/30 rounded-md p-8 overflow-y-auto"
 		>
 			<div className="max-w-4xl mx-auto space-y-6">
 				<div>
@@ -38,8 +38,8 @@ const TeamTab: React.FC<TeamTabProps> = ({
 				</div>
 
 				{!hasTeamAssigned ? (
-					<div className="p-8 border border-dashed border-border rounded-lg flex flex-col items-center justify-center text-center bg-surface/10">
-						<div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center text-text-muted mb-4">
+					<div className="p-8 border border-dashed border-primary/30 rounded-lg flex flex-col items-center justify-center text-center bg-surface/10">
+						<div className="w-12 h-12 rounded-full bg-surface border border-primary/30 flex items-center justify-center text-text-muted mb-4">
 							<UsersIcon size={24} />
 						</div>
 						<h3 className="text-text-main font-bold">No Team Assigned</h3>
@@ -52,7 +52,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 					</div>
 				) : projectTeam ? (
 					<div className="space-y-4">
-						<div className="p-4 border border-border rounded-lg bg-surface/50 flex justify-between items-center">
+						<div className="p-4 border border-primary/30 rounded-lg bg-surface/50 flex justify-between items-center">
 							<div>
 								<h3 className="font-bold text-text-main">{projectTeam.name}</h3>
 								<p className="text-xs text-text-muted mt-1">
@@ -71,7 +71,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 							{projectTeam.members?.map((member) => (
 								<div
 									key={member.userId}
-									className="p-4 border border-border rounded-lg bg-surface flex items-center gap-4 hover:border-text-muted transition-colors"
+									className="p-4 border border-primary/30 rounded-lg bg-surface flex items-center gap-4 hover:border-text-muted transition-colors"
 								>
 									<Avatar name={member.name} size="md" />
 									<div>
@@ -83,7 +83,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 											onChange={(e) =>
 												onRoleChange(member.userId, e.target.value)
 											}
-											className={`bg-[var(--accent-primary)]/10 border border-border rounded px-2 py-1 text-xs font-medium focus:outline-none focus:border-primary transition-colors cursor-pointer mt-1 ${
+											className={`bg-[var(--accent-primary)]/10 border border-primary/30 rounded px-2 py-1 text-xs font-medium focus:outline-none focus:border-primary transition-colors cursor-pointer mt-1 ${
 												["Project Manager", "Product Owner"].includes(
 													member.role,
 												)
@@ -93,20 +93,20 @@ const TeamTab: React.FC<TeamTabProps> = ({
 															"Senior Developer",
 															"DevOps Engineer",
 													  ].includes(member.role)
-														? "text-emerald-400"
+														? "text-primary"
 														: [
 																"UI/UX Designer",
 																"QA Engineer",
 														  ].includes(member.role)
-															? "text-amber-400"
+															? "text-primary"
 															: member.role === "Stakeholder"
-																? "text-slate-400"
+																? "text-text-muted"
 																: "text-primary"
 											}`}
 										>
 											<optgroup
 												label="Management"
-												className="bg-slate-900 text-slate-500"
+												className="bg-surface text-text-muted"
 											>
 												<option
 													value="Project Manager"
@@ -123,14 +123,14 @@ const TeamTab: React.FC<TeamTabProps> = ({
 											</optgroup>
 											<optgroup
 												label="Engineering"
-												className="bg-slate-900 text-slate-500"
+												className="bg-surface text-text-muted"
 											>
-												<option value="Tech Lead" className="text-emerald-400">
+												<option value="Tech Lead" className="text-primary">
 													Tech Lead
 												</option>
 												<option
 													value="Senior Developer"
-													className="text-emerald-400"
+													className="text-primary"
 												>
 													Senior Developer
 												</option>
@@ -145,30 +145,30 @@ const TeamTab: React.FC<TeamTabProps> = ({
 												</option>
 												<option
 													value="DevOps Engineer"
-													className="text-emerald-400"
+													className="text-primary"
 												>
 													DevOps Engineer
 												</option>
 											</optgroup>
 											<optgroup
 												label="Design & Quality"
-												className="bg-slate-900 text-slate-500"
+												className="bg-surface text-text-muted"
 											>
 												<option
 													value="UI/UX Designer"
-													className="text-amber-400"
+													className="text-primary"
 												>
 													UI/UX Designer
 												</option>
-												<option value="QA Engineer" className="text-amber-400">
+												<option value="QA Engineer" className="text-primary">
 													QA Engineer
 												</option>
 											</optgroup>
 											<optgroup
 												label="Other"
-												className="bg-slate-900 text-slate-500"
+												className="bg-surface text-text-muted"
 											>
-												<option value="Stakeholder" className="text-slate-400">
+												<option value="Stakeholder" className="text-text-muted">
 													Stakeholder
 												</option>
 												<option value="Member" className="text-primary">
@@ -180,7 +180,7 @@ const TeamTab: React.FC<TeamTabProps> = ({
 								</div>
 							))}
 							{(!projectTeam.members || projectTeam.members.length === 0) && (
-								<div className="col-span-full p-8 border border-dashed border-border rounded-lg text-center text-text-muted">
+								<div className="col-span-full p-8 border border-dashed border-primary/30 rounded-lg text-center text-text-muted">
 									No members found in this team.
 								</div>
 							)}

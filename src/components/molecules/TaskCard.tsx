@@ -22,24 +22,24 @@ interface TaskCardProps {
 const TypeIcon = ({ type }: { type: Task["type"] }) => {
 	switch (type) {
 		case "Issue":
-			return <AlertCircle size={12} className="text-gray-500" />;
+			return <AlertCircle size={12} className="text-text-muted" />;
 		case "Suggestion":
-			return <Lightbulb size={12} className="text-gray-400" />;
+			return <Lightbulb size={12} className="text-text-muted" />;
 		case "Bug":
-			return <AlertCircle size={12} className="text-gray-600 font-bold" />;
+			return <AlertCircle size={12} className="text-text-muted font-bold" />;
 		case "Feature":
-			return <CheckCircle2 size={12} className="text-gray-900" />;
+			return <CheckCircle2 size={12} className="text-text-main" />;
 		default:
-			return <Bookmark size={12} className="text-gray-900" />;
+			return <Bookmark size={12} className="text-text-main" />;
 	}
 };
 
 const PriorityBadge = ({ priority }: { priority: Task["priority"] }) => {
 	const colors: Record<Task["priority"], string> = {
-		Low: "bg-surface text-text-muted border-border",
+		Low: "bg-surface text-text-muted border-primary/30",
 		Medium: "bg-primary/10 text-primary border-primary/20",
-		High: "bg-warning/10 text-warning border-warning/20",
-		Urgent: "bg-danger/10 text-danger border-danger/20",
+		High: "bg-primary/10 text-primary border-primary/20",
+		Urgent: "bg-primary/10 text-primary border-primary/20",
 	};
 
 	return (
@@ -69,7 +69,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 			onClick={onClick}
 			className={twMerge(
 				"glass-card p-4 cursor-pointer group mb-3 flex flex-col gap-3",
-				isOverdue && "border-danger/40 bg-danger/5",
+				isOverdue && "border-primary/40 bg-primary/5",
 				className,
 			)}
 		>
@@ -85,13 +85,13 @@ const TaskCard: React.FC<TaskCardProps> = ({
 			</div>
 
 			<div className="flex items-center gap-3">
-				<span className="text-[10px] font-black font-mono text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border">
+				<span className="text-[10px] font-black font-mono text-text-muted bg-surface px-1.5 py-0.5 rounded border border-primary/30">
 					{task.taskKey}
 				</span>
 				<PriorityBadge priority={task.priority} />
 			</div>
 
-			<div className="flex justify-between items-center mt-2 pt-3 border-t border-border-subtle">
+			<div className="flex justify-between items-center mt-2 pt-3 border-t border-primary/30-subtle">
 				<div className="flex items-center -space-x-2">
 					{task.taskAssignees && task.taskAssignees.length > 0 ? (
 						task.taskAssignees.slice(0, 3).map((ta) => (
@@ -104,7 +104,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 							/>
 						))
 					) : (
-						<div className="w-6 h-6 rounded-full border-2 border-dashed border-border flex items-center justify-center text-text-muted">
+						<div className="w-6 h-6 rounded-full border-2 border-dashed border-primary/30 flex items-center justify-center text-text-muted">
 							<Plus size={10} />
 						</div>
 					)}
@@ -123,7 +123,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 						</div>
 					)}
 					{task.dueDate && (
-						<div className={twMerge("flex items-center gap-1 text-[10px] font-bold", isOverdue ? "text-danger" : "text-text-muted")}>
+						<div className={twMerge("flex items-center gap-1 text-[10px] font-bold", isOverdue ? "text-primary" : "text-text-muted")}>
 							<Calendar size={12} />
 							<span>{new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
 						</div>

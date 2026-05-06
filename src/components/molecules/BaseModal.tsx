@@ -81,7 +81,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 						className={`relative w-full ${SIZES[size]} matte-panel shadow-2xl overflow-hidden flex flex-col h-full md:h-auto md:max-h-[90vh] mt-auto md:mt-0 rounded-t-[var(--radius-xl)] md:rounded-[var(--radius-xl)]`}
 					>
 						{/* Header */}
-						<div className="px-4 py-4 md:py-3 border-b border-border flex items-center justify-between bg-[var(--accent-primary)]/10 backdrop-blur-md shrink-0">
+						<div className="px-4 py-4 md:py-3 border-b border-primary/30 flex items-center justify-between bg-[var(--accent-primary)]/10 backdrop-blur-md shrink-0">
 							<div className="flex-1">
 								{typeof title === "string" ? (
 									<h3 className="text-base md:text-sm font-bold text-text-main tracking-tight">
@@ -106,7 +106,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 
 						{/* Footer */}
 						{footer && (
-							<div className="px-4 py-4 md:py-3 border-t border-border bg-[var(--accent-primary)]/10 backdrop-blur-md flex items-center justify-end gap-3 shrink-0 pb-safe-offset">
+							<div className="px-4 py-4 md:py-3 border-t border-primary/30 bg-[var(--accent-primary)]/10 backdrop-blur-md flex items-center justify-end gap-3 shrink-0 pb-safe-offset">
 								{footer}
 							</div>
 						)}

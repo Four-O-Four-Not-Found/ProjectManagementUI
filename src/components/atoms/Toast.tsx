@@ -33,23 +33,23 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
   }, [toast, onClose]);
 
   const icons = {
-    success: <CheckCircle className="text-emerald-400" size={20} />,
-    error: <AlertCircle className="text-rose-400" size={20} />,
-    warning: <AlertTriangle className="text-amber-400" size={20} />,
+    success: <CheckCircle className="text-primary" size={20} />,
+    error: <AlertCircle className="text-primary" size={20} />,
+    warning: <AlertTriangle className="text-primary" size={20} />,
     info: <Info className="text-primary" size={20} />,
   };
 
   const borders = {
     success: 'border-emerald-500/20',
     error: 'border-rose-500/20',
-    warning: 'border-amber-500/20',
+    warning: 'border-primary/20',
     info: 'border-primary/20',
   };
 
   const backgrounds = {
-    success: 'bg-emerald-500/5',
-    error: 'bg-rose-500/5',
-    warning: 'bg-amber-500/5',
+    success: 'bg-primary/5',
+    error: 'bg-primary/5',
+    warning: 'bg-primary/5',
     info: 'bg-primary/5',
   };
 
@@ -71,11 +71,11 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
       </div>
       <div className="flex-1 min-w-0">
         <h4 className="text-sm font-bold text-[var(--text-primary)] mb-1">{toast.title}</h4>
-        {toast.message && <p className="text-xs text-slate-400 leading-relaxed">{toast.message}</p>}
+        {toast.message && <p className="text-xs text-text-muted leading-relaxed">{toast.message}</p>}
       </div>
       <button 
         onClick={() => onClose(toast.id)}
-        className="flex-shrink-0 p-1 rounded-lg hover:bg-[var(--card-bg)] text-slate-500 hover:text-[var(--text-primary)] transition-all"
+        className="flex-shrink-0 p-1 rounded-lg hover:bg-[var(--card-bg)] text-text-muted hover:text-[var(--text-primary)] transition-all"
       >
         <X size={16} />
       </button>

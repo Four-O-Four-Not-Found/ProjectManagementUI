@@ -161,7 +161,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 							Connect GitHub Repository (Optional)
 						</label>
 						<div className="relative group">
-							<div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-primary transition-colors">
+							<div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
 								<Search size={16} />
 							</div>
 							<input
@@ -175,11 +175,11 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 
 						<div className="h-48 overflow-y-auto rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] divide-y divide-white/[0.05] scrollbar-thin scrollbar-thumb-white/10">
 							{loading ? (
-								<div className="h-full flex items-center justify-center text-slate-500 text-xs font-mono animate-pulse">
+								<div className="h-full flex items-center justify-center text-text-muted text-xs font-mono animate-pulse">
 									Fetching Repositories...
 								</div>
 							) : filteredRepos.length === 0 ? (
-								<div className="h-full flex items-center justify-center text-slate-500 text-xs">
+								<div className="h-full flex items-center justify-center text-text-muted text-xs">
 									No repositories found
 								</div>
 							) : (
@@ -191,7 +191,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 									>
 										<div className="flex items-center gap-3">
 											<div
-												className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all ${selectedRepo?.fullName === repo.fullName ? "border-primary/50 bg-primary/10 text-primary" : "border-[var(--card-border)] bg-slate-900 text-slate-400"}`}
+												className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all ${selectedRepo?.fullName === repo.fullName ? "border-primary/50 bg-primary/10 text-primary" : "border-[var(--card-border)] bg-surface text-text-muted"}`}
 											>
 												<GitBranch size={14} />
 											</div>
@@ -201,7 +201,7 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 												>
 													{repo.name}
 												</p>
-												<p className="text-[10px] text-slate-500">
+												<p className="text-[10px] text-text-muted">
 													{repo.fullName}
 												</p>
 											</div>
@@ -229,11 +229,11 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
 								setFormData({ ...formData, teamId: e.target.value })
 							}
 						>
-							<option value="" className="bg-slate-900">
+							<option value="" className="bg-surface">
 								No Team Assigned
 							</option>
 							{teams.map((team) => (
-								<option key={team.id} value={team.id} className="bg-slate-900">
+								<option key={team.id} value={team.id} className="bg-surface">
 									{team.name}
 								</option>
 							))}

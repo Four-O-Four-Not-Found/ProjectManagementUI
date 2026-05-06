@@ -61,7 +61,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 								type="text"
 								value={projectName}
 								onChange={(e) => setProjectName(e.target.value)}
-								className="w-full bg-background border border-border rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
+								className="w-full bg-background border border-primary/30 rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
 							/>
 						</div>
 						<div className="space-y-2">
@@ -73,9 +73,9 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 									type="text"
 									value={project.key}
 									disabled
-									className="flex-1 bg-background/50 border border-border rounded-lg p-3 text-sm text-text-muted cursor-not-allowed"
+									className="flex-1 bg-background/50 border border-primary/30 rounded-lg p-3 text-sm text-text-muted cursor-not-allowed"
 								/>
-								<div className="p-3 bg-surface border border-border rounded-lg text-text-muted">
+								<div className="p-3 bg-surface border border-primary/30 rounded-lg text-text-muted">
 									<Key size={14} />
 								</div>
 							</div>
@@ -89,7 +89,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 							rows={3}
 							value={projectDescription}
 							onChange={(e) => setProjectDescription(e.target.value)}
-							className="w-full bg-background border border-border rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors resize-none"
+							className="w-full bg-background border border-primary/30 rounded-lg p-3 text-sm text-text-main focus:outline-none focus:border-primary transition-colors resize-none"
 						/>
 					</div>
 					<div className="flex justify-end pt-2">
@@ -118,10 +118,10 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 						project.repositories.map((repo) => (
 							<div
 								key={repo.id}
-								className="flex items-center justify-between p-4 bg-background border border-border rounded-xl"
+								className="flex items-center justify-between p-4 bg-background border border-primary/30 rounded-xl"
 							>
 								<div className="flex items-center gap-4">
-									<div className="w-12 h-12 rounded-xl bg-[var(--accent-primary)]/10 flex items-center justify-center border border-border shadow-inner">
+									<div className="w-12 h-12 rounded-xl bg-[var(--accent-primary)]/10 flex items-center justify-center border border-primary/30 shadow-inner">
 										<GitBranch size={24} className="text-text-main" />
 									</div>
 									<div>
@@ -149,11 +149,11 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 							</div>
 						))
 					) : (
-						<div className="p-8 text-center text-text-muted text-xs italic border border-dashed border-border rounded-xl bg-background/20">
+						<div className="p-8 text-center text-text-muted text-xs italic border border-dashed border-primary/30 rounded-xl bg-background/20">
 							No repositories linked to this project.
 						</div>
 					)}
-					<div className="mt-4 p-4 border border-border/50 rounded-xl bg-surface/30">
+					<div className="mt-4 p-4 border border-primary/30/50 rounded-xl bg-surface/30">
 						<div className="flex items-center justify-between mb-2">
 							<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
 								Active Sync Branch
@@ -174,7 +174,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				<section className="space-y-4">
 					<div className="flex items-center gap-2 mb-2">
-						<Users size={18} className="text-accent-purple" />
+						<Users size={18} className="text-accent-primary" />
 						<h3 className="font-bold text-text-main text-sm uppercase tracking-wider">
 							Team Access
 						</h3>
@@ -190,11 +190,11 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 										Managed via Project Admin
 									</p>
 								</div>
-								<div className="p-2 bg-accent-purple/10 border border-accent-purple/20 rounded-lg text-accent-purple">
+								<div className="p-2 bg-accent-primary/10 border border-accent-primary/20 rounded-lg text-accent-primary">
 									<Users size={16} />
 								</div>
 							</div>
-							<div className="p-3 bg-background border border-border rounded-lg text-[11px] text-text-muted">
+							<div className="p-3 bg-background border border-primary/30 rounded-lg text-[11px] text-text-muted">
 								This project is currently shared with the core development team.
 							</div>
 							<Button variant="secondary" size="sm" className="w-full">
@@ -206,7 +206,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 
 				<section className="space-y-4">
 					<div className="flex items-center gap-2 mb-2">
-						<Bell size={18} className="text-success" />
+						<Bell size={18} className="text-primary" />
 						<h3 className="font-bold text-text-main text-sm uppercase tracking-wider">
 							Notifications
 						</h3>
@@ -224,7 +224,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 								</div>
 								<button
 									onClick={() => setNotificationsEnabled(!notificationsEnabled)}
-									className={`w-10 h-5 rounded-full transition-all relative ${notificationsEnabled ? "bg-success" : "bg-border"}`}
+									className={`w-10 h-5 rounded-full transition-all relative ${notificationsEnabled ? "bg-primary" : "bg-border"}`}
 								>
 									<div
 										className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${notificationsEnabled ? "right-1" : "left-1"}`}
@@ -255,12 +255,12 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ project }) => {
 			{/* Danger Zone */}
 			<section className="space-y-4 pt-8">
 				<div className="flex items-center gap-2 mb-2">
-					<ShieldAlert size={18} className="text-danger" />
-					<h3 className="font-bold text-danger text-sm uppercase tracking-wider">
+					<ShieldAlert size={18} className="text-primary" />
+					<h3 className="font-bold text-primary text-sm uppercase tracking-wider">
 						Danger Zone
 					</h3>
 				</div>
-				<GlassCard className="p-6 border-danger/20 bg-danger/5">
+				<GlassCard className="p-6 border-primary/20 bg-primary/5">
 					<div className="flex flex-col md:flex-row items-center justify-between gap-4">
 						<div>
 							<p className="text-xs font-bold text-text-main">

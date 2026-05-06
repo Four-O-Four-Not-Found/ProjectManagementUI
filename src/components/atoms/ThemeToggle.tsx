@@ -18,15 +18,15 @@ const ThemeToggle: React.FC = () => {
         className="w-4 h-4 rounded-full bg-white flex items-center justify-center shadow-[0_0_8px_rgba(255,255,255,0.4)]"
       >
         {theme === 'dark' ? (
-          <Moon size={10} className="text-slate-900" />
+          <Moon size={10} className="text-text-main" />
         ) : (
-          <Sun size={10} className="text-amber-500" />
+          <Sun size={10} className="text-primary" />
         )}
       </motion.div>
       
       <div className="absolute inset-0 flex justify-between items-center px-2 pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity">
-        <Sun size={10} className={theme === 'light' ? 'text-amber-500' : 'text-slate-500'} />
-        <Moon size={10} className={theme === 'dark' ? 'text-[var(--text-primary)]' : 'text-slate-500'} />
+        <Sun size={10} className={theme === 'light' ? 'text-primary' : 'text-text-muted'} />
+        <Moon size={10} className={theme === 'dark' ? 'text-[var(--text-primary)]' : 'text-text-muted'} />
       </div>
     </button>
   );

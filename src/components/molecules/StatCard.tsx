@@ -19,10 +19,10 @@ const StatCard: React.FC<StatCardProps> = ({
 	colorClass,
 }) => {
 	return (
-		<div className="bg-surface border border-border rounded-xl p-2 md:p-3 flex items-center gap-2 md:gap-4 hover:border-primary/50 transition-all group relative overflow-hidden">
+		<div className="bg-surface border border-primary/40 rounded-xl p-2 md:p-3 flex items-center gap-2 md:gap-4 hover:border-primary transition-all group relative overflow-hidden">
 			<div
 				className={twMerge(
-					"w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-[var(--text-primary)] shrink-0 shadow-lg",
+					"w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-[var(--text-primary)] shrink-0 shadow-sm",
 					colorClass || "bg-primary",
 				)}
 			>
@@ -38,7 +38,7 @@ const StatCard: React.FC<StatCardProps> = ({
 						{value}
 					</h3>
 					{trend && (
-						<span className="text-[8px] md:text-[9px] font-bold text-success flex items-center">
+						<span className="text-[8px] md:text-[9px] font-bold text-primary flex items-center">
 							<TrendingUp size={8} className="mr-0.5" />
 							{trend}
 						</span>

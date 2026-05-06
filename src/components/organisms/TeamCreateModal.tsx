@@ -33,7 +33,7 @@ const TeamCreateModal: React.FC<TeamCreateModalProps> = ({
 		<BaseModal isOpen={isOpen} onClose={onClose} title="Initialize New Team">
 			<form onSubmit={handleSubmit} className="space-y-6 py-4">
 				<div className="space-y-2">
-					<label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+					<label className="text-xs font-bold text-text-muted uppercase tracking-widest">
 						Team Name
 					</label>
 					<input
@@ -47,7 +47,7 @@ const TeamCreateModal: React.FC<TeamCreateModalProps> = ({
 				</div>
 
 				<div className="space-y-2">
-					<label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+					<label className="text-xs font-bold text-text-muted uppercase tracking-widest">
 						Description
 					</label>
 					<textarea

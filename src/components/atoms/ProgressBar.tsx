@@ -12,7 +12,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   progress, 
   variant = 'md', 
   className,
-  colorClass = 'bg-success'
+  colorClass = 'bg-primary'
 }) => {
   const heights = {
     sm: "h-1",
@@ -22,7 +22,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <div className={twMerge(
-      "w-full bg-background border border-border rounded-full overflow-hidden",
+      "w-full bg-background border border-primary/30 rounded-full overflow-hidden",
       heights[variant],
       className
     )}>

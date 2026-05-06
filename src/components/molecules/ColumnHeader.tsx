@@ -27,7 +27,7 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = ({
 				<h3 className="font-black text-text-main text-[11px] uppercase tracking-[0.2em]">
 					{title}
 				</h3>
-				<span className="text-[10px] bg-surface/50 border border-border px-1.5 py-0.5 rounded-md text-text-muted font-black min-w-[20px] text-center">
+				<span className="text-[10px] bg-surface/50 border border-primary/30 px-1.5 py-0.5 rounded-md text-text-muted font-black min-w-[20px] text-center">
 					{count}
 				</span>
 				<Maximize2
@@ -37,7 +37,7 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = ({
 			</button>
 			<button
 				onClick={onAdd}
-				className="p-1.5 rounded-lg hover:bg-success/20 text-text-muted hover:text-success transition-all active:scale-95"
+				className="p-1.5 rounded-lg hover:bg-primary/20 text-text-muted hover:text-primary transition-all active:scale-95"
 			>
 				<Plus size={16} />
 			</button>

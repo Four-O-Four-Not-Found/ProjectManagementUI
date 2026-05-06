@@ -27,12 +27,12 @@ const Avatar: React.FC<AvatarProps> = ({
 	};
 
 	const avatarSrc =
-		src || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name || "User"}`;
+		src || `https://api.dicebear.com/7.x/initials/svg?seed=${name || "User"}&backgroundColor=000000&textColor=3b82f6`;
 
 	return (
 		<div
 			className={twMerge(
-				"relative flex-shrink-0 bg-[var(--accent-primary)]/10 border border-border overflow-hidden group",
+				"relative flex-shrink-0 bg-[var(--accent-primary)]/10 border border-primary/30 overflow-hidden group",
 				sizes[size],
 				isClickable && "cursor-pointer active:scale-95 transition-transform",
 				className,
@@ -41,7 +41,7 @@ const Avatar: React.FC<AvatarProps> = ({
 			<img
 				src={avatarSrc}
 				alt={alt || name || "Avatar"}
-				className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+				className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 grayscale"
 			/>
 		</div>
 	);

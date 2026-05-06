@@ -66,7 +66,7 @@ const SprintFormModal: React.FC<SprintFormModalProps> = ({ isOpen, onClose, onSa
           />
         </div>
 
-        <div className="p-4 bg-background border border-border rounded-xl">
+        <div className="p-4 bg-background border border-primary/30 rounded-xl">
           <p className="text-xs text-text-muted mb-2 font-bold uppercase tracking-widest">Sprint Velocity (Estimated)</p>
           <p className="text-sm text-text-main">Launching this sprint will notify all assigned contributors and activate the board view.</p>
         </div>

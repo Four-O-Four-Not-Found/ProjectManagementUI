@@ -24,16 +24,16 @@ const Alert: React.FC<AlertProps> = ({
   className 
 }) => {
   const icons = {
-    success: <CheckCircle className="text-emerald-400" size={18} />,
-    error: <AlertCircle className="text-rose-400" size={18} />,
-    warning: <AlertTriangle className="text-amber-400" size={18} />,
+    success: <CheckCircle className="text-primary" size={18} />,
+    error: <AlertCircle className="text-primary" size={18} />,
+    warning: <AlertTriangle className="text-primary" size={18} />,
     info: <Info className="text-primary" size={18} />,
   };
 
   const variants = {
-    success: 'border-emerald-500/20 bg-emerald-500/5 text-emerald-200',
-    error: 'border-rose-500/20 bg-rose-500/5 text-rose-200',
-    warning: 'border-amber-500/20 bg-amber-500/5 text-amber-200',
+    success: 'border-emerald-500/20 bg-primary/5 text-emerald-200',
+    error: 'border-rose-500/20 bg-primary/5 text-rose-200',
+    warning: 'border-primary/20 bg-primary/5 text-amber-200',
     info: 'border-primary/20 bg-primary/5 text-slate-200',
   };
 

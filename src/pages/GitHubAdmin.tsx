@@ -154,7 +154,7 @@ const GitHubAdmin: React.FC = () => {
 						</Button>
 						<Button
 							variant="success"
-							className="w-full md:w-auto shadow-lg shadow-success/20"
+							className="w-full md:w-auto shadow-sm shadow-success/20"
 							leftIcon={<GitBranch size={18} />}
 						>
 							Connect Repository
@@ -166,13 +166,13 @@ const GitHubAdmin: React.FC = () => {
 			<div className="flex items-center gap-2 mb-2">
 				<button
 					onClick={() => setActiveView("repos")}
-					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "repos" ? "bg-primary text-slate-900" : "bg-[var(--card-bg)] text-slate-400 hover:bg-[var(--card-bg)]"}`}
+					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "repos" ? "bg-primary text-text-main" : "bg-[var(--card-bg)] text-text-muted hover:bg-[var(--card-bg)]"}`}
 				>
 					Your Repositories
 				</button>
 				<button
 					onClick={() => setActiveView("orgs")}
-					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "orgs" ? "bg-primary text-slate-900" : "bg-[var(--card-bg)] text-slate-400 hover:bg-[var(--card-bg)]"}`}
+					className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeView === "orgs" ? "bg-primary text-text-main" : "bg-[var(--card-bg)] text-text-muted hover:bg-[var(--card-bg)]"}`}
 				>
 					Organizations
 				</button>
@@ -202,7 +202,7 @@ const GitHubAdmin: React.FC = () => {
 
 						<div className="flex-1 overflow-y-auto divide-y divide-white/[0.05] scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent hover:scrollbar-thumb-primary/20 transition-all">
 							{loading ? (
-								<div className="h-full flex flex-col items-center justify-center text-slate-500 gap-6">
+								<div className="h-full flex flex-col items-center justify-center text-text-muted gap-6">
 									<CodeLoader size="lg" />
 									<p className="font-mono text-xs uppercase tracking-[0.3em] text-primary/60 animate-pulse">
 										Deciphering GitHub Repositories...
@@ -210,7 +210,7 @@ const GitHubAdmin: React.FC = () => {
 								</div>
 							) : activeView === "repos" ? (
 								repos.length === 0 ? (
-									<div className="p-20 text-center text-slate-500">
+									<div className="p-20 text-center text-text-muted">
 										No repositories found.
 									</div>
 								) : (
@@ -220,7 +220,7 @@ const GitHubAdmin: React.FC = () => {
 											className="p-6 flex items-center justify-between hover:bg-[var(--card-bg)] transition-all group"
 										>
 											<div className="flex items-center gap-4">
-												<div className="w-12 h-12 rounded-2xl bg-slate-900 border border-[var(--card-border)] flex items-center justify-center text-slate-400 group-hover:border-primary/30 transition-all">
+												<div className="w-12 h-12 rounded-2xl bg-surface border border-[var(--card-border)] flex items-center justify-center text-text-muted group-hover:border-primary/30 transition-all">
 													<GitBranch
 														size={24}
 														className="group-hover:text-primary transition-colors"
@@ -236,11 +236,11 @@ const GitHubAdmin: React.FC = () => {
 														>
 															<ExternalLink
 																size={12}
-																className="text-slate-600 hover:text-primary"
+																className="text-text-muted hover:text-primary"
 															/>
 														</a>
 													</h4>
-													<p className="text-xs text-slate-500 line-clamp-1 max-w-xs md:max-w-md">
+													<p className="text-xs text-text-muted line-clamp-1 max-w-xs md:max-w-md">
 														{repo.description || "No description provided."}
 													</p>
 												</div>
@@ -257,7 +257,7 @@ const GitHubAdmin: React.FC = () => {
 															{repo.language || "Markdown"}
 														</Badge>
 													</div>
-													<p className="text-[10px] text-slate-500 uppercase">
+													<p className="text-[10px] text-text-muted uppercase">
 														Updated{" "}
 														{new Date(repo.updatedAt).toLocaleDateString()}
 													</p>
@@ -274,7 +274,7 @@ const GitHubAdmin: React.FC = () => {
 									))
 								)
 							) : orgs.length === 0 ? (
-								<div className="p-20 text-center text-slate-500">
+								<div className="p-20 text-center text-text-muted">
 									No organizations found.
 								</div>
 							) : (
@@ -293,7 +293,7 @@ const GitHubAdmin: React.FC = () => {
 												<h4 className="font-bold text-[var(--text-primary)] flex items-center gap-2">
 													{org.login}
 												</h4>
-												<p className="text-xs text-slate-500 line-clamp-1 max-w-xs md:max-w-md">
+												<p className="text-xs text-text-muted line-clamp-1 max-w-xs md:max-w-md">
 													{org.description || "GitHub Organization"}
 												</p>
 											</div>
@@ -318,12 +318,12 @@ const GitHubAdmin: React.FC = () => {
 						</div>
 					</GlassCard>
 
-					<GlassCard className="p-6 border-amber-500/20 bg-amber-500/5">
+					<GlassCard className="p-6 border-primary/20 bg-primary/5">
 						<div className="flex items-center gap-3 mb-6">
-							<Shield size={20} className="text-amber-400" />
+							<Shield size={20} className="text-primary" />
 							<h3 className="font-bold text-[var(--text-primary)]">Security & Permissions</h3>
 						</div>
-						<p className="text-sm text-slate-400 mb-4">
+						<p className="text-sm text-text-muted mb-4">
 							You are currently using an OAuth token with{" "}
 							<code className="text-primary bg-primary/10 px-1 rounded">
 								repo
@@ -351,23 +351,23 @@ const GitHubAdmin: React.FC = () => {
 						<h3 className="font-bold text-[var(--text-primary)] mb-6">Webhook Health</h3>
 						<div className="space-y-6">
 							<div className="flex items-center gap-4">
-								<div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+								<div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
 								<div className="flex-1">
 									<p className="text-sm font-bold text-[var(--text-primary)]">
 										Project Pipeline
 									</p>
-									<p className="text-[10px] text-slate-500 uppercase">
+									<p className="text-[10px] text-text-muted uppercase">
 										Operational
 									</p>
 								</div>
 							</div>
 							<div className="flex items-center gap-4">
-								<div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+								<div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
 								<div className="flex-1">
 									<p className="text-sm font-bold text-[var(--text-primary)]">
 										GitHub API Relay
 									</p>
-									<p className="text-[10px] text-slate-500 uppercase">
+									<p className="text-[10px] text-text-muted uppercase">
 										Connected
 									</p>
 								</div>
@@ -380,13 +380,13 @@ const GitHubAdmin: React.FC = () => {
 						<div className="grid grid-cols-2 gap-4">
 							<div className="p-3 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
 								<p className="text-2xl font-bold text-[var(--text-primary)]">{repos.length}</p>
-								<p className="text-[10px] text-slate-500 uppercase">
+								<p className="text-[10px] text-text-muted uppercase">
 									Repos Accessible
 								</p>
 							</div>
 							<div className="p-3 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)]">
 								<p className="text-2xl font-bold text-[var(--text-primary)]">{orgs.length}</p>
-								<p className="text-[10px] text-slate-500 uppercase">
+								<p className="text-[10px] text-text-muted uppercase">
 									Orgs Found
 								</p>
 							</div>

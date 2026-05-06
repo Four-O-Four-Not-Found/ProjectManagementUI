@@ -45,7 +45,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
               </div>
               <button 
                 onClick={onClose}
-                className="p-2 rounded-xl hover:bg-[var(--card-bg)] text-slate-400 transition-all"
+                className="p-2 rounded-xl hover:bg-[var(--card-bg)] text-text-muted transition-all"
               >
                 <X size={20} />
               </button>
@@ -55,7 +55,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 space-y-4">
                   <Loader2 className="animate-spin text-primary" size={32} />
-                  <p className="text-sm text-slate-500 font-mono">Syncing inbox...</p>
+                  <p className="text-sm text-text-muted font-mono">Syncing inbox...</p>
                 </div>
               ) : notifications.length > 0 ? (
                 notifications.map((notif) => (
@@ -67,8 +67,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, onClose
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-20 space-y-4 opacity-50">
-                  <Inbox size={48} className="text-slate-600" />
-                  <p className="text-sm text-slate-500">Your inbox is clear.</p>
+                  <Inbox size={48} className="text-text-muted" />
+                  <p className="text-sm text-text-muted">Your inbox is clear.</p>
                 </div>
               )}
             </div>

@@ -49,7 +49,7 @@ const columns: { id: Task["status"]; title: string; color: string }[] = [
 	{ id: "QAFailed", title: "QA Failed", color: "border-red-500/50" },
 	{ id: "Developed", title: "Developed", color: "border-emerald-400/50" },
 	{ id: "Closed", title: "Closed", color: "border-slate-500/50" },
-	{ id: "OnHold", title: "On Hold", color: "border-amber-500/50" },
+	{ id: "OnHold", title: "On Hold", color: "border-primary/50" },
 ];
 
 type ViewTab =
@@ -316,10 +316,10 @@ const Board: React.FC = () => {
 													{project.name}
 												</h3>
 												<div className="flex items-center gap-2">
-													<span className="px-2 py-0.5 rounded bg-surface border border-border text-[10px] font-mono text-text-muted uppercase">
+													<span className="px-2 py-0.5 rounded bg-surface border border-primary/30 text-[10px] font-mono text-text-muted uppercase">
 														{project.key}
 													</span>
-													<span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+													<span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
 												</div>
 											</div>
 										</div>
@@ -329,7 +329,7 @@ const Board: React.FC = () => {
 												"Enterprise-grade project tracking and automated workflow management."}
 										</p>
 
-										<div className="pt-6 flex items-center justify-between border-t border-border-subtle">
+										<div className="pt-6 flex items-center justify-between border-t border-primary/30-subtle">
 											<div className="flex -space-x-3">
 												{[1, 2, 3].map((i) => (
 													<div
@@ -355,7 +355,7 @@ const Board: React.FC = () => {
 							<GlassCard
 								onClick={() => setIsProjectModalOpen(true)}
 								isInteractive
-								className="group border-dashed border-2 border-border/50 bg-transparent hover:bg-primary/5 hover:border-primary/50 animate-slide-up flex flex-col items-center justify-center min-h-[260px]"
+								className="group border-dashed border-2 border-primary/30/50 bg-transparent hover:bg-primary/5 hover:border-primary/50 animate-slide-up flex flex-col items-center justify-center min-h-[260px]"
 								style={{ animationDelay: `${0.1 + allProjects.length * 0.05}s` }}
 							>
 								<div className="w-16 h-16 rounded-full bg-[var(--accent-primary)]/10 flex items-center justify-center text-text-muted mb-4 group-hover:scale-110 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300">
@@ -438,9 +438,9 @@ const Board: React.FC = () => {
 										initial={{ opacity: 0, y: 10 }}
 										animate={{ opacity: 1, y: 0 }}
 										exit={{ opacity: 0, y: 10 }}
-										className="absolute top-full left-0 mt-2 w-72 bg-surface border border-border rounded-md shadow-2xl z-50 overflow-hidden"
+										className="absolute top-full left-0 mt-2 w-72 bg-surface border border-primary/30 rounded-md shadow-2xl z-50 overflow-hidden"
 									>
-										<div className="p-2 border-b border-border bg-[var(--accent-primary)]/10">
+										<div className="p-2 border-b border-primary/30 bg-[var(--accent-primary)]/10">
 											<span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">
 												Switch Project
 											</span>
@@ -456,7 +456,7 @@ const Board: React.FC = () => {
 													className={`w-full flex items-center gap-3 p-3 rounded-md transition-all ${p.id === projectId ? "bg-primary/10 border border-primary/20" : "hover:bg-surface border border-transparent"}`}
 												>
 													<div
-														className={`w-8 h-8 rounded flex items-center justify-center ${p.id === projectId ? "bg-primary text-[var(--text-primary)]" : "bg-surface border border-border text-text-muted"}`}
+														className={`w-8 h-8 rounded flex items-center justify-center ${p.id === projectId ? "bg-primary text-[var(--text-primary)]" : "bg-surface border border-primary/30 text-text-muted"}`}
 													>
 														<Target size={16} />
 													</div>
@@ -485,7 +485,7 @@ const Board: React.FC = () => {
 							{currentProject?.description}
 						</span>
 						<span className="hidden md:inline w-1 h-1 rounded-full bg-border"></span>
-						<span className="font-black text-[10px] text-text-muted bg-surface px-1.5 py-0.5 rounded border border-border uppercase tracking-widest">
+						<span className="font-black text-[10px] text-text-muted bg-surface px-1.5 py-0.5 rounded border border-primary/30 uppercase tracking-widest">
 							{currentProject?.key}
 						</span>
 						<span className="w-1 h-1 rounded-full bg-border"></span>
@@ -511,11 +511,11 @@ const Board: React.FC = () => {
 									key={member.userId}
 									name={member.name}
 									size="sm"
-									className="border-2 border-background hover:z-10 transition-all shadow-md"
+									className="border-2 border-background hover:z-10 transition-all shadow-sm"
 								/>
 							))}
 							{projectTeam?.members && projectTeam.members.length > 5 && (
-								<div className="w-8 h-8 rounded-full bg-surface border-2 border-background flex items-center justify-center text-[10px] font-black text-text-muted hover:z-10 transition-all shadow-md">
+								<div className="w-8 h-8 rounded-full bg-surface border-2 border-background flex items-center justify-center text-[10px] font-black text-text-muted hover:z-10 transition-all shadow-sm">
 									+{projectTeam.members.length - 5}
 								</div>
 							)}
@@ -535,7 +535,7 @@ const Board: React.FC = () => {
 			/>
 
 			{/* Navigation Tabs - Sticky */}
-			<div className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 dark:border-[var(--card-border)] bg-[var(--card-bg)] dark:bg-gray-950/80 backdrop-blur-md px-4 shrink-0 overflow-x-auto scrollbar-hide">
+			<div className="sticky top-0 z-30 flex items-center justify-between border-b border-primary/30 bg-[var(--card-bg)] dark:bg-gray-950/80 backdrop-blur-md px-4 shrink-0 overflow-x-auto scrollbar-hide">
 				<div className="flex items-center gap-1">
 					{(
 						[
@@ -564,8 +564,8 @@ const Board: React.FC = () => {
 								onClick={() => setActiveTab(tab)}
 								className={`flex items-center gap-2 px-4 py-3 text-[13px] font-medium transition-all relative border-b-2 whitespace-nowrap ${
 									activeTab === tab
-										? "border-gray-900 dark:border-white text-gray-950 dark:text-[var(--text-primary)]"
-										: "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+										? "border-primary text-primary"
+										: "border-transparent text-text-muted hover:text-primary"
 								}`}
 							>
 								<Icon size={14} />
@@ -577,7 +577,7 @@ const Board: React.FC = () => {
 											: tab}
 								</span>
 								{tab === "Backlog" && (
-									<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-[var(--card-bg)] text-[10px] font-semibold">
+									<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-surface text-[10px] font-semibold">
 										{tasks.length}
 									</span>
 								)}
@@ -593,8 +593,8 @@ const Board: React.FC = () => {
 							className={twMerge(
 								"flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border",
 								showAI
-									? "bg-gray-900 text-[var(--text-primary)] border-gray-900 shadow-md"
-									: "bg-white dark:bg-gray-950 border-gray-200 dark:border-[var(--card-border)] text-gray-500 hover:text-gray-900 dark:hover:text-[var(--text-primary)]",
+									? "bg-surface text-[var(--text-primary)] border-primary/30 shadow-sm"
+									: "bg-white dark:bg-gray-950 border-primary/30 text-text-muted hover:text-text-main dark:hover:text-[var(--text-primary)]",
 							)}
 						>
 							<Sparkles size={14} className={showAI ? "animate-pulse" : ""} />
@@ -627,7 +627,7 @@ const Board: React.FC = () => {
 													<h3 className="text-xs font-black text-text-main uppercase tracking-widest">
 														{col.title}
 													</h3>
-													<span className="text-[10px] font-black text-text-muted bg-surface border border-border px-2 py-0.5 rounded-full">
+													<span className="text-[10px] font-black text-text-muted bg-surface border border-primary/30 px-2 py-0.5 rounded-full">
 														{tasks.filter((t) => t.status === col.id).length}
 													</span>
 												</div>
@@ -652,7 +652,7 @@ const Board: React.FC = () => {
 													>
 														{tasks.filter((task) => task.status === col.id).length ===
 														0 ? (
-															<div className="h-32 border-2 border-dashed border-border rounded-xl flex items-center justify-center bg-surface/50">
+															<div className="h-32 border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center bg-surface/50">
 																<span className="text-[10px] font-black uppercase tracking-widest text-text-muted opacity-50">
 																	No Tasks
 																</span>
@@ -732,7 +732,7 @@ const Board: React.FC = () => {
 									initial={{ opacity: 0, x: 20 }}
 									animate={{ opacity: 1, x: 0 }}
 									exit={{ opacity: 0, x: -20 }}
-									className="h-full bg-surface/30 border border-border rounded-md p-4 md:p-8 overflow-y-auto"
+									className="h-full bg-surface/30 border border-primary/30 rounded-md p-4 md:p-8 overflow-y-auto"
 								>
 									<RepositoryTab
 										gitHubRepo={currentProject.repositories[0].repoName}

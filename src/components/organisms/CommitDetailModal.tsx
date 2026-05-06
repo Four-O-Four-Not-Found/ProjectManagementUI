@@ -64,7 +64,7 @@ const CommitDetailModal: React.FC<CommitDetailModalProps> = ({
 			) : details ? (
 				<div className="space-y-6">
 					{/* Commit Header */}
-					<div className="p-4 bg-background border border-border rounded-xl">
+					<div className="p-4 bg-background border border-primary/30 rounded-xl">
 						<div className="flex justify-between items-start mb-4">
 							<div className="flex items-center gap-3">
 								<div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
@@ -89,7 +89,7 @@ const CommitDetailModal: React.FC<CommitDetailModalProps> = ({
 							</a>
 						</div>
 
-						<div className="flex items-center gap-6 pt-4 border-t border-border/50">
+						<div className="flex items-center gap-6 pt-4 border-t border-primary/30/50">
 							<div className="flex flex-col">
 								<span className="text-[8px] font-bold text-text-muted uppercase tracking-tighter">
 									Author
@@ -103,10 +103,10 @@ const CommitDetailModal: React.FC<CommitDetailModalProps> = ({
 									Changes
 								</span>
 								<div className="flex items-center gap-2 mt-0.5">
-									<span className="text-[10px] font-black text-success flex items-center gap-1">
+									<span className="text-[10px] font-black text-primary flex items-center gap-1">
 										<Plus size={10} /> {details.additions}
 									</span>
-									<span className="text-[10px] font-black text-danger flex items-center gap-1">
+									<span className="text-[10px] font-black text-primary flex items-center gap-1">
 										<Minus size={10} /> {details.deletions}
 									</span>
 								</div>
@@ -123,7 +123,7 @@ const CommitDetailModal: React.FC<CommitDetailModalProps> = ({
 							{details.files.map((file) => (
 								<div
 									key={file.filename}
-									className="group bg-surface/50 border border-border rounded-xl p-3 hover:border-primary/50 transition-all"
+									className="group bg-surface/50 border border-primary/30 rounded-xl p-3 hover:border-primary/50 transition-all"
 								>
 									<div className="flex items-center justify-between gap-4">
 										<div className="flex items-center gap-2 min-w-0">
@@ -136,21 +136,21 @@ const CommitDetailModal: React.FC<CommitDetailModalProps> = ({
 											</span>
 										</div>
 										<div className="flex items-center gap-2 shrink-0">
-											<span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-background border border-border text-text-muted uppercase">
+											<span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-background border border-primary/30 text-text-muted uppercase">
 												{file.status}
 											</span>
 											<div className="flex items-center gap-1">
-												<span className="text-[9px] font-bold text-success">
+												<span className="text-[9px] font-bold text-primary">
 													+{file.additions}
 												</span>
-												<span className="text-[9px] font-bold text-danger">
+												<span className="text-[9px] font-bold text-primary">
 													-{file.deletions}
 												</span>
 											</div>
 										</div>
 									</div>
 									{file.patch && (
-										<div className="mt-3 p-2 bg-background/50 rounded-lg border border-border/50 overflow-hidden">
+										<div className="mt-3 p-2 bg-background/50 rounded-lg border border-primary/30/50 overflow-hidden">
 											<pre className="text-[9px] font-mono text-text-muted leading-relaxed truncate opacity-70">
 												{file.patch.split("\n").slice(0, 3).join("\n")}
 												{file.patch.split("\n").length > 3 && "\n..."}

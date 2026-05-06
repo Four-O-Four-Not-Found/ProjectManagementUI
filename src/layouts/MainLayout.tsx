@@ -139,8 +139,8 @@ const MainLayout: React.FC = () => {
 										className="fixed inset-0 z-10"
 										onClick={() => setIsProfileDropdownOpen(false)}
 									/>
-									<div className="absolute right-0 mt-2 w-56 bg-surface/90 backdrop-blur-xl border border-border rounded-2xl shadow-2xl z-20 py-2 animate-in fade-in zoom-in-95 duration-200 origin-top-right pointer-events-auto">
-										<div className="px-4 py-3 border-b border-border/50 mb-1">
+									<div className="absolute right-0 mt-2 w-56 bg-surface/90 backdrop-blur-xl border border-primary/30 rounded-2xl shadow-2xl z-20 py-2 animate-in fade-in zoom-in-95 duration-200 origin-top-right pointer-events-auto">
+										<div className="px-4 py-3 border-b border-primary/30/50 mb-1">
 											<p className="text-[10px] text-text-muted uppercase tracking-widest font-bold mb-1">
 												Signed in as
 											</p>
@@ -175,7 +175,7 @@ const MainLayout: React.FC = () => {
 
 										<button
 											onClick={handleLogout}
-											className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger hover:bg-danger/10 transition-colors cursor-pointer"
+											className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors cursor-pointer"
 										>
 											<LogOut size={16} />
 											<span>Sign out</span>
@@ -195,7 +195,7 @@ const MainLayout: React.FC = () => {
 				</div>
 
 				{/* Mobile Bottom Navigation */}
-				<nav className="lg:hidden fixed bottom-0 left-0 right-0 h-[calc(4rem+env(safe-area-inset-bottom))] bg-surface/80 backdrop-blur-xl border-t border-border z-[80] flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
+				<nav className="lg:hidden fixed bottom-0 left-0 right-0 h-[calc(4rem+env(safe-area-inset-bottom))] bg-surface/80 backdrop-blur-xl border-t border-primary/30 z-[80] flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
 					<NavLink
 						to="/"
 						className={`flex flex-col items-center gap-1 p-2 transition-colors ${isDashActive ? "text-primary" : "text-text-muted hover:text-primary"}`}

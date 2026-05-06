@@ -13,13 +13,13 @@ const AIPredictor: React.FC<AIPredictorProps> = ({ tasks, sprint, className }) =
 	const analysis = useMemo(() => {
 		if (!sprint || tasks.length === 0) return null;
 
-		const completed = tasks.filter(t => t.status === "Done").length;
+		const completed = tasks.filter(t => t.status === "Closed").length;
 		const total = tasks.length;
 		const completionRate = (completed / total) * 100;
 		
 		// Heuristic: Overdue tasks and high-priority backlog impact success
-		const highPriority = tasks.filter(t => (t.priority === "Urgent" || t.priority === "High") && t.status !== "Done").length;
-		const bugCount = tasks.filter(t => t.type === "Bug" && t.status !== "Done").length;
+		const highPriority = tasks.filter(t => (t.priority === "Urgent" || t.priority === "High") && t.status !== "Closed").length;
+		const bugCount = tasks.filter(t => t.type === "Bug" && t.status !== "Closed").length;
 
 		let successProbability = 100 - (highPriority * 10) - (bugCount * 5);
 		if (completionRate > 50) successProbability += 10;
@@ -49,8 +49,8 @@ const AIPredictor: React.FC<AIPredictorProps> = ({ tasks, sprint, className }) =
 					</div>
 				</div>
 				<div className={`px-2 py-1 rounded text-[10px] font-bold ${
-					analysis.risk === "High" ? "bg-danger/10 text-danger" : 
-					analysis.risk === "Moderate" ? "bg-warning/10 text-warning" : "bg-success/10 text-success"
+					analysis.risk === "High" ? "bg-primary/10 text-primary" : 
+					analysis.risk === "Moderate" ? "bg-primary/10 text-primary" : "bg-primary/10 text-primary"
 				}`}>
 					{analysis.risk} Risk
 				</div>
@@ -69,21 +69,21 @@ const AIPredictor: React.FC<AIPredictorProps> = ({ tasks, sprint, className }) =
 				<div className="h-1.5 w-full bg-[var(--accent-primary)]/10 rounded-full overflow-hidden">
 					<div 
 						className={`h-full transition-all duration-1000 ${
-							analysis.probability < 60 ? "bg-danger" : 
-							analysis.probability < 85 ? "bg-warning" : "bg-primary"
+							analysis.probability < 60 ? "bg-primary" : 
+							analysis.probability < 85 ? "bg-primary" : "bg-primary"
 						}`}
 						style={{ width: `${analysis.probability}%` }}
 					/>
 				</div>
 
 				<div className="grid grid-cols-2 gap-3 pt-2">
-					<div className="p-3 bg-background/50 border border-border rounded-xl">
+					<div className="p-3 bg-background/50 border border-primary/30 rounded-xl">
 						<div className="flex items-center gap-2 text-[10px] font-bold text-text-muted mb-1 uppercase">
 							<TrendingUp size={12} /> Velocity
 						</div>
 						<div className="text-sm font-bold text-text-main">{analysis.completionRate}% Done</div>
 					</div>
-					<div className="p-3 bg-background/50 border border-border rounded-xl">
+					<div className="p-3 bg-background/50 border border-primary/30 rounded-xl">
 						<div className="flex items-center gap-2 text-[10px] font-bold text-text-muted mb-1 uppercase">
 							<AlertTriangle size={12} /> Blockers
 						</div>

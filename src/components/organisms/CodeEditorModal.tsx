@@ -71,16 +71,16 @@ const CodeEditorModal: React.FC<CodeEditorModalProps> = ({
 			}
 		>
 			<div className="space-y-4 h-[500px] flex flex-col">
-				<div className="flex-1 bg-slate-950 rounded-xl border border-border overflow-hidden relative group">
+				<div className="flex-1 bg-slate-950 rounded-xl border border-primary/30 overflow-hidden relative group">
 					<div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-						<span className="text-[10px] font-mono text-text-muted bg-slate-900/80 px-2 py-1 rounded">
+						<span className="text-[10px] font-mono text-text-muted bg-surface/80 px-2 py-1 rounded">
 							UTF-8
 						</span>
 					</div>
 					<textarea
 						value={content}
 						onChange={(e) => setContent(e.target.value)}
-						className="w-full h-full bg-transparent text-emerald-400 font-mono text-sm p-6 outline-none resize-none scrollbar-custom"
+						className="w-full h-full bg-transparent text-primary font-mono text-sm p-6 outline-none resize-none scrollbar-custom"
 						spellCheck={false}
 					/>
 				</div>
@@ -93,7 +93,7 @@ const CodeEditorModal: React.FC<CodeEditorModalProps> = ({
 						type="text"
 						value={commitMessage}
 						onChange={(e) => setCommitMessage(e.target.value)}
-						className="w-full bg-surface border border-border rounded-lg px-4 py-2 text-sm text-text-main outline-none focus:border-primary transition-all"
+						className="w-full bg-surface border border-primary/30 rounded-lg px-4 py-2 text-sm text-text-main outline-none focus:border-primary transition-all"
 						placeholder="Describe your changes..."
 					/>
 				</div>

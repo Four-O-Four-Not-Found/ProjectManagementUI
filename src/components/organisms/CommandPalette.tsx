@@ -42,7 +42,7 @@ const CommandPalette: React.FC = () => {
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 					/>
-					<div className="hidden md:flex items-center gap-1 px-1.5 py-0.5 bg-surface border border-border rounded text-[9px] text-text-muted font-bold uppercase">
+					<div className="hidden md:flex items-center gap-1 px-1.5 py-0.5 bg-surface border border-primary/30 rounded text-[9px] text-text-muted font-bold uppercase">
 						ESC
 					</div>
 				</div>
@@ -66,10 +66,10 @@ const CommandPalette: React.FC = () => {
 					results.map((item) => (
 						<div
 							key={item.id}
-							className="flex items-center justify-between p-3 rounded-xl hover:bg-[var(--accent-primary)]/10 cursor-pointer group transition-all border border-transparent hover:border-border"
+							className="flex items-center justify-between p-3 rounded-xl hover:bg-[var(--accent-primary)]/10 cursor-pointer group transition-all border border-transparent hover:border-primary/30"
 						>
 							<div className="flex items-center gap-4">
-								<div className="w-10 h-10 rounded-lg bg-surface border border-border flex items-center justify-center text-text-muted group-hover:text-primary transition-colors">
+								<div className="w-10 h-10 rounded-lg bg-surface border border-primary/30 flex items-center justify-center text-text-muted group-hover:text-primary transition-colors">
 									<item.icon size={18} />
 								</div>
 								<div>
