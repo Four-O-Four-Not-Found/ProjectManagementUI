@@ -30,17 +30,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 	return (
 		<aside
 			className={clsx(
-				"h-full glass-panel border-r border-primary/30 flex flex-col transition-all duration-300 ease-in-out z-[100] relative !rounded-none",
+				"h-full bg-[#0f172a] border-r border-[#334155] flex flex-col transition-all duration-300 ease-in-out z-[100] relative !rounded-none",
 				isCollapsed ? "w-16" : "w-64",
 			)}
 		>
 			{/* Brand */}
-			<div className="p-4 flex items-center gap-3 border-b border-primary/30 h-16">
-				<div className="w-8 h-8 rounded-md flex items-center justify-center overflow-hidden">
-					<img src="/favicon.svg" alt="FlowState" className="w-6 h-6 object-contain" />
+			<div className="p-4 flex items-center gap-3 border-b border-[#334155] h-16">
+				<div className="w-8 h-8 rounded bg-[#1e293b] flex items-center justify-center border border-[#334155]">
+					<img src="/favicon.svg" alt="FlowState" className="w-5 h-5 object-contain" />
 				</div>
 				{!isCollapsed && (
-					<span className="font-bold text-lg neon-text tracking-tight uppercase">
+					<span className="font-black text-lg text-[#f8fafc] tracking-tight uppercase">
 						FlowState
 					</span>
 				)}
@@ -65,17 +65,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 			</nav>
 
 			{/* Footer Actions */}
-			<div className="p-2 border-t border-primary/30">
+			<div className="p-2 border-t border-[#334155]">
 				<button
 					onClick={onToggle}
-					className="w-full py-2.5 rounded-lg hover:bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-all group"
+					className="w-full py-2.5 rounded-lg hover:bg-[#1e293b] flex items-center justify-center text-[#94a3b8] hover:text-[#38bdf8] transition-all group"
 				>
 					{isCollapsed ? (
 						<ChevronRight size={18} />
 					) : (
 						<div className="flex items-center gap-3">
 							<ChevronLeft size={18} />
-							<span className="text-xs font-semibold">Collapse Sidebar</span>
+							<span className="text-[10px] font-bold uppercase tracking-widest">Collapse Menu</span>
 						</div>
 					)}
 				</button>

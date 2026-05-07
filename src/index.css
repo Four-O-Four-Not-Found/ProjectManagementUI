@@ -2,54 +2,55 @@
 @import "tailwindcss";
 
 :root {
-	/* Modern Professional Theme - Light Mode */
-	--bg-color: #0c0c0d;
-	--text-primary: #ffffff;
-	--text-secondary: rgba(255, 255, 255, 0.7);
-	--accent-primary: #3b82f6; /* Standard Blue */
-	--accent-secondary: #2563eb; /* Darker Blue */
-	--card-bg: rgba(255, 255, 255, 0.02);
-	--card-border: rgba(59, 130, 246, 0.5); /* More vibrant Blue Border */
-	--glass-blur: 24px;
-	--neon-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+	/* Matte Professional Theme */
+	--bg-color: #0f172a; /* Slate 950 - Matte Navy */
+	--text-primary: #f8fafc; /* Slate 50 */
+	--text-secondary: #94a3b8; /* Slate 400 */
+	--accent-primary: #38bdf8; /* Sky 400 (Muted Blue) */
+	--accent-secondary: #0284c7; /* Sky 600 */
+	--card-bg: #1e293b; /* Slate 800 */
+	--card-border: #334155; /* Slate 700 */
+	--glass-blur: 0px;
+	--neon-shadow: none;
 	--circuit-color: rgba(0, 0, 0, 0);
 
 	--font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 	--font-heading: "Outfit", sans-serif;
 	--font-mono: "JetBrains Mono", monospace;
 
-	/* Compatibility Aliases for Tailwind-based code */
+	/* Global Styled Tokens */
 	--background: var(--bg-color);
 	--surface: var(--card-bg);
+	--surface-hover: #334155;
 	--border: var(--card-border);
+	--border-subtle: rgba(51, 65, 85, 0.5);
 	--text-main: var(--text-primary);
 	--text-muted: var(--text-secondary);
 	--color-primary: var(--accent-primary);
 }
 
 .dark {
-	/* Modern Professional Theme - Dark Mode */
-	--bg-color: #0c0c0d;
-	--text-primary: #ffffff;
-	--text-secondary: rgba(255, 255, 255, 0.7);
-	--accent-primary: #3b82f6;
-	--accent-secondary: #2563eb;
-	--card-bg: rgba(255, 255, 255, 0.02);
-	--card-border: rgba(59, 130, 246, 0.5);
-	--neon-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+	--bg-color: #0f172a;
+	--text-primary: #f8fafc;
+	--text-secondary: #94a3b8;
+	--accent-primary: #38bdf8;
+	--accent-secondary: #0284c7;
+	--card-bg: #1e293b;
+	--card-border: #334155;
+	--neon-shadow: none;
 	--circuit-color: rgba(0, 0, 0, 0);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root:not(.light) {
-		--bg-color: #0c0c0d;
-		--text-primary: #ffffff;
-		--text-secondary: rgba(255, 255, 255, 0.7);
-		--accent-primary: #3b82f6;
-		--accent-secondary: #2563eb;
-		--card-bg: rgba(255, 255, 255, 0.02);
-		--card-border: rgba(59, 130, 246, 0.5);
-		--neon-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+		--bg-color: #0f172a;
+		--text-primary: #f8fafc;
+		--text-secondary: #94a3b8;
+		--accent-primary: #38bdf8;
+		--accent-secondary: #0284c7;
+		--card-bg: #1e293b;
+		--card-border: #334155;
+		--neon-shadow: none;
 		--circuit-color: rgba(0, 0, 0, 0);
 	}
 }
@@ -107,68 +108,56 @@ h1, h2, h3, h4 {
 @layer components {
 	.glass-card {
 		background: var(--card-bg);
-		backdrop-filter: blur(var(--glass-blur));
-		-webkit-backdrop-filter: blur(var(--glass-blur));
 		border: 1px solid var(--card-border);
-		border-radius: 12px;
+		border-radius: 8px;
 		transition: all 0.2s ease;
-		box-shadow: var(--neon-shadow);
 	}
 
 	.glass-card:hover {
-		box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
-		border-color: var(--accent-primary);
+		border-color: #475569; /* Slate 600 */
+		background: #243045; /* Slightly lighter navy */
 	}
 
 	.neon-text {
 		color: var(--accent-primary);
-		text-shadow: none;
 		font-weight: 600;
 	}
 
 	.btn-primary {
 		background: var(--accent-primary);
-		color: #ffffff;
+		color: #0f172a;
 		padding: 8px 16px;
 		border-radius: 6px;
-		font-weight: 500;
+		font-weight: 700;
 		font-size: 0.875rem;
 		cursor: pointer;
 		border: 1px solid transparent;
-		transition: all 0.2s ease;
-		box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+		transition: all 0.15s ease;
 	}
 
 	.btn-primary:hover {
-		background: var(--accent-secondary);
-		box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+		background: #7dd3fc; /* Sky 300 */
+		transform: translateY(-1px);
 	}
 
 	.btn-outline {
-		background: transparent;
+		background: #1e293b;
 		color: var(--text-primary);
 		padding: 8px 16px;
 		border-radius: 6px;
-		font-weight: 500;
+		font-weight: 600;
 		font-size: 0.875rem;
 		cursor: pointer;
-		border: 1px solid var(--accent-primary);
-		transition: all 0.2s ease;
+		border: 1px solid var(--card-border);
+		transition: all 0.15s ease;
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 	}
 
 	.btn-outline:hover {
-		background: rgba(59, 130, 246, 0.1);
-		border-color: var(--accent-secondary);
-		color: var(--accent-secondary);
-	}
-
-	:root.dark .btn-outline:hover {
-		background: rgba(59, 130, 246, 0.15);
-		border-color: var(--accent-secondary);
+		background: #334155;
+		border-color: #475569;
 	}
 }
 

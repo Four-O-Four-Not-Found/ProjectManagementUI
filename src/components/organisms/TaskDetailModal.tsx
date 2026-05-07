@@ -591,9 +591,21 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 						<div className="border-t border-[var(--border)] pt-4">
 							<h3 className="text-[12px] font-semibold text-[var(--text-muted)] mb-2">Development</h3>
 							{task.branchName ? (
-								<div className="flex items-center gap-2 text-[12px] font-mono text-[var(--color-primary)] bg-[var(--color-primary)]/10 px-2 py-1 rounded-github border border-[var(--color-primary)]/20">
-									<GitBranch size={12} />
-									<span className="truncate">{task.branchName}</span>
+								<div className="flex items-center gap-2">
+									<div className="flex-1 flex items-center gap-2 text-[11px] font-mono text-primary bg-primary/10 px-2 py-1.5 rounded-lg border border-primary/20 overflow-hidden">
+										<GitBranch size={12} className="shrink-0" />
+										<span className="truncate">{task.branchName}</span>
+									</div>
+									<button 
+										onClick={() => {
+											navigator.clipboard.writeText(task.branchName || "");
+											success("Copied", "Branch name ready for git checkout.");
+										}}
+										className="p-1.5 rounded-lg bg-surface border border-primary/20 text-text-muted hover:text-primary hover:border-primary transition-all"
+										title="Copy branch name"
+									>
+										<Bookmark size={12} />
+									</button>
 								</div>
 							) : (
 								<p className="text-[12px] text-[var(--text-muted)] italic">No branch linked</p>

@@ -36,54 +36,54 @@ class SignalRService {
 		if (this.startPromise) return this.startPromise;
 
 		if (
-			this.connection?.state === signalR.HubConnectionState.Connected ||
-			this.connection?.state === signalR.HubConnectionState.Connecting
+			this.connection && 
+			(this.connection.state === signalR.HubConnectionState.Connected ||
+			 this.connection.state === signalR.HubConnectionState.Connecting)
 		) {
 			return;
 		}
 
 		this.startPromise = (async () => {
 			try {
-				this.connection = new signalR.HubConnectionBuilder()
-					.withUrl(this.hubUrl, {
-						accessTokenFactory: () => {
-							const token = useAuthStore.getState().token;
-							return token || "";
-						},
-						skipNegotiation: false,
-						transport:
-							signalR.HttpTransportType.WebSockets |
-							signalR.HttpTransportType.LongPolling,
-					})
-					.withAutomaticReconnect()
-					.configureLogging(signalR.LogLevel.Warning)
-					.build();
+				if (!this.connection) {
+					this.connection = new signalR.HubConnectionBuilder()
+						.withUrl(this.hubUrl, {
+							accessTokenFactory: () => {
+								const token = useAuthStore.getState().token;
+								return token || "";
+							},
+							skipNegotiation: false,
+							transport:
+								signalR.HttpTransportType.WebSockets |
+								signalR.HttpTransportType.LongPolling,
+						})
+						.withAutomaticReconnect()
+						.configureLogging(signalR.LogLevel.Warning)
+						.build();
 
-				// Listen for notifications
-				this.connection.on("ReceiveNotification", (notification: any) => {
-					// Add to store
-					useNotificationStore.getState().addNotification(notification);
-
-					// Show native notification
-					this.showNativeNotification(notification.title || "Project Update", {
-						body: notification.message,
+					// Setup listeners once
+					this.connection.on("ReceiveNotification", (notification: any) => {
+						useNotificationStore.getState().addNotification(notification);
+						this.showNativeNotification(notification.title || "Project Update", {
+							body: notification.message,
+						});
 					});
-				});
+				}
 
-				console.log("SignalR: Connecting...");
-				await this.connection.start();
-				console.log("SignalR: Connected");
+				if (this.connection.state === signalR.HubConnectionState.Disconnected) {
+					console.log("SignalR: Connecting...");
+					await this.connection.start();
+					console.log("SignalR: Connected");
+				}
 			} catch (err) {
 				const error = err as Error;
-				const isAbortError =
+				if (
 					error.message?.includes("stopped during negotiation") ||
-					error.message?.includes("connection was stopped") ||
-					error.name === "AbortError";
-
-				if (!isAbortError) {
-					console.error("SignalR: Connection failed:", error);
+					error.message?.includes("connection was stopped")
+				) {
+					console.debug("SignalR: Connection synchronized.");
 				} else {
-					console.debug("SignalR: Connection attempt synchronized.");
+					console.error("SignalR: Connection failed:", error);
 				}
 			} finally {
 				this.startPromise = null;

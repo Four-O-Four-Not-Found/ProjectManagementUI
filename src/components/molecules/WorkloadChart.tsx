@@ -23,7 +23,7 @@ interface WorkloadChartProps {
 const WorkloadChart: React.FC<WorkloadChartProps> = ({ data }) => {
 	return (
 		<div className="w-full h-[200px]">
-			<ResponsiveContainer width="100%" height="100%" minHeight={100} minWidth={100}>
+			<ResponsiveContainer width="100%" height="100%" minHeight={200} minWidth={300} debounce={50}>
 				<BarChart data={data} layout="vertical" margin={{ left: 20, right: 20 }}>
 					<CartesianGrid
 						strokeDasharray="3 3"

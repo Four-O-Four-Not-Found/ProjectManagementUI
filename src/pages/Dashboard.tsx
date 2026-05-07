@@ -54,6 +54,7 @@ const Dashboard: React.FC = () => {
 	const [teams, setTeams] = useState<Team[]>([]);
 	const [stats, setStats] = useState<DashboardStats | null>(null);
 	const [loading, setLoading] = useState(true);
+	const [filterUrgentOnly, setFilterUrgentOnly] = useState(false);
 
 	useEffect(() => {
 		const loadDashboardData = async () => {
@@ -121,17 +122,17 @@ const Dashboard: React.FC = () => {
 			<div className="space-y-8 animate-fade-in p-6">
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 					{[1, 2, 3, 4].map((i) => (
-						<div key={i} className="h-32 glass-card shimmer rounded-xl" />
+						<div key={i} className="h-32 bg-[#1e293b] border border-[#334155] rounded-lg" />
 					))}
 				</div>
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					<div className="lg:col-span-2 space-y-8">
-						<div className="h-[400px] glass-card shimmer rounded-2xl" />
-						<div className="h-[350px] glass-card shimmer rounded-2xl" />
+						<div className="h-[400px] bg-[#1e293b] border border-[#334155] rounded-lg" />
+						<div className="h-[350px] bg-[#1e293b] border border-[#334155] rounded-lg" />
 					</div>
 					<div className="space-y-8">
-						<div className="h-[500px] glass-card shimmer rounded-2xl" />
-						<div className="h-64 glass-card shimmer rounded-2xl" />
+						<div className="h-[500px] bg-[#1e293b] border border-[#334155] rounded-lg" />
+						<div className="h-64 bg-[#1e293b] border border-[#334155] rounded-lg" />
 					</div>
 				</div>
 			</div>
@@ -152,7 +153,7 @@ const Dashboard: React.FC = () => {
 					description="Your project board is currently empty. Initialize your first project to start tracking tasks and sprints."
 					actionLabel="Create First Project"
 					onAction={() => setIsProjectModalOpen(true)}
-					className="max-w-2xl mx-auto"
+					className="max-w-2xl mx-auto bg-[#1e293b] border border-[#334155]"
 				/>
 			</div>
 		);
@@ -185,22 +186,21 @@ const Dashboard: React.FC = () => {
 			/>
 
 			<PageHeader
-				title="Project Overview"
+				title="Overview"
 				description={
 					<>
 						Welcome back,{" "}
-						<span className="text-[var(--accent-primary)] font-bold">
+						<span className="text-[#38bdf8] font-black">
 							{user?.displayName || "Agent"}
 						</span>
-						! Here's what's happening with{" "}
-						<span className="text-primary font-medium">FlowState</span> today.
+						. Here's your current operations status.
 					</>
 				}
 				actions={
 					<>
 						<Button
 							variant="secondary"
-							className="flex-1 md:flex-none"
+							className="flex-1 md:flex-none bg-[#334155] border-[#475569] text-white hover:bg-[#475569]"
 							leftIcon={<FileText size={16} />}
 							onClick={() =>
 								info("Report Generating", "Compiling project metrics...")
@@ -210,49 +210,47 @@ const Dashboard: React.FC = () => {
 						</Button>
 						<Button
 							variant="success"
-							className="flex-1 md:flex-none"
+							className="flex-1 md:flex-none bg-[#38bdf8] text-[#0f172a] hover:bg-[#7dd3fc]"
 							leftIcon={<Target size={16} />}
 							onClick={() => setIsProjectModalOpen(true)}
 						>
-							Create Project
+							Project
 						</Button>
 						<Button
 							variant="success"
-							className="flex-1 md:flex-none"
+							className="flex-1 md:flex-none bg-[#38bdf8] text-[#0f172a] hover:bg-[#7dd3fc]"
 							leftIcon={<Plus size={16} />}
 							onClick={() => setIsTaskModalOpen(true)}
 						>
-							New Task
+							Task
 						</Button>
 					</>
 				}
 			/>
 
-			<div className="grid grid-cols-2 gap-3 md:gap-6">
+			<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
 				<StatCard
 					label="Total Tasks"
 					value={stats.totalTasks.toString()}
 					icon={CheckCircle2}
-					colorClass="bg-primary"
 					trend="+12%"
 				/>
 				<StatCard
 					label="Active Sprints"
 					value={stats.activeSprints.toString()}
 					icon={Clock}
-					colorClass="bg-merged"
+					colorClass="bg-[#0284c7]"
 				/>
 				<StatCard
 					label="Joined Teams"
 					value={stats.teamMembers.toString()}
 					icon={Users}
-					colorClass="bg-primary"
+					colorClass="bg-[#38bdf8]"
 				/>
 				<StatCard
 					label="PRs Open"
 					value={stats.openPullRequests.toString()}
 					icon={GitBranch}
-					colorClass="bg-primary"
 					trend="+4"
 				/>
 			</div>
@@ -265,75 +263,85 @@ const Dashboard: React.FC = () => {
 							<motion.div
 								initial={{ height: 0, opacity: 0 }}
 								animate={{ height: "auto", opacity: 1 }}
-								className="bg-primary/10 border border-primary/20 rounded-2xl p-4 flex items-center gap-4 overflow-hidden"
+								className="bg-[#38bdf8]/10 border border-[#38bdf8]/30 rounded-lg p-4 flex items-center gap-4 overflow-hidden"
 							>
-								<div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0">
+								<div className="w-10 h-10 rounded bg-[#38bdf8]/20 flex items-center justify-center text-[#38bdf8] shrink-0">
 									<AlertTriangle size={20} />
 								</div>
 								<div className="flex-1 min-w-0">
-									<h4 className="text-sm font-bold text-primary">
-										Priority Alerts
+									<h4 className="text-sm font-black text-[#38bdf8] uppercase tracking-wider">
+										Priority Alert
 									</h4>
-									<p className="text-xs text-primary/70 truncate">
-										You have {urgentTasks.length} urgent tasks requiring
-										immediate attention.
+									<p className="text-xs text-[#38bdf8]/80">
+										You have {urgentTasks.length} critical tasks requiring attention.
 									</p>
 								</div>
 								<Button
 									size="xs"
-									variant="danger"
-									className="shadow-sm shadow-danger/20"
+									className="bg-[#38bdf8] text-[#0f172a] hover:bg-[#7dd3fc] font-bold"
+									onClick={() => {
+										setFilterUrgentOnly(true);
+										document.getElementById("assigned-section")?.scrollIntoView({ behavior: "smooth" });
+									}}
 								>
-									Review All
+									Review
 								</Button>
 							</motion.div>
 						)}
 					</AnimatePresence>
 
-					<GlassCard className="p-0 flex flex-col overflow-hidden">
-						<div className="p-4 border-b border-primary/30 bg-[var(--accent-primary)]/10 flex justify-between items-center">
+					<GlassCard id="assigned-section" className="p-0 flex flex-col overflow-hidden bg-[#1e293b] border-[#334155]">
+						<div className="p-4 border-b border-[#334155] bg-[#0f172a]/30 flex justify-between items-center">
 							<div className="flex items-center gap-2">
-								<Bookmark size={16} className="text-primary" />
-								<h3 className="font-bold text-text-main text-sm">
-									Assigned to Me
+								<Bookmark size={16} className="text-[#38bdf8]" />
+								<h3 className="font-bold text-[#f8fafc] text-sm uppercase tracking-wider">
+									{filterUrgentOnly ? "Critical Operations" : "Current Assignments"}
 								</h3>
 							</div>
-							<span className="text-[10px] font-bold text-text-muted bg-surface px-2 py-0.5 rounded-full border border-primary/30">
-								{(stats?.assignedTasks || []).length} Pending
-							</span>
+							<div className="flex items-center gap-3">
+								{filterUrgentOnly && (
+									<button 
+										onClick={() => setFilterUrgentOnly(false)}
+										className="text-[10px] font-bold text-[#38bdf8] hover:underline uppercase tracking-widest"
+									>
+										Reset
+									</button>
+								)}
+								<span className="text-[10px] font-bold text-[#94a3b8] bg-[#0f172a] px-2 py-0.5 rounded border border-[#334155] uppercase tracking-tighter">
+									{filterUrgentOnly ? urgentTasks.length : (stats?.assignedTasks || []).length} Units
+								</span>
+							</div>
 						</div>
-						<div className="p-2 bg-background/30 max-h-[400px] overflow-y-auto scrollbar-custom">
+						<div className="p-4 bg-[#0f172a]/20 max-h-[400px] overflow-y-auto scrollbar-custom">
 							{!stats?.assignedTasks || stats.assignedTasks.length === 0 ? (
-								<div className="p-8 text-center text-text-muted text-xs italic">
-									All clear! No tasks currently assigned to you.
+								<div className="p-8 text-center text-[#94a3b8] text-xs italic">
+									No pending assignments found.
 								</div>
 							) : (
-								<div className="grid grid-cols-2 gap-2 md:gap-3">
-									{stats.assignedTasks.map((task) => (
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									{(filterUrgentOnly ? urgentTasks : stats.assignedTasks).map((task) => (
 										<div
 											key={task.id}
 											onClick={() => navigate(`/project/${task.projectId}`)}
-											className="p-2 md:p-3 bg-surface border border-primary/30 rounded-lg md:rounded-xl hover:border-primary transition-all cursor-pointer group"
+											className="p-3 bg-[#1e293b] border border-[#334155] rounded-lg hover:border-[#38bdf8]/50 transition-all cursor-pointer group"
 										>
-											<div className="flex justify-between items-start mb-1 md:mb-2">
-												<span className="text-[8px] md:text-[9px] font-mono text-text-muted">
+											<div className="flex justify-between items-start mb-2">
+												<span className="text-[10px] font-mono text-[#94a3b8] uppercase">
 													{task.taskKey}
 												</span>
 												<div
-													className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${
+													className={`w-2 h-2 rounded-full ${
 														task.priority === "Urgent"
-															? "bg-primary shadow-[0_0_8px_rgba(239,68,68,0.5)]"
-															: task.priority === "High"
-																? "bg-primary"
-																: "bg-primary"
+															? "bg-[#38bdf8] shadow-[0_0_8px_rgba(56,189,248,0.4)]"
+															: "bg-[#38bdf8]/40"
 													}`}
 												/>
 											</div>
-											<h4 className="text-[11px] md:text-xs font-bold text-text-main group-hover:text-primary transition-colors line-clamp-1 leading-tight">
+											<h4 className="text-[13px] font-bold text-[#f8fafc] group-hover:text-[#38bdf8] transition-colors line-clamp-1 leading-tight">
 												{task.title}
 											</h4>
-											<div className="flex items-center gap-2 mt-1.5 md:mt-2">
-												<div className="px-1 py-0.5 rounded bg-background border border-primary/30 text-[7px] md:text-[8px] font-bold text-text-muted uppercase">
+											<div className="flex items-center gap-2 mt-3">
+												<div className="px-2 py-0.5 rounded bg-[#0f172a] border border-[#334155] text-[8px] font-black text-[#94a3b8] uppercase tracking-widest">
 													{task.status}
 												</div>
 											</div>
@@ -345,30 +353,26 @@ const Dashboard: React.FC = () => {
 					</GlassCard>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<GlassCard className="p-6 flex flex-col min-h-[350px]">
-							<div className="flex justify-between items-center mb-6">
-								<div>
-									<h3 className="font-bold text-text-main text-sm">
-										Project Performance
-									</h3>
-									<p className="text-[10px] text-text-muted">
-										Velocity trend across all connected projects
-									</p>
-								</div>
+						<GlassCard className="p-6 flex flex-col min-h-[350px] bg-[#1e293b] border-[#334155]">
+							<div className="mb-6">
+								<h3 className="font-bold text-[#f8fafc] text-sm uppercase tracking-wider">
+									Velocity Tracking
+								</h3>
+								<p className="text-[10px] text-[#94a3b8] uppercase tracking-tighter">
+									Historical sprint performance metrics
+								</p>
 							</div>
 							<BurndownChart data={stats.burndownData} />
 						</GlassCard>
 
-						<GlassCard className="p-6 flex flex-col min-h-[350px]">
-							<div className="flex justify-between items-center mb-6">
-								<div>
-									<h3 className="font-bold text-text-main text-sm">
-										Workload Balance
-									</h3>
-									<p className="text-[10px] text-text-muted">
-										Current task distribution across top contributors
-									</p>
-								</div>
+						<GlassCard className="p-6 flex flex-col min-h-[350px] bg-[#1e293b] border-[#334155]">
+							<div className="mb-6">
+								<h3 className="font-bold text-[#f8fafc] text-sm uppercase tracking-wider">
+									Resource Allocation
+								</h3>
+								<p className="text-[10px] text-[#94a3b8] uppercase tracking-tighter">
+									Contributor task distribution
+								</p>
 							</div>
 							<WorkloadChart data={stats.workloadData} />
 						</GlassCard>
@@ -377,41 +381,42 @@ const Dashboard: React.FC = () => {
 
 				{/* Right Column: Activity Feed & Projects */}
 				<div className="space-y-8">
-					<GlassCard className="p-0 flex flex-col h-[500px]">
-						<div className="p-4 border-b border-primary/30 bg-[var(--accent-primary)]/10">
-							<h3 className="font-bold text-text-main text-sm">
-								Movement Feed
+					<GlassCard className="p-0 flex flex-col h-[500px] bg-[#1e293b] border-[#334155]">
+						<div className="p-4 border-b border-[#334155] bg-[#0f172a]/30">
+							<h3 className="font-bold text-[#f8fafc] text-sm uppercase tracking-wider">
+								System Ledger
 							</h3>
 						</div>
-						<div className="flex-1 p-4 space-y-6 bg-background/20 overflow-y-auto scrollbar-custom">
+						<div className="flex-1 p-4 space-y-6 bg-[#0f172a]/10 overflow-y-auto scrollbar-custom">
 							{!stats?.recentActivities ||
 							stats.recentActivities.length === 0 ? (
-								<div className="flex flex-col items-center justify-center h-full text-text-muted gap-2 opacity-50">
+								<div className="flex flex-col items-center justify-center h-full text-[#94a3b8] gap-2 opacity-50">
 									<Clock size={32} />
 									<span className="text-[10px] font-bold uppercase tracking-widest">
-										No recent movements
+										Ledger Empty
 									</span>
 								</div>
 							) : (
 								stats.recentActivities.map((activity) => (
 									<div key={activity.id} className="flex gap-3 group">
-										<div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 group-hover:scale-110 transition-transform">
+										<div className="w-8 h-8 rounded bg-[#334155] border border-[#475569] flex items-center justify-center text-[#38bdf8] shrink-0">
 											<Target size={14} />
 										</div>
 										<div className="flex-1 min-w-0">
 											<div className="flex justify-between items-start gap-2">
-												<p className="text-[11px] text-text-main leading-tight">
-													<span className="font-bold">System</span>{" "}
+												<p className="text-[11px] text-[#f8fafc] leading-tight">
+													<span className="text-[#94a3b8]">Entry:</span>{" "}
 													{activity.action}{" "}
-													<span className="font-bold text-primary">
+													<span className="font-bold text-[#38bdf8]">
 														{activity.target}
 													</span>
 												</p>
 											</div>
-											<span className="text-[9px] text-text-muted mt-1 block">
+											<span className="text-[9px] text-[#94a3b8] font-mono mt-1 block uppercase">
 												{new Date(activity.createdAt).toLocaleTimeString([], {
 													hour: "2-digit",
 													minute: "2-digit",
+													hour12: false
 												})}
 											</span>
 										</div>
@@ -419,18 +424,18 @@ const Dashboard: React.FC = () => {
 								))
 							)}
 						</div>
-						<button className="w-full py-3 border-t border-primary/30 bg-[var(--accent-primary)]/10 text-[10px] font-bold text-text-muted hover:text-text-main transition-all uppercase tracking-widest">
-							Full Audit Log
+						<button className="w-full py-3 border-t border-[#334155] bg-[#0f172a]/40 text-[10px] font-bold text-[#94a3b8] hover:text-[#38bdf8] transition-all uppercase tracking-widest">
+							Access Full Audit Log
 						</button>
 					</GlassCard>
 
 					<div className="space-y-4">
 						<div className="flex items-center justify-between">
-							<h3 className="text-xs font-extrabold text-primary uppercase tracking-widest">
-								Active Projects
+							<h3 className="text-[11px] font-black text-[#38bdf8] uppercase tracking-[0.2em]">
+								Active Portfolio
 							</h3>
-							<span className="text-[10px] font-bold text-text-muted hover:text-primary cursor-pointer transition-colors">
-								View All
+							<span className="text-[10px] font-bold text-[#94a3b8] hover:text-[#38bdf8] cursor-pointer transition-colors uppercase">
+								Expand
 							</span>
 						</div>
 						<div className="space-y-3">
@@ -438,38 +443,38 @@ const Dashboard: React.FC = () => {
 								const progress = [75, 40, 92, 15][idx % 4];
 								const status =
 									progress > 70
-										? "On Track"
+										? "Stable"
 										: progress > 30
-											? "Active"
-											: "Early Stage";
+											? "Operational"
+											: "Initializing";
 
 								return (
 									<div
 										key={project.id}
 										onClick={() => navigate(`/project/${project.id}`)}
-										className="p-4 bg-surface border border-primary/30 rounded-2xl hover:border-primary/50 hover:shadow-sm hover:shadow-primary/5 transition-all cursor-pointer group relative overflow-hidden"
+										className="p-4 bg-[#1e293b] border border-[#334155] rounded-lg hover:border-[#38bdf8]/40 transition-all cursor-pointer group relative"
 									>
 										<div className="flex justify-between items-start mb-3">
 											<div className="min-w-0">
 												<div className="flex items-center gap-2 mb-1">
-													<div className="w-2 h-2 rounded-full bg-primary" />
-													<h4 className="text-xs font-black text-text-main group-hover:text-primary transition-colors truncate">
+													<div className="w-1.5 h-1.5 rounded-full bg-[#38bdf8]" />
+													<h4 className="text-[13px] font-bold text-[#f8fafc] group-hover:text-[#38bdf8] transition-colors truncate">
 														{project.name}
 													</h4>
 												</div>
-												<p className="text-[9px] text-text-muted font-bold uppercase tracking-wider">
+												<p className="text-[9px] text-[#94a3b8] font-bold uppercase tracking-widest">
 													{project.key} • {status}
 												</p>
 											</div>
-											<span className="text-[10px] font-mono text-text-muted">
+											<span className="text-[10px] font-mono text-[#94a3b8]">
 												{progress}%
 											</span>
 										</div>
-										<div className="h-1 bg-background rounded-full overflow-hidden">
+										<div className="h-1 bg-[#0f172a] rounded-full overflow-hidden">
 											<motion.div
 												initial={{ width: 0 }}
 												animate={{ width: `${progress}%` }}
-												className="h-full bg-primary"
+												className="h-full bg-[#38bdf8]"
 											/>
 										</div>
 									</div>
@@ -480,37 +485,37 @@ const Dashboard: React.FC = () => {
 
 					<div className="space-y-4">
 						<div className="flex items-center justify-between">
-							<h3 className="text-xs font-extrabold text-accent-primary uppercase tracking-widest">
-								Joined Teams
+							<h3 className="text-[11px] font-black text-[#38bdf8] uppercase tracking-[0.2em]">
+								Connected Teams
 							</h3>
-							<span className="text-[10px] font-bold text-text-muted hover:text-accent-primary cursor-pointer transition-colors" onClick={() => navigate('/team')}>
-								Manage
+							<span className="text-[10px] font-bold text-[#94a3b8] hover:text-[#38bdf8] cursor-pointer transition-colors uppercase" onClick={() => navigate('/team')}>
+								Registry
 							</span>
 						</div>
 						<div className="space-y-3">
 							{teams.length === 0 ? (
-								<div className="p-4 border border-dashed border-primary/30 rounded-xl text-center bg-surface/10">
-									<p className="text-[10px] text-text-muted italic font-medium uppercase tracking-tighter">Not part of any teams yet.</p>
+								<div className="p-4 border border-dashed border-[#334155] rounded-lg text-center bg-[#0f172a]/20">
+									<p className="text-[10px] text-[#94a3b8] italic font-medium uppercase tracking-widest">No active connections.</p>
 								</div>
 							) : (
 								teams.slice(0, 3).map((team) => (
 									<div
 										key={team.id}
-										className="p-3 bg-surface border border-primary/30 rounded-xl hover:border-accent-primary/50 transition-all flex items-center gap-3 group cursor-pointer"
+										className="p-3 bg-[#1e293b] border border-[#334155] rounded-lg hover:border-[#38bdf8]/40 transition-all flex items-center gap-3 group cursor-pointer"
 										onClick={() => navigate('/team')}
 									>
-										<div className="w-10 h-10 rounded-lg bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary shrink-0 group-hover:scale-105 transition-transform">
+										<div className="w-10 h-10 rounded bg-[#0f172a] border border-[#334155] flex items-center justify-center text-[#38bdf8] shrink-0 group-hover:border-[#38bdf8]/40 transition-colors">
 											<Users size={18} />
 										</div>
 										<div className="flex-1 min-w-0">
-											<h4 className="text-xs font-bold text-text-main truncate">
+											<h4 className="text-[13px] font-bold text-[#f8fafc] truncate">
 												{team.name}
 											</h4>
-											<p className="text-[9px] text-text-muted truncate">
-												{team.members?.length || 0} members
+											<p className="text-[9px] text-[#94a3b8] uppercase tracking-tighter">
+												{team.members?.length || 0} Operators
 											</p>
 										</div>
-										<ChevronRight size={14} className="text-text-muted group-hover:text-accent-primary transition-colors" />
+										<ChevronRight size={14} className="text-[#334155] group-hover:text-[#38bdf8] transition-colors" />
 									</div>
 								))
 							)}

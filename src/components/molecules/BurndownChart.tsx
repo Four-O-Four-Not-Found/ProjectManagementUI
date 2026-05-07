@@ -36,8 +36,9 @@ const BurndownChart: React.FC<BurndownChartProps> = ({ data = DEFAULT_DATA }) =>
 			<ResponsiveContainer
 				width="100%"
 				height="100%"
-				minWidth={100}
-				minHeight={100}
+				minWidth={300}
+				minHeight={300}
+				debounce={50}
 			>
 				<ComposedChart data={data}>
 					<defs>

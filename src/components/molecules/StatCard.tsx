@@ -19,27 +19,27 @@ const StatCard: React.FC<StatCardProps> = ({
 	colorClass,
 }) => {
 	return (
-		<div className="bg-surface border border-primary/40 rounded-xl p-2 md:p-3 flex items-center gap-2 md:gap-4 hover:border-primary transition-all group relative overflow-hidden">
+		<div className="bg-[#1e293b] border border-[#334155] rounded-lg p-3 flex items-center gap-4 hover:border-[#475569] transition-all group relative overflow-hidden">
 			<div
 				className={twMerge(
-					"w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-[var(--text-primary)] shrink-0 shadow-sm",
-					colorClass || "bg-primary",
+					"w-10 h-10 rounded-lg flex items-center justify-center text-[#f8fafc] shrink-0",
+					colorClass || "bg-[#38bdf8] text-[#0f172a]",
 				)}
 			>
-				<Icon size={16} className="md:w-[18px] md:h-[18px]" />
+				<Icon size={20} />
 			</div>
 
 			<div className="flex-1 min-w-0">
-				<p className="text-[9px] md:text-[10px] font-bold text-text-muted uppercase tracking-tight truncate">
+				<p className="text-[10px] font-bold text-[#94a3b8] uppercase tracking-wider truncate">
 					{label}
 				</p>
-				<div className="flex items-baseline gap-1.5 md:gap-2">
-					<h3 className="text-lg md:text-xl font-bold text-text-main group-hover:text-primary transition-colors leading-none">
+				<div className="flex items-baseline gap-2">
+					<h3 className="text-xl font-bold text-[#f8fafc] group-hover:text-[#38bdf8] transition-colors leading-none">
 						{value}
 					</h3>
 					{trend && (
-						<span className="text-[8px] md:text-[9px] font-bold text-primary flex items-center">
-							<TrendingUp size={8} className="mr-0.5" />
+						<span className="text-[10px] font-bold text-[#38bdf8] flex items-center">
+							<TrendingUp size={10} className="mr-1" />
 							{trend}
 						</span>
 					)}
