@@ -111,6 +111,7 @@ export interface Project {
 	createdAt: string;
 	updatedAt: string;
 	repositories?: Repository[];
+	newTasksCount?: number;
 }
 
 export interface Activity {

@@ -16,7 +16,7 @@ import Button from '../atoms/Button';
 import ActivityDetailModal from '../organisms/ActivityDetailModal';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Target, Layout } from 'lucide-react';
 import type { Activity, Task, Project } from '../../types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 type ViewMode = 'Week' | 'Month';
 type DataMode = 'Tasks' | 'Projects';

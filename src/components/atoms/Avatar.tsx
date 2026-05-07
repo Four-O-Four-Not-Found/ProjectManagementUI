@@ -26,8 +26,7 @@ const Avatar: React.FC<AvatarProps> = ({
 		xl: "w-16 h-16 rounded-[24px]",
 	};
 
-	const avatarSrc =
-		src || `https://api.dicebear.com/7.x/initials/svg?seed=${name || "User"}&backgroundColor=1e293b&textColor=38bdf8&fontFamily=Outfit`;
+	const avatarSrc = src || `https://github.com/${name || "ghost"}.png`;
 
 	return (
 		<div

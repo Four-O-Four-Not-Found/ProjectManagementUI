@@ -15,6 +15,7 @@ import {
 	GitBranch,
 	Clock,
 	Sparkles,
+	ChevronRight,
 } from "lucide-react";
 import TaskCard from "../components/molecules/TaskCard";
 import TaskDetailModal from "../components/organisms/TaskDetailModal";
@@ -329,22 +330,17 @@ const Board: React.FC = () => {
 												"Enterprise-grade project tracking and automated workflow management."}
 										</p>
 
-										<div className="pt-6 flex items-center justify-between border-t border-primary/30-subtle">
-											<div className="flex -space-x-3">
-												{[1, 2, 3].map((i) => (
-													<div
-														key={i}
-														className="w-8 h-8 rounded-full border-2 border-background bg-[var(--accent-primary)]/10 flex items-center justify-center shadow-sm overflow-hidden"
-													>
-														<Avatar name={`Member ${i}`} size="sm" />
-													</div>
-												))}
-												<div className="w-8 h-8 rounded-full border-2 border-background bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
-													+5
+										<div className="pt-6 flex items-center justify-between border-t border-[#334155]/50">
+											<div className="flex items-center gap-3">
+												<div className="flex items-center gap-2 px-3 py-1.5 bg-[#0f172a] border border-[#334155] rounded-md shadow-inner group-hover:border-[#38bdf8]/30 transition-colors">
+													<div className="w-2 h-2 rounded-full bg-[#38bdf8] animate-pulse" />
+													<span className="text-[11px] font-black text-[#f8fafc] uppercase tracking-wider">
+														{project.newTasksCount || 0} New Tasks
+													</span>
 												</div>
 											</div>
-											<Button variant="ghost" size="sm" className="group-hover:translate-x-1 transition-transform">
-												Enter Board
+											<Button variant="ghost" size="sm" className="font-bold text-[10px] uppercase tracking-widest text-[#94a3b8] hover:text-[#38bdf8] hover:bg-transparent p-0 flex items-center gap-2 group-hover:translate-x-1 transition-all">
+												Access Board <ChevronRight size={14} />
 											</Button>
 										</div>
 									</div>
